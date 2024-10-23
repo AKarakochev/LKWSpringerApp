@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LKWSpringerApp.Web", "LKWSpringerApp.Web\LKWSpringerApp.Web.csproj", "{61118B53-E3B4-4AEF-8421-359C93A439B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LKWSpringerApp.Web.ViewModels", "LKWSpringerApp.Web.ViewModels\LKWSpringerApp.Web.ViewModels.csproj", "{62043A44-E83F-49CE-A3AA-D4B09DE58401}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LKWSpringerApp.Common", "LKWSpringerApp.Common\LKWSpringerApp.Common.csproj", "{3C878A92-B108-4665-945E-D8A274C3EB13}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LKWSpringerApp.Data.Models", "LKWSpringerApp.Data.Models\LKWSpringerApp.Data.Models.csproj", "{35A33FA2-9EED-499E-958B-52EDAE8D660F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{94399898-7F90-4DA6-97F7-DA2E8250E4FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{C3078159-C3C4-4221-9B15-DD29477AB51B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61118B53-E3B4-4AEF-8421-359C93A439B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61118B53-E3B4-4AEF-8421-359C93A439B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61118B53-E3B4-4AEF-8421-359C93A439B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61118B53-E3B4-4AEF-8421-359C93A439B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62043A44-E83F-49CE-A3AA-D4B09DE58401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62043A44-E83F-49CE-A3AA-D4B09DE58401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62043A44-E83F-49CE-A3AA-D4B09DE58401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62043A44-E83F-49CE-A3AA-D4B09DE58401}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C878A92-B108-4665-945E-D8A274C3EB13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C878A92-B108-4665-945E-D8A274C3EB13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C878A92-B108-4665-945E-D8A274C3EB13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C878A92-B108-4665-945E-D8A274C3EB13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35A33FA2-9EED-499E-958B-52EDAE8D660F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35A33FA2-9EED-499E-958B-52EDAE8D660F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35A33FA2-9EED-499E-958B-52EDAE8D660F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35A33FA2-9EED-499E-958B-52EDAE8D660F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{61118B53-E3B4-4AEF-8421-359C93A439B9} = {94399898-7F90-4DA6-97F7-DA2E8250E4FF}
+		{62043A44-E83F-49CE-A3AA-D4B09DE58401} = {94399898-7F90-4DA6-97F7-DA2E8250E4FF}
+		{35A33FA2-9EED-499E-958B-52EDAE8D660F} = {C3078159-C3C4-4221-9B15-DD29477AB51B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA0B2814-6784-4A7A-9D47-1260B5F7B592}
+	EndGlobalSection
+EndGlobal
