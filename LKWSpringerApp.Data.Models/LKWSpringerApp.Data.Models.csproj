@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LKWSpringerApp.Common\LKWSpringerApp.Common.csproj" />
-    <ProjectReference Include="..\LKWSpringerApp.Web.ViewModels\LKWSpringerApp.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

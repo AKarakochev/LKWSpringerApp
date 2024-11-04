@@ -11,16 +11,20 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LKWSpringerApp.Common\LKWSpringerApp.Common.csproj" />
-    <ProjectReference Include="..\LKWSpringerApp.Data.Models\LKWSpringerApp.Data.Models.csproj" />
+    <ProjectReference Include="..\LKWSpringerApp.Data\LKWSpringerApp.Data.csproj" />
+    <ProjectReference Include="..\LKWSpringerApp.Services.Data\LKWSpringerApp.Services.Data.csproj" />
+    <ProjectReference Include="..\LKWSpringerApp.Services.Mapping\LKWSpringerApp.Services.Mapping.csproj" />
     <ProjectReference Include="..\LKWSpringerApp.Web.ViewModels\LKWSpringerApp.Web.ViewModels.csproj" />
   </ItemGroup>
 

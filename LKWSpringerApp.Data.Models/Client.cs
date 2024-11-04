@@ -33,7 +33,9 @@ namespace LKWSpringerApp.Data.Models
         public string Address { get; set; } = null!;
 
         [MaxLength(ClientAddressUrlMaxLength)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         public string? AddressUrl { get; set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
         [Required(ErrorMessage = ClientPhoneNumberErrorMessage)]
         [Comment("The phone number of the client.")]

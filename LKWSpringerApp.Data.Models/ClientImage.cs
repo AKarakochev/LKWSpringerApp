@@ -23,11 +23,15 @@ namespace LKWSpringerApp.Data.Models
         public string ImageUrl { get; set; } = null!;
 
         [Comment("VideoUrl of the client location and delivery area.")]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         public string? VideoUrl { get; set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
         [Comment("Description of the video or/and images.")]
         [MaxLength(DescriptionMaxLength)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         public string? Description { get; set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
         [Required]
         public Guid ClientId { get; set; }

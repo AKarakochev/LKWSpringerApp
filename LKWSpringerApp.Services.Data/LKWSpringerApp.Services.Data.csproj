@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LKWSpringerApp.Common\LKWSpringerApp.Common.csproj" />
-    <ProjectReference Include="..\LKWSpringerApp.Data.Models\LKWSpringerApp.Data.Models.csproj" />
-    <ProjectReference Include="..\LKWSpringerApp.Services.Mapping\LKWSpringerApp.Services.Mapping.csproj" />
+    <ProjectReference Include="..\LKWSpringerApp.Data\LKWSpringerApp.Data.csproj" />
+    <ProjectReference Include="..\LKWSpringerApp.Web.ViewModels\LKWSpringerApp.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

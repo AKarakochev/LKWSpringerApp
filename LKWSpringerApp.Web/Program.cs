@@ -1,46 +1,59 @@
-using DeskMarket.Data;
-using LKWSpringerApp.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using LKWSpringerApp.Services.Mapping;
+using LKWSpringerApp.Web.ViewModels;
+using LKWSpringerApp.Data;
+using LKWSpringerApp.Data.Models;
+using Microsoft.Extensions.Options;
 
 namespace LKWSpringerApp.Web
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
+            
             var connectionString = builder.Configuration.GetConnectionString("SQLServer") ?? throw new InvalidOperationException("Connection string 'SQLServer' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+            
+            builder.Services
+                .AddDbContext<LkwSpringerDbContext>(options =>
                 {
-                    options.SignIn.RequireConfirmedAccount = false;
-                    options.Password.RequireDigit = true;
-                    options.Password.RequireNonAlphanumeric = true;
-                    options.Password.RequireUppercase = true;
-                    options.Password.RequireLowercase = true;
-                    options.Password.RequiredLength = 6;
-                })
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddControllersWithViews();
+                    options.UseSqlServer(connectionString,
+                    sqlOptions => sqlOptions.MigrationsAssembly("LKWSpringerApp.Data"));
+                });
 
-            //Creating IdentityRoles
-            builder.Services.AddScoped<IdentityDataSeeder>();
+            //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<LkwSpringerDbContext>();
+            //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            builder.Services
+               .AddIdentity<ApplicationUser, IdentityRole<Guid>>(cfg =>
+               {
+                   ConfigureIdentity(builder, cfg);
+               })
+               .AddEntityFrameworkStores<LkwSpringerDbContext>()
+               .AddSignInManager<SignInManager<ApplicationUser>>()
+               .AddUserManager<UserManager<ApplicationUser>>();
+
+            builder.Services.ConfigureApplicationCookie(cfg =>
+            {
+                cfg.LoginPath = "/Identity/Account/Login";
+            });
+
+
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
 
             var app = builder.Build();
 
+            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);
+
             //Call the seed method for IdentityRole
-            using (var scope = app.Services.CreateScope())
-            {
-                var seeder = scope.ServiceProvider.GetRequiredService<IdentityDataSeeder>();
-                await seeder.SeedRolesAndAdminUserAsync();
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var seeder = scope.ServiceProvider.GetRequiredService<IdentityDataSeeder>();
+            //    await seeder.SeedRolesAndAdminUserAsync();
+            //}
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -67,38 +80,33 @@ namespace LKWSpringerApp.Web
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-            //    var roles = new[] { "Administrator", "User" };
-
-            //    foreach (var role in roles)
-            //    {
-            //        if (!await roleManager.RoleExistsAsync(role)) await roleManager.CreateAsync(new IdentityRole(role));
-            //    }
-            //}
-
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-
-            //    string email = "admin@admin.com";
-            //    string password = "Admin1!";
-
-            //    if (await userManager.FindByEmailAsync(email) == null)
-            //    {
-            //        var user = new IdentityUser();
-            //        user.Email = email;
-            //        user.UserName = email;
-
-            //        await userManager.CreateAsync(user, password);
-
-            //        await userManager.AddToRoleAsync(user, "Administrator");
-            //    }
-            //}
-
             app.Run();
+        }
+
+        private static void ConfigureIdentity(WebApplicationBuilder builder, IdentityOptions cfg)
+        {
+            cfg.Password.RequireDigit =
+                builder.Configuration.GetValue<bool>("Identity:Password:RequireDigits");
+            cfg.Password.RequireLowercase =
+                builder.Configuration.GetValue<bool>("Identity:Password:RequireLowercase");
+            cfg.Password.RequireUppercase =
+                builder.Configuration.GetValue<bool>("Identity:Password:RequireUppercase");
+            cfg.Password.RequireNonAlphanumeric =
+                builder.Configuration.GetValue<bool>("Identity:Password:RequireNonAlphanumerical");
+            cfg.Password.RequiredLength =
+                builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
+            cfg.Password.RequiredUniqueChars =
+                builder.Configuration.GetValue<int>("Identity:Password:RequiredUniqueCharacters");
+
+            cfg.SignIn.RequireConfirmedAccount =
+                builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedAccount");
+            cfg.SignIn.RequireConfirmedEmail =
+                builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedEmail");
+            cfg.SignIn.RequireConfirmedPhoneNumber =
+                builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedPhoneNumber");
+
+            cfg.User.RequireUniqueEmail =
+                builder.Configuration.GetValue<bool>("Identity:User:RequireUniqueEmail");
         }
     }
 }

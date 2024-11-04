@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using LKWSpringerApp.Common;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
+using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
 
 namespace LKWSpringerApp.Data.Models
 {
@@ -55,12 +53,9 @@ namespace LKWSpringerApp.Data.Models
         [Comment("Shows if a driver has been deleted.")]
         public bool IsDeleted { get; set; }
 
-        //[Required]
-        //public string UserId { get; set; }
-
-        //[ForeignKey(nameof(UserId))]
-        //public IdentityUser User { get; set; } = null!;
-
         public ICollection<Tour> Tours { get; set; } = new HashSet<Tour>();
+
+        public virtual ICollection<ApplicationUserDriver> DriverApplicationUsers { get; set; }
+            = new HashSet<ApplicationUserDriver>();
     }
 }

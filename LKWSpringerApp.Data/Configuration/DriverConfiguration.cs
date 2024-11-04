@@ -25,7 +25,8 @@ namespace LKWSpringerApp.Data.Configuration
                     PhoneNumber = "00491624389341",
                     Springerfahrer = true,
                     Stammfahrer = false,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    //UserId = "06a0da05-4438-4158-a9ca-b18e7778482a"
                 },
                 new Driver()
                 {
@@ -36,7 +37,8 @@ namespace LKWSpringerApp.Data.Configuration
                     PhoneNumber = "00491624494949",
                     Springerfahrer = true,
                     Stammfahrer = false,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    //UserId = "06a0da05-4438-4158-a9ca-b18e7778482a"
                 },
                 new Driver()
                 {
@@ -47,7 +49,8 @@ namespace LKWSpringerApp.Data.Configuration
                     PhoneNumber = "00491624490000",
                     Springerfahrer = false,
                     Stammfahrer = true,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    //UserId = "53566310-f89b-4c07-abf5-87fdc475fad1"
                 },
                 new Driver()
                 {
@@ -58,7 +61,8 @@ namespace LKWSpringerApp.Data.Configuration
                     PhoneNumber = "00491624411111",
                     Springerfahrer = false,
                     Stammfahrer = true,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    //UserId = "53566310-f89b-4c07-abf5-87fdc475fad1"
                 }
             };
 

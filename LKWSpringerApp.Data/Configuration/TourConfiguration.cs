@@ -1,8 +1,4 @@
-﻿using LKWSpringerApp.Data.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-
-namespace LKWSpringerApp.Web.Data.Configuration
+﻿namespace LKWSpringerApp.Web.Data.Configuration
 {
     //public class TourConfiguration : IEntityTypeConfiguration<Tour>
     //{

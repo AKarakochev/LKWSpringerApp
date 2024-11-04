@@ -1,8 +1,4 @@
-﻿using LKWSpringerApp.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace LKWSpringerApp.Web.Data.Configuration
+﻿namespace LKWSpringerApp.Web.Data.Configuration
 {
     //public class ClientConfiguration : IEntityTypeConfiguration<Client>
     //{
