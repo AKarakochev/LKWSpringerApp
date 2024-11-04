@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
+using LKWSpringerApp.Common;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
 
 namespace LKWSpringerApp.Data.Models
