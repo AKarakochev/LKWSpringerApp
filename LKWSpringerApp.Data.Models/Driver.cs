@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
 using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
+using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LKWSpringerApp.Data.Models
 {
@@ -43,11 +45,11 @@ namespace LKWSpringerApp.Data.Models
 
         [Required]
         [Comment("That is a driver who visits different clients almost every day.")]
-        public bool Springerfahrer { get; set; }
+        public bool Springerdriver { get; set; }
 
         [Required]
         [Comment("That is a driver who visits the same clients.")]
-        public bool Stammfahrer { get; set; }
+        public bool Stammdriver { get; set; }
 
         [Required]
         [Comment("Shows if a driver has been deleted.")]
@@ -55,7 +57,8 @@ namespace LKWSpringerApp.Data.Models
 
         public ICollection<Tour> Tours { get; set; } = new HashSet<Tour>();
 
-        public virtual ICollection<ApplicationUserDriver> DriverApplicationUsers { get; set; }
-            = new HashSet<ApplicationUserDriver>();
+        //public ICollection<ApplicationUserDriver> ApplicationUserDrivers { get; set; } 
+           // = new HashSet<ApplicationUserDriver>();
+
     }
 }

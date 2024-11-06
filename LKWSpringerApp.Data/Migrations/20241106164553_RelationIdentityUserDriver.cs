@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace LKWSpringerApp.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrationWithUpdatedAppStructure : Migration
+    public partial class RelationIdentityUserDriver : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +15,7 @@ namespace LKWSpringerApp.Data.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -31,7 +29,7 @@ namespace LKWSpringerApp.Data.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -81,8 +79,8 @@ namespace LKWSpringerApp.Data.Migrations
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Driver birthdate."),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date of commencement of employment."),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "The phone number of the driver."),
-                    Springerfahrer = table.Column<bool>(type: "bit", nullable: false, comment: "That is a driver who visits different clients almost every day."),
-                    Stammfahrer = table.Column<bool>(type: "bit", nullable: false, comment: "That is a driver who visits the same clients."),
+                    Springerdriver = table.Column<bool>(type: "bit", nullable: false, comment: "That is a driver who visits different clients almost every day."),
+                    Stammdriver = table.Column<bool>(type: "bit", nullable: false, comment: "That is a driver who visits the same clients."),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Shows if a driver has been deleted.")
                 },
                 constraints: table =>
@@ -96,7 +94,7 @@ namespace LKWSpringerApp.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -117,7 +115,7 @@ namespace LKWSpringerApp.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -136,10 +134,10 @@ namespace LKWSpringerApp.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -156,8 +154,8 @@ namespace LKWSpringerApp.Data.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -180,9 +178,9 @@ namespace LKWSpringerApp.Data.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -242,15 +240,15 @@ namespace LKWSpringerApp.Data.Migrations
                 name: "UsersDrivers",
                 columns: table => new
                 {
-                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier."),
-                    DriverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier.")
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DriverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersDrivers", x => new { x.ApplicationUserId, x.DriverId });
+                    table.PrimaryKey("PK_UsersDrivers", x => new { x.UserId, x.DriverId });
                     table.ForeignKey(
-                        name: "FK_UsersDrivers_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_UsersDrivers_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -284,17 +282,6 @@ namespace LKWSpringerApp.Data.Migrations
                         principalTable: "Tours",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Drivers",
-                columns: new[] { "Id", "BirthDate", "FirstName", "IsDeleted", "PhoneNumber", "SecondName", "Springerfahrer", "Stammfahrer", "StartDate" },
-                values: new object[,]
-                {
-                    { new Guid("098bf4a7-595d-4f65-8443-b695a79dee27"), new DateTime(1985, 11, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), "Anastas", false, "00491624389341", "Karakochev", true, false, new DateTime(2020, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("3e067049-3fc9-4473-964a-2c02ec78d896"), new DateTime(1970, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), "Max", false, "00491624490000", "Mustermann", false, true, new DateTime(2000, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("e47e3beb-8e54-4a9f-9913-5ada38409954"), new DateTime(1992, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "Ben", false, "00491624411111", "Fischer", false, true, new DateTime(2022, 12, 11, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("f84aeac1-27a1-477b-8dae-5980bc5de2a1"), new DateTime(2000, 5, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), "Daniel", false, "00491624494949", "Schneider", true, false, new DateTime(2023, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.CreateIndex(

@@ -4,7 +4,6 @@ using LKWSpringerApp.Services.Mapping;
 using LKWSpringerApp.Web.ViewModels;
 using LKWSpringerApp.Data;
 using LKWSpringerApp.Data.Models;
-using Microsoft.Extensions.Options;
 
 namespace LKWSpringerApp.Web
 {
@@ -19,21 +18,25 @@ namespace LKWSpringerApp.Web
             builder.Services
                 .AddDbContext<LkwSpringerDbContext>(options =>
                 {
-                    options.UseSqlServer(connectionString,
+                options.UseSqlServer(connectionString,
                     sqlOptions => sqlOptions.MigrationsAssembly("LKWSpringerApp.Data"));
                 });
 
-            //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<LkwSpringerDbContext>();
-            //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
             builder.Services
-               .AddIdentity<ApplicationUser, IdentityRole<Guid>>(cfg =>
-               {
-                   ConfigureIdentity(builder, cfg);
-               })
-               .AddEntityFrameworkStores<LkwSpringerDbContext>()
-               .AddSignInManager<SignInManager<ApplicationUser>>()
-               .AddUserManager<UserManager<ApplicationUser>>();
+                .AddDefaultIdentity<IdentityUser>
+                (options => {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.SignIn.RequireConfirmedEmail = false;
+                    options.SignIn.RequireConfirmedPhoneNumber = false;
+                    options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<LkwSpringerDbContext>();
+            
 
             builder.Services.ConfigureApplicationCookie(cfg =>
             {
@@ -78,35 +81,10 @@ namespace LKWSpringerApp.Web
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
             app.MapRazorPages();
 
             app.Run();
-        }
-
-        private static void ConfigureIdentity(WebApplicationBuilder builder, IdentityOptions cfg)
-        {
-            cfg.Password.RequireDigit =
-                builder.Configuration.GetValue<bool>("Identity:Password:RequireDigits");
-            cfg.Password.RequireLowercase =
-                builder.Configuration.GetValue<bool>("Identity:Password:RequireLowercase");
-            cfg.Password.RequireUppercase =
-                builder.Configuration.GetValue<bool>("Identity:Password:RequireUppercase");
-            cfg.Password.RequireNonAlphanumeric =
-                builder.Configuration.GetValue<bool>("Identity:Password:RequireNonAlphanumerical");
-            cfg.Password.RequiredLength =
-                builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
-            cfg.Password.RequiredUniqueChars =
-                builder.Configuration.GetValue<int>("Identity:Password:RequiredUniqueCharacters");
-
-            cfg.SignIn.RequireConfirmedAccount =
-                builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedAccount");
-            cfg.SignIn.RequireConfirmedEmail =
-                builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedEmail");
-            cfg.SignIn.RequireConfirmedPhoneNumber =
-                builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedPhoneNumber");
-
-            cfg.User.RequireUniqueEmail =
-                builder.Configuration.GetValue<bool>("Identity:User:RequireUniqueEmail");
         }
     }
 }
