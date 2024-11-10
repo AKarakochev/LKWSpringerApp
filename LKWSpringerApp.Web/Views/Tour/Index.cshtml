@@ -1,0 +1,36 @@
+﻿@model IEnumerable<LKWSpringerApp.Web.ViewModels.TourModels.AllTourModel>
+
+@{
+    ViewData["Title"] = "All Tours";
+}
+
+<h2>All Tours</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tour Number</th>
+            <th>Tour Name</th>
+            <th>Clients</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tour in Model)
+        {
+            <tr>
+                <td>@tour.TourNumber</td>
+                <td>@tour.TourName</td>
+                <td>
+                    @foreach (var client in tour.Clients)
+                    {
+                        <p>@client.Name</p>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@tour.Id" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -11,12 +11,12 @@ namespace LKWSpringerApp.Common
         public static class Driver
         {
             public const int DriverFirstNameMaxLength = 50;
-            public const int DriverFirstNameMinLength = 50;
+            public const int DriverFirstNameMinLength = 3;
             public const int DriverSecondNameMaxLength = 50;
-            public const int DriverSecondNameMinLength = 50;
+            public const int DriverSecondNameMinLength = 3;
             public const string DriverBirthDateFormat = "dd/MM/yyyy";
             public const string DriverStartDateFormat = "dd/MM/yyyy";
-            public const string DriverPhoneNumberFormatPattern = @"^\d{14}$|^\+\d{12}$";
+            public const string DriverPhoneNumberFormatPattern = @"^(\+?\d{10,14})$";
         }
 
         public static class Client

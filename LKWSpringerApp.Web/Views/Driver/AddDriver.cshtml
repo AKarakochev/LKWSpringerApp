@@ -1,0 +1,60 @@
+﻿@using LKWSpringerApp.Web.ViewModels.Driver
+@model AddDriverModel
+
+@{
+    ViewData["Title"] = "Add Driver";
+}
+
+<h2>Add a new driver</h2>
+
+<form asp-action="AddDriver" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="FirstName" class="control-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SecondName" class="control-label"></label>
+        <input asp-for="SecondName" class="form-control" />
+        <span asp-validation-for="SecondName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BirthDate" class="control-label"></label>
+        <input asp-for="BirthDate" class="form-control" type="text" placeholder="example: 01/01/2000" />
+        <span asp-validation-for="BirthDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate" class="control-label"></label>
+        <input asp-for="StartDate" class="form-control" type="text" placeholder="example: 01/01/2000" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PhoneNumber" class="control-label"></label>
+        <input asp-for="PhoneNumber" class="form-control" type="text" placeholder="example: 0049... or +49... or 0162..." />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="Springerdriver" class="form-check-input" type="checkbox" />
+        <label asp-for="Springerdriver" class="form-check-label"></label>
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="Stammdriver" class="form-check-input" type="checkbox" />
+        <label asp-for="Stammdriver" class="form-check-label"></label>
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Add Driver</button>
+        <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

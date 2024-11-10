@@ -1,0 +1,36 @@
+﻿@using LKWSpringerApp.Web.ViewModels.Driver
+@model IEnumerable<AllDriverModel>
+
+@{
+    ViewData["Title"] = "All Drivers";
+}
+
+<h2>Drivers</h2>
+
+<div class="mb-3">
+    <a asp-action="AddDriver" class="btn btn-success">Add New Driver</a>
+</div>
+
+<div class="row">
+    @foreach (var driver in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@driver.FirstName @driver.SecondName</h5>
+                    <p><strong>Phone:</strong> @driver.PhoneNumber</p>
+
+                    <p><strong>Tours:</strong></p>
+                    <ul>
+                        @foreach (var tour in driver.TourNames)
+                        {
+                            <li>@tour</li>
+                        }
+                    </ul>
+
+                    <a asp-action="Details" asp-route-id="@driver.Id" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

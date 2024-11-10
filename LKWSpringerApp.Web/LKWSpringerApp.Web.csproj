@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Tour\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.10" />
@@ -29,6 +33,18 @@
     <ProjectReference Include="..\LKWSpringerApp.Services.Data\LKWSpringerApp.Services.Data.csproj" />
     <ProjectReference Include="..\LKWSpringerApp.Services.Mapping\LKWSpringerApp.Services.Mapping.csproj" />
     <ProjectReference Include="..\LKWSpringerApp.Web.ViewModels\LKWSpringerApp.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Tour\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Tour\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Tour\Index.cshtml" />
   </ItemGroup>
 
 </Project>

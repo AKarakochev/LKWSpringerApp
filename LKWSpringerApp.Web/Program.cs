@@ -24,18 +24,31 @@ namespace LKWSpringerApp.Web
 
             builder.Services
                 .AddDefaultIdentity<IdentityUser>
-                (options => {
+                (options =>
+                {
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequiredUniqueChars = 0;
+                    options.Password.RequiredLength = 6;
+
                     options.SignIn.RequireConfirmedAccount = false;
                     options.SignIn.RequireConfirmedEmail = false;
                     options.SignIn.RequireConfirmedPhoneNumber = false;
-                    options.Password.RequireDigit = true;
-                    options.Password.RequiredLength = 6;
-                    options.Password.RequireLowercase = true;
-                    options.Password.RequireUppercase = true;
-                    options.Password.RequireNonAlphanumeric = true;
-                    })
+
+                    options.User.RequireUniqueEmail = true;
+
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                    options.Lockout.MaxFailedAccessAttempts = 5;
+                    options.Lockout.AllowedForNewUsers = true;
+                })
+               
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<LkwSpringerDbContext>();
+                .AddEntityFrameworkStores<LkwSpringerDbContext>()
+                .AddSignInManager<SignInManager<IdentityUser>>()
+                .AddUserManager<UserManager<IdentityUser>>();
+                
             
 
             builder.Services.ConfigureApplicationCookie(cfg =>

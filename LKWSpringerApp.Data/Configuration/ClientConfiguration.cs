@@ -1,4 +1,8 @@
-﻿namespace LKWSpringerApp.Web.Data.Configuration
+﻿using LKWSpringerApp.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace LKWSpringerApp.Web.Data.Configuration
 {
     //public class ClientConfiguration : IEntityTypeConfiguration<Client>
     //{
@@ -14,8 +18,9 @@
     //        {
     //            new Client()
     //            {
+    //                Id = Guid.NewGuid(),
     //                Name = "Kempten",
-    //                ClientNumber = 1,
+    //                ClientNumber = 101,
     //                Address = "87435 Kempten,Kemptener Str. 1",
     //                PhoneNumber = "+491624389000",
     //                DeliveryDescription = "Front door",
@@ -24,6 +29,7 @@
     //            },
     //            new Client()
     //            {
+    //                Id = Guid.NewGuid(),
     //                Name = "Fussen",
     //                ClientNumber = 3000,
     //                Address = "87629 Fussen,Fussenner Str. 2",
@@ -34,6 +40,7 @@
     //            },
     //            new Client()
     //            {
+    //                Id = Guid.NewGuid(),
     //                Name = "Wangen",
     //                ClientNumber = 5555,
     //                Address = "87000 Wangen,Wangener Str. 3",
@@ -44,6 +51,7 @@
     //            },
     //            new Client()
     //            {
+    //                Id = Guid.NewGuid(),
     //                Name = "Memmingen",
     //                ClientNumber = 110,
     //                Address = "87435 Memmingen,Memmingener Str. 4",
