@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using LKWSpringerApp.Web.ViewModels.TourModels
+@model AddTourModel
+
+<h2>Add New Tour</h2>
+
+<form asp-action="Add" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="TourName" class="control-label"></label>
+        <input asp-for="TourName" class="form-control" />
+        <span asp-validation-for="TourName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TourNumber" class="control-label"></label>
+        <input asp-for="TourNumber" class="form-control" />
+        <span asp-validation-for="TourNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedDriverIds" class="control-label">Select Drivers</label>
+        <select asp-for="SelectedDriverIds" asp-items="Model.Drivers" class="form-control" multiple></select>
+        <span asp-validation-for="SelectedDriverIds" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Tour</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

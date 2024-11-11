@@ -4,6 +4,7 @@ using LKWSpringerApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LKWSpringerApp.Data.Migrations
 {
     [DbContext(typeof(LkwSpringerDbContext))]
-    partial class LkwSpringerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241110164451_SeedingTourClient")]
+    partial class SeedingTourClient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,49 +267,15 @@ namespace LKWSpringerApp.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LKWSpringerApp.Data.Models.DriverTour", b =>
-                {
-                    b.Property<Guid>("DriverId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TourId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("DriverId", "TourId");
-
-                    b.HasIndex("TourId");
-
-                    b.ToTable("DriverTours");
-
-                    b.HasData(
-                        new
-                        {
-                            DriverId = new Guid("8654035c-e140-4fc7-b9dd-1a36e2a09186"),
-                            TourId = new Guid("1f500845-25ef-4a18-9fdc-14f69568cf1f")
-                        },
-                        new
-                        {
-                            DriverId = new Guid("86770804-cd07-4471-acca-84e83ad0026b"),
-                            TourId = new Guid("7b520787-18df-44d4-8be2-292411cbcb68")
-                        },
-                        new
-                        {
-                            DriverId = new Guid("7959723f-22e9-4efb-a334-cf25c5bd9431"),
-                            TourId = new Guid("cef8eeb6-d07c-42ce-959f-cae8c1fae542")
-                        },
-                        new
-                        {
-                            DriverId = new Guid("a22dd3bc-24f9-4dea-b986-8a198d460a8f"),
-                            TourId = new Guid("a3101694-8d27-4d93-8b76-a2bc7cdeed7a")
-                        });
-                });
-
             modelBuilder.Entity("LKWSpringerApp.Data.Models.Tour", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier.");
+
+                    b.Property<Guid>("DriverId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -323,12 +292,15 @@ namespace LKWSpringerApp.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DriverId");
+
                     b.ToTable("Tours");
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("1f500845-25ef-4a18-9fdc-14f69568cf1f"),
+                            DriverId = new Guid("8654035c-e140-4fc7-b9dd-1a36e2a09186"),
                             IsDeleted = false,
                             TourName = "Wangen",
                             TourNumber = 1
@@ -336,6 +308,7 @@ namespace LKWSpringerApp.Data.Migrations
                         new
                         {
                             Id = new Guid("7b520787-18df-44d4-8be2-292411cbcb68"),
+                            DriverId = new Guid("86770804-cd07-4471-acca-84e83ad0026b"),
                             IsDeleted = false,
                             TourName = "Kempten",
                             TourNumber = 2
@@ -343,6 +316,7 @@ namespace LKWSpringerApp.Data.Migrations
                         new
                         {
                             Id = new Guid("cef8eeb6-d07c-42ce-959f-cae8c1fae542"),
+                            DriverId = new Guid("7959723f-22e9-4efb-a334-cf25c5bd9431"),
                             IsDeleted = false,
                             TourName = "Fussen",
                             TourNumber = 3
@@ -350,6 +324,7 @@ namespace LKWSpringerApp.Data.Migrations
                         new
                         {
                             Id = new Guid("a3101694-8d27-4d93-8b76-a2bc7cdeed7a"),
+                            DriverId = new Guid("a22dd3bc-24f9-4dea-b986-8a198d460a8f"),
                             IsDeleted = false,
                             TourName = "Memmingen",
                             TourNumber = 4
@@ -626,23 +601,15 @@ namespace LKWSpringerApp.Data.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("LKWSpringerApp.Data.Models.DriverTour", b =>
+            modelBuilder.Entity("LKWSpringerApp.Data.Models.Tour", b =>
                 {
                     b.HasOne("LKWSpringerApp.Data.Models.Driver", "Driver")
-                        .WithMany("DriverTours")
+                        .WithMany("Tours")
                         .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LKWSpringerApp.Data.Models.Tour", "Tour")
-                        .WithMany("DriverTours")
-                        .HasForeignKey("TourId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Driver");
-
-                    b.Navigation("Tour");
                 });
 
             modelBuilder.Entity("LKWSpringerApp.Data.Models.TourClient", b =>
@@ -724,13 +691,11 @@ namespace LKWSpringerApp.Data.Migrations
 
             modelBuilder.Entity("LKWSpringerApp.Data.Models.Driver", b =>
                 {
-                    b.Navigation("DriverTours");
+                    b.Navigation("Tours");
                 });
 
             modelBuilder.Entity("LKWSpringerApp.Data.Models.Tour", b =>
                 {
-                    b.Navigation("DriverTours");
-
                     b.Navigation("ToursClients");
                 });
 #pragma warning restore 612, 618

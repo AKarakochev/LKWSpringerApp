@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using static LKWSpringerApp.Common.EntityValidationConstants.Tour;
@@ -17,6 +19,10 @@ namespace LKWSpringerApp.Web.ViewModels.TourModels
         [MaxLength(TourNameMaxLength)]
         public string TourName { get; set; } = null!;
 
-        public bool IsDeleted { get; set; }
+        // List of selected driver IDs
+        public List<Guid> SelectedDriverIds { get; set; } = new List<Guid>();
+
+        // List of drivers for selection
+        public List<SelectListItem> Drivers { get; set; } = new List<SelectListItem>();
     }
 }

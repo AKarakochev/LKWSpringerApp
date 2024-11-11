@@ -55,10 +55,10 @@ namespace LKWSpringerApp.Data.Models
         [Comment("Shows if a driver has been deleted.")]
         public bool IsDeleted { get; set; }
 
-        public ICollection<Tour> Tours { get; set; } = new HashSet<Tour>();
+        public ICollection<DriverTour> DriverTours { get; set; } = new List<DriverTour>();
 
         //public ICollection<ApplicationUserDriver> ApplicationUserDrivers { get; set; } 
-           // = new HashSet<ApplicationUserDriver>();
+        // = new HashSet<ApplicationUserDriver>();
 
     }
 }

@@ -29,14 +29,14 @@ namespace LKWSpringerApp.Web.Controllers
 
             var drivers = await context.Drivers
                     .Where(d => d.IsDeleted == false)
-                    .Include(d => d.Tours)
+                    .Include(d => d.DriverTours)
                     .Select(d => new AllDriverModel()
                     {
                         Id = d.Id.ToString(),
                         FirstName = d.FirstName,
                         SecondName = d.SecondName,
                         PhoneNumber = d.PhoneNumber,
-                        TourNames = d.Tours.Select(t => t.TourName)
+                        TourNames = d.DriverTours.Select(dt => dt.Tour.TourName).ToList()
                     })
                     .AsNoTracking()
                     .ToListAsync();
@@ -115,7 +115,8 @@ namespace LKWSpringerApp.Web.Controllers
         public async Task<IActionResult> Details(Guid id)
         {
             var driver = await context.Drivers
-                .Include(d => d.Tours) // Include related tours if needed
+                .Include(d => d.DriverTours)
+                .ThenInclude(dt => dt.Tour)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
             if (driver == null)
@@ -133,7 +134,7 @@ namespace LKWSpringerApp.Web.Controllers
                 PhoneNumber = driver.PhoneNumber,
                 Springerdriver = driver.Springerdriver,
                 Stammdriver = driver.Stammdriver,
-                Tours = driver.Tours.Select(t => t.TourName).ToList() // Map tour names if needed
+                Tours = driver.DriverTours.Select(dt => dt.Tour.TourName).ToList()
             };
 
             return View(model);
@@ -143,12 +144,13 @@ namespace LKWSpringerApp.Web.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var driver = await context.Drivers
-                .Include(d => d.Tours) // If you need to display related tours
+                .Include(d => d.DriverTours)
+                .ThenInclude(dt => dt.Tour)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
             if (driver == null)
             {
-                return NotFound(); // If the driver doesn't exist, return 404
+                return NotFound();
             }
 
             var model = new EditDriverModel
@@ -156,14 +158,20 @@ namespace LKWSpringerApp.Web.Controllers
                 Id = driver.Id,
                 FirstName = driver.FirstName,
                 SecondName = driver.SecondName,
-                BirthDate = driver.BirthDate.ToString(DriverBirthDateFormat), // Format the date as needed
-                StartDate = driver.StartDate.ToString(DriverStartDateFormat), // Format the date as needed
+                BirthDate = driver.BirthDate.ToString(DriverBirthDateFormat),
+                StartDate = driver.StartDate.ToString(DriverStartDateFormat),
                 PhoneNumber = driver.PhoneNumber,
                 Springerdriver = driver.Springerdriver,
-                Stammdriver = driver.Stammdriver
+                Stammdriver = driver.Stammdriver,
+                Tours = driver.DriverTours.Select(dt => new TourViewModel
+                {
+                    Id = dt.Tour.Id,
+                    TourName = dt.Tour.TourName,
+                    TourNumber = dt.Tour.TourNumber
+                }).ToList()
             };
 
-            return View(model); // Pass the model to the view
+            return View(model);
         }
 
         [HttpPost]
@@ -200,6 +208,31 @@ namespace LKWSpringerApp.Web.Controllers
             await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index)); // Redirect to the driver list after saving
+        }
+
+        public async Task<IActionResult> DeleteTour(Guid driverId, Guid tourId)
+        {
+            var driverTour = await context.DriverTours
+        .FirstOrDefaultAsync(dt => dt.DriverId == driverId && dt.TourId == tourId);
+
+            if (driverTour == null)
+            {
+                return NotFound();
+            }
+
+            var driverToursCount = await context.DriverTours
+                .CountAsync(dt => dt.DriverId == driverId);
+
+            if (driverToursCount <= 1)
+            {
+                TempData["Error"] = "A driver must have at least one tour assigned.";
+                return RedirectToAction("Edit", new { id = driverId });
+            }
+
+            context.DriverTours.Remove(driverTour);
+            await context.SaveChangesAsync();
+
+            return RedirectToAction("Edit", new { id = driverId });
         }
 
         [HttpGet]

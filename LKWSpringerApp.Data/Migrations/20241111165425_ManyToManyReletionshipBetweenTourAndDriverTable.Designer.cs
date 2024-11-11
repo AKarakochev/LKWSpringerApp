@@ -4,6 +4,7 @@ using LKWSpringerApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LKWSpringerApp.Data.Migrations
 {
     [DbContext(typeof(LkwSpringerDbContext))]
-    partial class LkwSpringerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241111165425_ManyToManyReletionshipBetweenTourAndDriverTable")]
+    partial class ManyToManyReletionshipBetweenTourAndDriverTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

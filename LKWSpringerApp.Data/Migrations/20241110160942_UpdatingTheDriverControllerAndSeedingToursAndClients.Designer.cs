@@ -4,6 +4,7 @@ using LKWSpringerApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LKWSpringerApp.Data.Migrations
 {
     [DbContext(typeof(LkwSpringerDbContext))]
-    partial class LkwSpringerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241110160942_UpdatingTheDriverControllerAndSeedingToursAndClients")]
+    partial class UpdatingTheDriverControllerAndSeedingToursAndClients
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,7 +93,7 @@ namespace LKWSpringerApp.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("162abc8f-af39-415d-956d-c288a4f401d4"),
+                            Id = new Guid("47f3539d-42a7-47c2-86f5-67ebf9638b87"),
                             Address = "87435 Kempten,Kemptener Str. 1",
                             ClientNumber = 101,
                             DeliveryDescription = "Front door",
@@ -101,7 +104,7 @@ namespace LKWSpringerApp.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0ceac7e0-f9d5-45f0-9845-8a58141184d5"),
+                            Id = new Guid("162abc8f-af39-415d-956d-c288a4f401d4"),
                             Address = "87629 Fussen,Fussenner Str. 2",
                             ClientNumber = 3000,
                             DeliveryDescription = "Hospital main entrance",
@@ -112,7 +115,7 @@ namespace LKWSpringerApp.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("47f3539d-42a7-47c2-86f5-67ebf9638b87"),
+                            Id = new Guid("7a80f16d-f7b0-467c-9f96-61d506702150"),
                             Address = "87000 Wangen,Wangener Str. 3",
                             ClientNumber = 5555,
                             DeliveryDescription = "Ramp 13",
@@ -123,7 +126,7 @@ namespace LKWSpringerApp.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7a80f16d-f7b0-467c-9f96-61d506702150"),
+                            Id = new Guid("0ceac7e0-f9d5-45f0-9845-8a58141184d5"),
                             Address = "87435 Memmingen,Memmingener Str. 4",
                             ClientNumber = 110,
                             DeliveryDescription = "Behind the restaurant",
@@ -264,49 +267,15 @@ namespace LKWSpringerApp.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LKWSpringerApp.Data.Models.DriverTour", b =>
-                {
-                    b.Property<Guid>("DriverId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TourId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("DriverId", "TourId");
-
-                    b.HasIndex("TourId");
-
-                    b.ToTable("DriverTours");
-
-                    b.HasData(
-                        new
-                        {
-                            DriverId = new Guid("8654035c-e140-4fc7-b9dd-1a36e2a09186"),
-                            TourId = new Guid("1f500845-25ef-4a18-9fdc-14f69568cf1f")
-                        },
-                        new
-                        {
-                            DriverId = new Guid("86770804-cd07-4471-acca-84e83ad0026b"),
-                            TourId = new Guid("7b520787-18df-44d4-8be2-292411cbcb68")
-                        },
-                        new
-                        {
-                            DriverId = new Guid("7959723f-22e9-4efb-a334-cf25c5bd9431"),
-                            TourId = new Guid("cef8eeb6-d07c-42ce-959f-cae8c1fae542")
-                        },
-                        new
-                        {
-                            DriverId = new Guid("a22dd3bc-24f9-4dea-b986-8a198d460a8f"),
-                            TourId = new Guid("a3101694-8d27-4d93-8b76-a2bc7cdeed7a")
-                        });
-                });
-
             modelBuilder.Entity("LKWSpringerApp.Data.Models.Tour", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier.");
+
+                    b.Property<Guid>("DriverId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -323,33 +292,39 @@ namespace LKWSpringerApp.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DriverId");
+
                     b.ToTable("Tours");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1f500845-25ef-4a18-9fdc-14f69568cf1f"),
+                            Id = new Guid("a3101694-8d27-4d93-8b76-a2bc7cdeed7a"),
+                            DriverId = new Guid("8654035c-e140-4fc7-b9dd-1a36e2a09186"),
                             IsDeleted = false,
                             TourName = "Wangen",
                             TourNumber = 1
                         },
                         new
                         {
-                            Id = new Guid("7b520787-18df-44d4-8be2-292411cbcb68"),
+                            Id = new Guid("cef8eeb6-d07c-42ce-959f-cae8c1fae542"),
+                            DriverId = new Guid("86770804-cd07-4471-acca-84e83ad0026b"),
                             IsDeleted = false,
                             TourName = "Kempten",
                             TourNumber = 2
                         },
                         new
                         {
-                            Id = new Guid("cef8eeb6-d07c-42ce-959f-cae8c1fae542"),
+                            Id = new Guid("1f500845-25ef-4a18-9fdc-14f69568cf1f"),
+                            DriverId = new Guid("7959723f-22e9-4efb-a334-cf25c5bd9431"),
                             IsDeleted = false,
                             TourName = "Fussen",
                             TourNumber = 3
                         },
                         new
                         {
-                            Id = new Guid("a3101694-8d27-4d93-8b76-a2bc7cdeed7a"),
+                            Id = new Guid("7b520787-18df-44d4-8be2-292411cbcb68"),
+                            DriverId = new Guid("a22dd3bc-24f9-4dea-b986-8a198d460a8f"),
                             IsDeleted = false,
                             TourName = "Memmingen",
                             TourNumber = 4
@@ -370,28 +345,6 @@ namespace LKWSpringerApp.Data.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("TourClients");
-
-                    b.HasData(
-                        new
-                        {
-                            TourId = new Guid("1f500845-25ef-4a18-9fdc-14f69568cf1f"),
-                            ClientId = new Guid("162abc8f-af39-415d-956d-c288a4f401d4")
-                        },
-                        new
-                        {
-                            TourId = new Guid("7b520787-18df-44d4-8be2-292411cbcb68"),
-                            ClientId = new Guid("0ceac7e0-f9d5-45f0-9845-8a58141184d5")
-                        },
-                        new
-                        {
-                            TourId = new Guid("cef8eeb6-d07c-42ce-959f-cae8c1fae542"),
-                            ClientId = new Guid("47f3539d-42a7-47c2-86f5-67ebf9638b87")
-                        },
-                        new
-                        {
-                            TourId = new Guid("a3101694-8d27-4d93-8b76-a2bc7cdeed7a"),
-                            ClientId = new Guid("7a80f16d-f7b0-467c-9f96-61d506702150")
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -626,23 +579,15 @@ namespace LKWSpringerApp.Data.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("LKWSpringerApp.Data.Models.DriverTour", b =>
+            modelBuilder.Entity("LKWSpringerApp.Data.Models.Tour", b =>
                 {
                     b.HasOne("LKWSpringerApp.Data.Models.Driver", "Driver")
-                        .WithMany("DriverTours")
+                        .WithMany("Tours")
                         .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LKWSpringerApp.Data.Models.Tour", "Tour")
-                        .WithMany("DriverTours")
-                        .HasForeignKey("TourId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Driver");
-
-                    b.Navigation("Tour");
                 });
 
             modelBuilder.Entity("LKWSpringerApp.Data.Models.TourClient", b =>
@@ -724,13 +669,11 @@ namespace LKWSpringerApp.Data.Migrations
 
             modelBuilder.Entity("LKWSpringerApp.Data.Models.Driver", b =>
                 {
-                    b.Navigation("DriverTours");
+                    b.Navigation("Tours");
                 });
 
             modelBuilder.Entity("LKWSpringerApp.Data.Models.Tour", b =>
                 {
-                    b.Navigation("DriverTours");
-
                     b.Navigation("ToursClients");
                 });
 #pragma warning restore 612, 618

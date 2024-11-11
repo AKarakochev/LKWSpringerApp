@@ -29,12 +29,8 @@ namespace LKWSpringerApp.Data.Models
 
         public bool IsDeleted { get; set; }
 
-        [Required]
-        public Guid DriverId { get; set; }
-
-        [ForeignKey(nameof(DriverId))]
-        public Driver Driver { get; set; } = null!;
-
         public ICollection<TourClient> ToursClients { get; set; } = new HashSet<TourClient>();
+
+        public ICollection<DriverTour> DriverTours { get; set; } = new List<DriverTour>();
     }
 }

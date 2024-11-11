@@ -20,11 +20,12 @@ namespace LKWSpringerApp.Data
         }
 
         public virtual DbSet<Driver> Drivers { get; set; }
+        public virtual DbSet<DriverTour> DriverTours { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Tour> Tours { get; set; }
         public virtual DbSet<TourClient> TourClients { get; set; }
         public virtual DbSet<ClientImage> ClientImages { get; set; }
-        public virtual DbSet<ApplicationUserDriver> UsersDrivers { get; set; }  // Join table
+        public virtual DbSet<ApplicationUserDriver> UsersDrivers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -47,6 +48,19 @@ namespace LKWSpringerApp.Data
                 .WithMany()  // Driver doesn't need a collection of users
                 .HasForeignKey(ud => ud.DriverId)  // Use the explicitly named foreign key
                 .OnDelete(DeleteBehavior.Cascade);   // Optional, for cascade delete behavior
+
+            builder.Entity<DriverTour>()
+        .HasKey(dt => new { dt.DriverId, dt.TourId });
+
+            builder.Entity<DriverTour>()
+                .HasOne(dt => dt.Driver)
+                .WithMany(d => d.DriverTours)
+                .HasForeignKey(dt => dt.DriverId);
+
+            builder.Entity<DriverTour>()
+                .HasOne(dt => dt.Tour)
+                .WithMany(t => t.DriverTours)
+                .HasForeignKey(dt => dt.TourId);
         }
     }
 }
