@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using TourModel = LKWSpringerApp.Data.Models.Tour;
 using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
-using LKWSpringerApp.Data.Models;
 
 
 namespace LKWSpringerApp.Web.ViewModels.Driver
@@ -34,7 +33,7 @@ namespace LKWSpringerApp.Web.ViewModels.Driver
         [Required]
         public bool Stammdriver { get; set; }
 
-        public ICollection<Tour> Tours { get; set; } = new HashSet<Tour>();
+        public ICollection<TourModel> Tours { get; set; } = new HashSet<TourModel>();
     }
 
     public class EitherSpringerOrStammAttribute : ValidationAttribute

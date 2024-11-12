@@ -36,7 +36,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Tour\Edit.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Tour\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Tour\Edit.cshtml" />
   </ItemGroup>
 
 </Project>

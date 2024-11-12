@@ -1,8 +1,4 @@
-﻿using LKWSpringerApp.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-
-
+﻿
 namespace LKWSpringerApp.Web.ViewModels.TourModels
 {
     public class AllTourModel

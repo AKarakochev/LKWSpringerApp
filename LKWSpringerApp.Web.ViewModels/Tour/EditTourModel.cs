@@ -5,22 +5,20 @@ using static LKWSpringerApp.Common.EntityValidationConstants.Tour;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Tour;
 
 
-namespace LKWSpringerApp.Web.ViewModels.TourModels
+namespace LKWSpringerApp.Web.ViewModels.Tour
 {
-    public class AddTourModel
+    public class EditTourModel
     {
+        public Guid Id { get; set; }
+        
+        [Required(ErrorMessage = TourNameErrorMessage)]
+        [StringLength(TourNameMaxLength, MinimumLength = TourNameMinLength)]
+        public string TourName { get; set; }
+        
         [Required(ErrorMessage = TourNumberErrorMessage)]
         [Range(1, 1000, ErrorMessage = TourRangeNumberErrorMessage)]
         public int TourNumber { get; set; }
-
-        [Required(ErrorMessage = TourNameErrorMessage)]
-        [StringLength(TourNameMaxLength,MinimumLength =TourNameMinLength)]
-        public string TourName { get; set; } = null!;
-
-        // List of selected driver IDs
         public List<Guid> SelectedDriverIds { get; set; } = new List<Guid>();
-
-        // List of drivers for selection
         public List<SelectListItem> Drivers { get; set; } = new List<SelectListItem>();
     }
 }

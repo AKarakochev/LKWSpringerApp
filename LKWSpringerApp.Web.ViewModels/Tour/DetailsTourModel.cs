@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
+﻿
 namespace LKWSpringerApp.Web.ViewModels.TourModels
 {
     public class TourDetailsModel

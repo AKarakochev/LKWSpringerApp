@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 using LKWSpringerApp.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 
 using LKWSpringerApp.Data;
-using static LKWSpringerApp.Common.EntityValidationConstants.Tour;
-using static LKWSpringerApp.Common.ErrorMessagesConstants.Tour;
 using LKWSpringerApp.Web.ViewModels.TourModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
-
+using LKWSpringerApp.Web.ViewModels.Tour;
 
 
 namespace LKWSpringerApp.Web.Controllers
@@ -167,6 +163,135 @@ namespace LKWSpringerApp.Web.Controllers
                 });
             }
 
+            await context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var tour = await context.Tours
+                .Include(t => t.DriverTours)
+                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
+
+            if (tour == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EditTourModel
+            {
+                Id = tour.Id,
+                TourName = tour.TourName,
+                TourNumber = tour.TourNumber,
+                SelectedDriverIds = tour.DriverTours.Select(dt => dt.DriverId).ToList(),
+                Drivers = await context.Drivers
+                    .Where(d => !d.IsDeleted)
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.Id.ToString(),
+                        Text = $"{d.FirstName} {d.SecondName}"
+                    })
+                    .ToListAsync()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Guid id, EditTourModel model)
+        {
+            if (id != model.Id)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Drivers = await context.Drivers
+                    .Where(d => !d.IsDeleted)
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.Id.ToString(),
+                        Text = $"{d.FirstName} {d.SecondName}"
+                    })
+                    .ToListAsync();
+
+                return View(model);
+            }
+
+            var tour = await context.Tours
+                .Include(t => t.DriverTours)
+                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
+
+            if (tour == null)
+            {
+                return NotFound();
+            }
+
+            // Update basic details
+            tour.TourName = model.TourName;
+            tour.TourNumber = model.TourNumber;
+
+            // Update the drivers associated with the tour
+            var currentDriverIds = tour.DriverTours.Select(dt => dt.DriverId).ToList();
+            var selectedDriverIds = model.SelectedDriverIds;
+
+            // Add new drivers
+            foreach (var driverId in selectedDriverIds.Except(currentDriverIds))
+            {
+                context.DriverTours.Add(new DriverTour { DriverId = driverId, TourId = tour.Id });
+            }
+
+            // Remove unselected drivers
+            foreach (var driverId in currentDriverIds.Except(selectedDriverIds))
+            {
+                var driverTour = tour.DriverTours.FirstOrDefault(dt => dt.DriverId == driverId);
+                if (driverTour != null)
+                {
+                    context.DriverTours.Remove(driverTour);
+                }
+            }
+
+            await context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var tour = await context.Tours
+                .Where(t => t.Id == id && !t.IsDeleted)
+                .Select(t => new DeleteTourModel
+                {
+                    Id = t.Id,
+                    TourName = t.TourName,
+                    TourNumber = t.TourNumber
+                })
+                .FirstOrDefaultAsync();
+
+            if (tour == null)
+            {
+                return NotFound();
+            }
+
+            return View(tour);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var tour = await context.Tours.FindAsync(id);
+
+            if (tour == null || tour.IsDeleted)
+            {
+                return NotFound();
+            }
+
+            tour.IsDeleted = true;
+            context.Update(tour);
             await context.SaveChangesAsync();
 
             return RedirectToAction("Index");

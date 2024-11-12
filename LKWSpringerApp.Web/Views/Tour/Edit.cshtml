@@ -1,0 +1,33 @@
+﻿@using LKWSpringerApp.Web.ViewModels.Tour
+@model EditTourModel
+
+<h2>Edit Tour</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="TourName" class="control-label"></label>
+        <input asp-for="TourName" class="form-control" />
+        <span asp-validation-for="TourName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TourNumber" class="control-label"></label>
+        <input asp-for="TourNumber" class="form-control" />
+        <span asp-validation-for="TourNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedDriverIds" class="control-label">Drivers</label>
+        <select asp-for="SelectedDriverIds" asp-items="Model.Drivers" class="form-control" multiple></select>
+        <span asp-validation-for="SelectedDriverIds" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
