@@ -1,0 +1,43 @@
+﻿@model IEnumerable<LKWSpringerApp.Web.ViewModels.Client.ClientViewModel>
+
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<h2>Clients</h2>
+
+<div class="mb-3">
+    <a asp-action="Add" class="btn btn-success">Add New Client</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Client Number</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Delivery Time</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var client in Model)
+        {
+            <tr>
+                <td>@client.Name</td>
+                <td>@client.ClientNumber</td>
+                <td>@client.Address</td>
+                <td>@client.PhoneNumber</td>
+                <td>@client.DeliveryTime</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@client.Id" class="btn btn-primary">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
+}

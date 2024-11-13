@@ -1,0 +1,30 @@
+﻿@using LKWSpringerApp.Web.ViewModels.Client
+@model DeleteClientModel
+
+@{
+    ViewData["Title"] = "Delete Client";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title text-center">@Model.Name</h3>
+                <p class="text-muted text-center">Client Number: @Model.ClientNumber</p>
+                <p class="text-danger mt-3 text-center">Are you sure you want to delete the client "@Model.Name"?</p>
+            </div>
+            <div class="card-footer">
+                <form asp-action="DeleteConfirmed" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-warning">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

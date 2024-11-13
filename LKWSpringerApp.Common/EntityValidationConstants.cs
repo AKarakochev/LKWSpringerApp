@@ -26,7 +26,7 @@ namespace LKWSpringerApp.Common
             public const int ClientAddressMaxLength = 250;
             public const int ClientAddressMinLength = 10;
             public const int ClientAddressUrlMaxLength = 150;
-            public const string ClientPhoneNumberFormatPattern = @"^\d{14}$|^\+\d{12}$";
+            public const string ClientPhoneNumberFormatPattern = @"^(\+?\d{10,14})$";
             public const int DeliveryDescriptionMaxLength = 250;
             public const int DeliveryDescriptionMinLength = 10;
             public const string ClientDeliveryTimeRegexFormat = @"^\d{2}:\d{2}$";

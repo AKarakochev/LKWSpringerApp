@@ -1,13 +1,15 @@
 ﻿using LKWSpringerApp.Web.ViewModels.Driver;
 using LKWSpringerApp.Data;
+using LKWSpringerApp.Data.Models;
 using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using LKWSpringerApp.Data.Models;
-using Microsoft.AspNetCore.Authorization;
+
+
 
 
 
@@ -46,7 +48,7 @@ namespace LKWSpringerApp.Web.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> AddDriver()
+        public async Task<IActionResult> Add()
         {
             var model = new AddDriverModel();
             model.Tours = await context.Tours.ToListAsync();
@@ -55,7 +57,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddDriver(AddDriverModel model)
+        public async Task<IActionResult> Add(AddDriverModel model)
         {
             if (!this.ModelState.IsValid)
             {
