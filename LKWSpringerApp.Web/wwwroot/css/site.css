@@ -20,3 +20,35 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.animated-welcome {
+    font-size: 2.5rem;
+    color: black;
+    overflow: hidden; /* Ensures text stays within the container */
+    white-space: nowrap; /* Prevents text from wrapping */
+    border-right: 4px solid black; /* Creates a cursor effect */
+    width: 0; /* Starts with no width to animate typing */
+    animation: typing 5s steps(40, end) forwards, blink-caret 0.75s step-end infinite;
+}
+
+/* Typing effect */
+@keyframes typing {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+/* Blinking caret effect */
+@keyframes blink-caret {
+    from, to {
+        border-color: transparent;
+    }
+
+    50% {
+        border-color: black;
+    }
+}

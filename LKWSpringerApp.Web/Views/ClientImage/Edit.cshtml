@@ -1,0 +1,28 @@
+﻿@model LKWSpringerApp.Web.ViewModels.ClientImage.EditClientImageModel
+
+<h2>Edit Client Media</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ClientId" />
+
+    <div class="form-group">
+        <label asp-for="ImageUrl"></label>
+        <div>
+            <img src="/@Model.ImageUrl" alt="Current Image" style="max-width: 150px;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="VideoUrl"></label>
+        <input asp-for="VideoUrl" class="form-control" />
+        <span asp-validation-for="VideoUrl" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

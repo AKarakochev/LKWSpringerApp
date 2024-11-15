@@ -54,4 +54,11 @@
     <UpToDateCheckInput Remove="Views\Client\Add.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\clients\fussen\" />
+    <Folder Include="wwwroot\images\clients\kempten\" />
+    <Folder Include="wwwroot\images\clients\memmingen\" />
+    <Folder Include="wwwroot\images\clients\wangen\" />
+  </ItemGroup>
+
 </Project>

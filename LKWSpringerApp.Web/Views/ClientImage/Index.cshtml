@@ -1,0 +1,38 @@
+﻿@model IEnumerable<LKWSpringerApp.Web.ViewModels.ClientImage.AllClientImageModel>
+
+@{
+    ViewData["Title"] = "Client Images";
+}
+
+<h2>Client Media Management</h2>
+
+<div class="d-flex justify-content-start mb-3">
+    <a asp-action="Add" class="btn btn-success">Add Client Media</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Client Name</th>
+            <th>Image</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var image in Model)
+        {
+            <tr>
+                <td>@image.ClientName</td>
+                <td>
+                    <img src="/@image.ImageUrl" alt="@image.Description" style="max-width: 100px;" />
+                </td>
+                <td>@image.Description</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@image.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@image.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

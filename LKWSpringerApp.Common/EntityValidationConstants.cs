@@ -40,7 +40,8 @@ namespace LKWSpringerApp.Common
 
         public static class ClientImage
         {
-            public const int DescriptionMaxLength = 200;
+            public const int DescriptionMaxLength = 500;
+            public const int DescriptionMinLength = 5;
         }
     }
 }
