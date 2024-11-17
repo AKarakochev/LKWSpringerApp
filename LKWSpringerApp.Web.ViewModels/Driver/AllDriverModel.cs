@@ -10,10 +10,11 @@ namespace LKWSpringerApp.Web.ViewModels.Driver
 {
     public class AllDriverModel
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
         public string FirstName { get; set; } = null!;
         public string SecondName { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
-        public IEnumerable<string> TourNames { get; set; } = new List<string>();
+        public bool Springerdriver { get; set; }
+        public bool Stammdriver { get; set; }
     }
 }

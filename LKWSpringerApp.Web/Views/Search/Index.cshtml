@@ -1,0 +1,21 @@
+﻿@model IEnumerable<dynamic>
+
+<div class="container mt-4">
+    <h2>Search Results</h2>
+    <hr />
+    @if (!Model.Any())
+    {
+        <p>No results found for your query.</p>
+    }
+    else
+    {
+        <ul class="list-group">
+            @foreach (var result in Model)
+            {
+                <li class="list-group-item">
+                    <strong>@result.Type:</strong> <a href="@result.Link">@result.Name</a>
+                </li>
+            }
+        </ul>
+    }
+</div>

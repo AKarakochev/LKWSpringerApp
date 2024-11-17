@@ -28,20 +28,19 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-
             var drivers = await context.Drivers
-                    .Where(d => d.IsDeleted == false)
-                    .Include(d => d.DriverTours)
-                    .Select(d => new AllDriverModel()
-                    {
-                        Id = d.Id.ToString(),
-                        FirstName = d.FirstName,
-                        SecondName = d.SecondName,
-                        PhoneNumber = d.PhoneNumber,
-                        TourNames = d.DriverTours.Select(dt => dt.Tour.TourName).ToList()
-                    })
-                    .AsNoTracking()
-                    .ToListAsync();
+                .Where(d => !d.IsDeleted) // Filter out deleted drivers
+                .Select(d => new AllDriverModel
+                {
+                    Id = d.Id.ToString(),
+                    FirstName = d.FirstName,
+                    SecondName = d.SecondName,
+                    PhoneNumber = d.PhoneNumber,
+                    Springerdriver = d.Springerdriver,
+                    Stammdriver = d.Stammdriver
+                })
+                .OrderBy(d => d.SecondName)
+                .ToListAsync();
 
             return View(drivers);
         }

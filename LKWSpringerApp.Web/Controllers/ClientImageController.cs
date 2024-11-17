@@ -31,6 +31,7 @@ namespace LKWSpringerApp.Web.Controllers
                     ImageUrl = img.ImageUrl,
                     Description = img.Description
                 })
+                .OrderBy(img => img.ClientName)
                 .ToListAsync();
 
             return View(images);

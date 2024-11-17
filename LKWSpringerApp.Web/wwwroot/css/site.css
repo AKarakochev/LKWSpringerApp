@@ -21,34 +21,25 @@ body {
   margin-bottom: 60px;
 }
 
-.animated-welcome {
-    font-size: 2.5rem;
-    color: black;
-    overflow: hidden; /* Ensures text stays within the container */
-    white-space: nowrap; /* Prevents text from wrapping */
-    border-right: 4px solid black; /* Creates a cursor effect */
-    width: 0; /* Starts with no width to animate typing */
-    animation: typing 5s steps(40, end) forwards, blink-caret 0.75s step-end infinite;
+.eddc-text p {
+    font-size: 2.5rem; /* Match font size across all text */
+    color: #343a40; /* Dark text color */
+    margin: 0.5rem 0; /* Add spacing between lines */
 }
 
-/* Typing effect */
-@keyframes typing {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: 100%;
-    }
+.eddc-text .welcome {
+    font-weight: bold; /* Keep "Welcome to E.D.D.C!" bold */
 }
 
-/* Blinking caret effect */
-@keyframes blink-caret {
-    from, to {
-        border-color: transparent;
-    }
+/* Adjust spacing between buttons and text */
+.ms-4 {
+    margin-left: 2rem !important; /* Add consistent horizontal spacing */
+}
 
-    50% {
-        border-color: black;
-    }
+/* Button hover styles (already in place, but adding for completeness) */
+.btn-outline-secondary:hover {
+    background-color: #6c757d; /* Darker gray background */
+    color: #343a40; /* Dark text color */
+    border-color: #6c757d; /* Match background */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }

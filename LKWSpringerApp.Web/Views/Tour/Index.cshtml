@@ -6,37 +6,48 @@
 }
 
 
-<h2>All Tours</h2>
+<h2><u>All Tours</u></h2>
 
-<div class="mb-3">
+<div class="mb-3 text-end">
     <a asp-action="Add" class="btn btn-success">Add New Tour</a>
 </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Tour Number</th>
-            <th>Tour Name</th>
-            <th>Clients</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var tour in Model)
-        {
+<!-- Responsive Table Wrapper -->
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead class="table-light">
             <tr>
-                <td>@tour.TourNumber</td>
-                <td>@tour.TourName</td>
-                <td>
-                    @foreach (var client in tour.Clients)
-                    {
-                        <p>@client.Name</p>
-                    }
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@tour.Id" class="btn btn-primary">View Details</a>
-                </td>
+                <th>Tour Name</th>
+                <th>Tour Number</th>
+                <th>Clients</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var tour in Model)
+            {
+                <tr>
+                    <td>@tour.TourName</td>
+                    <td>@tour.TourNumber</td>
+                    <td>
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var client in tour.Clients)
+                            {
+                                <li>@client.Name</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+                            <a asp-action="Details" asp-route-id="@tour.Id" class="btn btn-primary btn-sm">View Details</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
+}

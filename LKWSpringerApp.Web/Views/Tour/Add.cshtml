@@ -2,7 +2,7 @@
 @using LKWSpringerApp.Web.ViewModels.TourModels
 @model AddTourModel
 
-<h2>Add New Tour</h2>
+<h2><u>Add tour</u></h2>
 
 <form asp-action="Add" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -25,7 +25,10 @@
         <span asp-validation-for="SelectedDriverIds" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Add Tour</button>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Add Tour</button>
+        <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
+    </div>
 </form>
 
 @section Scripts {

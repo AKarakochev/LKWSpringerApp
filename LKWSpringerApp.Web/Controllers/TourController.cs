@@ -41,6 +41,7 @@ namespace LKWSpringerApp.Web.Controllers
                         })
                         .ToList()
                 })
+                .OrderBy(t => t.TourName)
                 .ToListAsync();
 
             return View(tours);
