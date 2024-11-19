@@ -28,6 +28,7 @@
     <ProjectReference Include="..\LKWSpringerApp.Data\LKWSpringerApp.Data.csproj" />
     <ProjectReference Include="..\LKWSpringerApp.Services.Data\LKWSpringerApp.Services.Data.csproj" />
     <ProjectReference Include="..\LKWSpringerApp.Services.Mapping\LKWSpringerApp.Services.Mapping.csproj" />
+    <ProjectReference Include="..\LKWSpringerApp.Web.Infrastructure\LKWSpringerApp.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\LKWSpringerApp.Web.ViewModels\LKWSpringerApp.Web.ViewModels.csproj" />
   </ItemGroup>
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LKWSpringerApp.Data.Models.Repository.Interfaces
+﻿namespace LKWSpringerApp.Data.Models.Repository.Interfaces
 {
     public interface IRepository<TType, TId>
     {
@@ -15,6 +9,8 @@ namespace LKWSpringerApp.Data.Models.Repository.Interfaces
         IEnumerable<TType> GetAll();
 
         Task<IEnumerable<TType>> GetAllAsync();
+
+        IEnumerable<TType> GetAllAttached();
 
         void Add(TType item);
 

@@ -211,31 +211,6 @@ namespace LKWSpringerApp.Web.Controllers
             return RedirectToAction(nameof(Index)); // Redirect to the driver list after saving
         }
 
-        public async Task<IActionResult> DeleteTour(Guid driverId, Guid tourId)
-        {
-            var driverTour = await context.DriverTours
-        .FirstOrDefaultAsync(dt => dt.DriverId == driverId && dt.TourId == tourId);
-
-            if (driverTour == null)
-            {
-                return NotFound();
-            }
-
-            var driverToursCount = await context.DriverTours
-                .CountAsync(dt => dt.DriverId == driverId);
-
-            if (driverToursCount <= 1)
-            {
-                TempData["Error"] = "A driver must have at least one tour assigned.";
-                return RedirectToAction("Edit", new { id = driverId });
-            }
-
-            context.DriverTours.Remove(driverTour);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction("Edit", new { id = driverId });
-        }
-
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {

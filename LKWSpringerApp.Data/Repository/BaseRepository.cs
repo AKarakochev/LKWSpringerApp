@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LKWSpringerApp.Data.Repository
 {
-    public class Repository<TType, TId> : IRepository<TType, TId>
+    public class BaseRepository<TType, TId> : IRepository<TType, TId>
         where TType : class
     {
         private readonly LkwSpringerDbContext dbContext;
         private readonly DbSet<TType> dbSet;
 
-        public Repository(LkwSpringerDbContext dbContext)
+        public BaseRepository(LkwSpringerDbContext dbContext)
         {
             this.dbContext = dbContext;
             dbSet = dbContext.Set<TType>();
@@ -38,6 +38,11 @@ namespace LKWSpringerApp.Data.Repository
         public async Task<IEnumerable<TType>> GetAllAsync()
         {
             return await dbSet.ToArrayAsync();
+        }
+
+        public IEnumerable<TType> GetAllAttached()
+        {
+            return this.dbSet.AsSingleQuery();
         }
 
         public void Add(TType item)
