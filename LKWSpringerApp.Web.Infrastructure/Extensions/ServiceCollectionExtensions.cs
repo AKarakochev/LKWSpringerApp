@@ -11,41 +11,28 @@ namespace LKWSpringerApp.Web.Infrastructure.Extensions
     {
         public static void RegisterRepositories(this IServiceCollection services, Assembly modelsAssembly)
         {
-            Type[] typesToExclude = new Type[] { typeof(ApplicationUserDriver) };
+            Type[] typesToExclude = { typeof(ApplicationUserDriver) }; // Optionally exclude models
             Type[] modelTypes = modelsAssembly
                 .GetTypes()
-                .Where(t => !t.IsAbstract  && !t.IsInterface && !t.Name.ToLower().EndsWith("attribute"))
+                .Where(t => t.IsClass && !t.IsAbstract && t.Namespace == "LKWSpringerApp.Data.Models") // Adjust namespace
                 .ToArray();
 
-            foreach (Type type in modelTypes) 
+            foreach (var type in modelTypes)
             {
+                if (typesToExclude.Contains(type)) continue;
 
-                if (!typesToExclude.Contains(type))
+                var idProperty = type.GetProperty("Id") ?? type.GetProperty("UserId");
+                if (idProperty == null)
                 {
-                    Type repositoryInterface = typeof(IRepository<,>);
-                    Type repositoryInstanceType = typeof(BaseRepository<,>);
-                    PropertyInfo idPropertyInfo = type
-                        .GetProperties()
-                        .Where(p => p.Name.ToLower() == "id")
-                        .SingleOrDefault();
-
-                    Type[] constructArgs = new Type[2];
-                    constructArgs[0] = type;
-
-                    if(idPropertyInfo == null)
-                    {
-                        constructArgs[1] = typeof(object);
-                    }
-                    else
-                    {
-                        constructArgs[1] = idPropertyInfo.GetType();
-                    }
-
-                    repositoryInterface = repositoryInterface.MakeGenericType(constructArgs);
-                    repositoryInstanceType = repositoryInstanceType.MakeGenericType(constructArgs);
-
-                    services.AddScoped(repositoryInterface, repositoryInstanceType);
+                    Console.WriteLine($"Skipping {type.Name}: No 'Id' or 'UserId' property found.");
+                    continue;
                 }
+
+                var idType = idProperty.PropertyType;
+                var repositoryInterface = typeof(IRepository<,>).MakeGenericType(type, idType);
+                var repositoryImplementation = typeof(BaseRepository<,>).MakeGenericType(type, idType);
+
+                services.AddScoped(repositoryInterface, repositoryImplementation);
             }
         }
     }

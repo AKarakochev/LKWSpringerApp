@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LKWSpringerApp.Web.ViewModels.Client
 {
-    public class ClientViewModel
+    public class AllClientModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;

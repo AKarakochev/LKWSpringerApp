@@ -72,6 +72,8 @@ namespace LKWSpringerApp.Data.Repository
             return true;
         }
 
+        
+
         public async Task<bool> DeleteAsync(TId id)
         {
             TType entity = await GetByIdAsync(id);
@@ -86,8 +88,38 @@ namespace LKWSpringerApp.Data.Repository
 
             return true;
         }
-        //
-        //Da vidq kak se pravi
+
+        //I need to create a interface ISoftDelete
+
+        //public bool SoftDelete(TId id)
+        //{
+        //    var entity = GetById(id);
+        //    if (entity == null) return false;
+
+        //    if (entity is ISoftDeletable softDeletableEntity)
+        //    {
+        //        softDeletableEntity.IsDeleted = true;
+        //        dbContext.SaveChanges();
+        //        return true;
+        //    }
+
+        //    throw new InvalidOperationException($"Entity {typeof(TType)} does not implement ISoftDeletable");
+        //}
+
+        //public async Task<bool> SoftDeleteAsync(TId id)
+        //{
+        //    var entity = await GetByIdAsync(id);
+        //    if (entity == null) return false;
+
+        //    if (entity is ISoftDeletable softDeletableEntity)
+        //    {
+        //        softDeletableEntity.IsDeleted = true;
+        //        await dbContext.SaveChangesAsync();
+        //        return true;
+        //    }
+
+        //    throw new InvalidOperationException($"Entity {typeof(TType)} does not implement ISoftDeletable");
+        //}
         public bool SoftDelete(TId id)
         {
             throw new NotImplementedException();

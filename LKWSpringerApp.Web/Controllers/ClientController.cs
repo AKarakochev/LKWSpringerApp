@@ -7,6 +7,7 @@ using static LKWSpringerApp.Common.ErrorMessagesConstants.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using LKWSpringerApp.Data.Models.Repository.Interfaces;
 
 namespace LKWSpringerApp.Web.Controllers
 {
@@ -14,10 +15,12 @@ namespace LKWSpringerApp.Web.Controllers
     public class ClientController : Controller
     {
         private readonly LkwSpringerDbContext context;
+        private IRepository<Client,Guid> clientRepository;
 
-        public ClientController(LkwSpringerDbContext _context)
+        public ClientController(LkwSpringerDbContext _context, IRepository<Client, Guid> clientRepository)
         {
-            context = _context;
+            this.context = _context;
+            this.clientRepository = clientRepository;
         }
 
         [HttpGet]
@@ -25,7 +28,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             var clients = await context.Clients
                 .Where(c => !c.IsDeleted)
-                .Select(c => new ClientViewModel
+                .Select(c => new AllClientModel
                 {
                         Id = c.Id,
                         Name = c.Name,
