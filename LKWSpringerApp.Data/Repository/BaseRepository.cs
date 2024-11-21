@@ -1,5 +1,8 @@
 ﻿using LKWSpringerApp.Data.Models.Repository.Interfaces;
+using LKWSpringerApp.Data.Models;
+
 using Microsoft.EntityFrameworkCore;
+
 
 namespace LKWSpringerApp.Data.Repository
 {
@@ -40,9 +43,9 @@ namespace LKWSpringerApp.Data.Repository
             return await dbSet.ToArrayAsync();
         }
 
-        public IEnumerable<TType> GetAllAttached()
+        public IQueryable<TType> GetAllAttached()
         {
-            return this.dbSet.AsSingleQuery();
+            return this.dbSet.AsQueryable();
         }
 
         public void Add(TType item)
@@ -89,45 +92,34 @@ namespace LKWSpringerApp.Data.Repository
             return true;
         }
 
-        //I need to create a interface ISoftDelete
-
-        //public bool SoftDelete(TId id)
-        //{
-        //    var entity = GetById(id);
-        //    if (entity == null) return false;
-
-        //    if (entity is ISoftDeletable softDeletableEntity)
-        //    {
-        //        softDeletableEntity.IsDeleted = true;
-        //        dbContext.SaveChanges();
-        //        return true;
-        //    }
-
-        //    throw new InvalidOperationException($"Entity {typeof(TType)} does not implement ISoftDeletable");
-        //}
-
-        //public async Task<bool> SoftDeleteAsync(TId id)
-        //{
-        //    var entity = await GetByIdAsync(id);
-        //    if (entity == null) return false;
-
-        //    if (entity is ISoftDeletable softDeletableEntity)
-        //    {
-        //        softDeletableEntity.IsDeleted = true;
-        //        await dbContext.SaveChangesAsync();
-        //        return true;
-        //    }
-
-        //    throw new InvalidOperationException($"Entity {typeof(TType)} does not implement ISoftDeletable");
-        //}
         public bool SoftDelete(TId id)
         {
-            throw new NotImplementedException();
+            var entity = GetById(id);
+            if (entity == null) return false;
+
+            if (entity is ISoftDeletable softDeletableEntity)
+            {
+                softDeletableEntity.IsDeleted = true;
+                dbContext.SaveChanges();
+                return true;
+            }
+
+            throw new InvalidOperationException($"Entity {typeof(TType)} does not implement ISoftDeletable");
         }
 
-        public Task<bool> SoftDeleteAsync(TId id)
+        public async Task<bool> SoftDeleteAsync(TId id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            if (entity == null) return false;
+
+            if (entity is ISoftDeletable softDeletableEntity)
+            {
+                softDeletableEntity.IsDeleted = true;
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+
+            throw new InvalidOperationException($"Entity {typeof(TType)} does not implement ISoftDeletable");
         }
 
         public bool Update(TType item)

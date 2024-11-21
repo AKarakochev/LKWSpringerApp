@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LKWSpringerApp.Data.Models
 {
-    public class Driver
+    public class Driver : ISoftDeletable
     {
         public Driver()
         {
@@ -56,9 +56,5 @@ namespace LKWSpringerApp.Data.Models
         public bool IsDeleted { get; set; }
 
         public ICollection<DriverTour> DriverTours { get; set; } = new List<DriverTour>();
-
-        //public ICollection<ApplicationUserDriver> ApplicationUserDrivers { get; set; } 
-        // = new HashSet<ApplicationUserDriver>();
-
     }
 }

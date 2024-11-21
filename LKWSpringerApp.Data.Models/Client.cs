@@ -6,7 +6,7 @@ using static LKWSpringerApp.Common.ErrorMessagesConstants.Client;
 
 namespace LKWSpringerApp.Data.Models
 {
-    public class Client
+    public class Client : ISoftDeletable
     {
         public Client()
         {

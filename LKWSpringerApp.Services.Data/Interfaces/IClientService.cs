@@ -2,13 +2,17 @@
 
 namespace LKWSpringerApp.Services.Data.Interfaces
 {
-    internal interface IClientService
+    public interface IClientService
     {
-        Task<ICollection<AllClientModel>> IndexGetAllOrederedByNameAsync();
+        Task<ICollection<AllClientModel>> IndexGetAllOrderedByNameAsync();
 
         Task AddClientAsync(AddClientModel model);
 
         //Dali trqbva pri men da e Guid?
         Task<DetailsClientModel> GetClientDetailsByIdAsync(Guid id);
+
+        Task<bool> UpdateClientAsync(EditClientModel model);
+
+        Task<bool> SoftDeleteClientAsync(Guid id);
     }
 }

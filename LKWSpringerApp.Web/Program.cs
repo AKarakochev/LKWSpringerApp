@@ -8,6 +8,8 @@ using LKWSpringerApp.Data.Models;
 using LKWSpringerApp.Data.Repository;
 using Microsoft.Extensions.Options;
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
+using LKWSpringerApp.Services.Data.Interfaces;
+using LKWSpringerApp.Services.Data;
 
 namespace LKWSpringerApp.Web
 {
@@ -66,6 +68,8 @@ namespace LKWSpringerApp.Web
             //builder.Services.AddScoped<IRepository<ClientImage, Guid>, BaseRepository<ClientImage, Guid>>();
 
             builder.Services.RegisterRepositories(typeof(ApplicationUserDriver).Assembly);
+            
+            builder.Services.AddScoped<IClientService, ClientService>();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();

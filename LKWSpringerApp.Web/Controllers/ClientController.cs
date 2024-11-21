@@ -1,13 +1,12 @@
 ﻿using LKWSpringerApp.Web.ViewModels.Client;
 using LKWSpringerApp.Data;
 using LKWSpringerApp.Data.Models;
-using static LKWSpringerApp.Common.EntityValidationConstants.Client;
-using static LKWSpringerApp.Common.ErrorMessagesConstants.Client;
+using LKWSpringerApp.Services.Data.Interfaces;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LKWSpringerApp.Data.Models.Repository.Interfaces;
+
 
 namespace LKWSpringerApp.Web.Controllers
 {
@@ -15,39 +14,19 @@ namespace LKWSpringerApp.Web.Controllers
     public class ClientController : Controller
     {
         private readonly LkwSpringerDbContext context;
-        private IRepository<Client,Guid> clientRepository;
+        private readonly IClientService clientService;
 
-        public ClientController(LkwSpringerDbContext _context, IRepository<Client, Guid> clientRepository)
+        public ClientController(LkwSpringerDbContext _context, IClientService clientService)
         {
             this.context = _context;
-            this.clientRepository = clientRepository;
+            this.clientService = clientService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var clients = await context.Clients
-                .Where(c => !c.IsDeleted)
-                .Select(c => new AllClientModel
-                {
-                        Id = c.Id,
-                        Name = c.Name,
-                        ClientNumber = c.ClientNumber,
-                        Address = c.Address,
-                        PhoneNumber = c.PhoneNumber,
-                        DeliveryDescription = c.DeliveryDescription,
-                        DeliveryTime = c.DeliveryTime,
-                        AddressUrl = c.AddressUrl,
-                        Images = c.Images.Select(img => new ClientImageModel
-                        {
-                            Id = img.Id,
-                            ImageUrl = img.ImageUrl,
-                            VideoUrl = img.VideoUrl,
-                            Description = img.Description
-                        }).ToList()
-                })
-                .OrderBy(c => c.Name)
-                .ToListAsync();
+            ICollection<AllClientModel> clients = 
+                await clientService.IndexGetAllOrderedByNameAsync();
 
             return View(clients);
         }
@@ -55,27 +34,7 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            var client = await context.Clients
-                .Where(c => c.Id == id && !c.IsDeleted)
-                .Select(c => new DetailsClientModel
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    ClientNumber = c.ClientNumber,
-                    Address = c.Address,
-                    AddressUrl = c.AddressUrl,
-                    PhoneNumber = c.PhoneNumber,
-                    DeliveryDescription = c.DeliveryDescription,
-                    DeliveryTime = c.DeliveryTime,
-                    Images = c.Images.Select(img => new ClientImageModel
-                    {
-                        Id = img.Id,
-                        ImageUrl = img.ImageUrl,
-                        VideoUrl = img.VideoUrl,
-                        Description = img.Description
-                    }).ToList()
-                })
-                .FirstOrDefaultAsync();
+            var client = await clientService.GetClientDetailsByIdAsync(id);
 
             if (client == null)
             {
@@ -92,6 +51,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddClientModel model)
         {
             if (!ModelState.IsValid)
@@ -99,29 +59,16 @@ namespace LKWSpringerApp.Web.Controllers
                 return View(model);
             }
 
-            var newClient = new Client
-            {
-                Id = Guid.NewGuid(),
-                Name = model.Name,
-                ClientNumber = model.ClientNumber ?? 0,
-                Address = model.Address,
-                AddressUrl = model.AddressUrl,
-                PhoneNumber = model.PhoneNumber,
-                DeliveryDescription = model.DeliveryDescription,
-                DeliveryTime = model.DeliveryTime
-            };
+            await clientService.AddClientAsync(model);
 
-            context.Clients.Add(newClient);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction("Index"); // Redirect to client list or confirmation page
+            return RedirectToAction("Index");
         }
     
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var client = await context.Clients.FindAsync(id);
+            var client = await clientService.GetClientDetailsByIdAsync(id);
 
             if (client == null)
             {
@@ -157,23 +104,12 @@ namespace LKWSpringerApp.Web.Controllers
                 return View(model);
             }
 
-            var client = await context.Clients.FindAsync(id);
+            var updated = await clientService.UpdateClientAsync(model);
 
-            if (client == null)
+            if (!updated)
             {
                 return NotFound();
             }
-
-            // Update client details
-            client.Name = model.Name;
-            client.ClientNumber = model.ClientNumber;
-            client.Address = model.Address;
-            client.AddressUrl = model.AddressUrl;
-            client.PhoneNumber = model.PhoneNumber;
-            client.DeliveryDescription = model.DeliveryDescription;
-            client.DeliveryTime = model.DeliveryTime;
-
-            await context.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
@@ -203,17 +139,14 @@ namespace LKWSpringerApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var client = await context.Clients.FindAsync(id);
-            if (client == null || client.IsDeleted)
+            var result = await clientService.SoftDeleteClientAsync(id);
+
+            if (!result)
             {
-                return NotFound();
+                return NotFound(); // Return 404 if the client was not found or is not deletable
             }
 
-            client.IsDeleted = true;
-            context.Update(client);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index)); // Redirect to the list of clients
+            return RedirectToAction(nameof(Index));
         }
     }
 }

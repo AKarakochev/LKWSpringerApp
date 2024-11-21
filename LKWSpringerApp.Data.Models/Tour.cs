@@ -6,7 +6,7 @@ using static LKWSpringerApp.Common.EntityValidationConstants.Tour;
 
 namespace LKWSpringerApp.Data.Models
 {
-    public class Tour
+    public class Tour : ISoftDeletable
     {
         public Tour()
         {

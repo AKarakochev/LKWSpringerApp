@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using LKWSpringerApp.Data.Models;
+using LKWSpringerApp.Services.Mapping;
 
 namespace LKWSpringerApp.Web.ViewModels.Client
 {
     public class AllClientModel
-    {
+    { 
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
         public int ClientNumber { get; set; }
