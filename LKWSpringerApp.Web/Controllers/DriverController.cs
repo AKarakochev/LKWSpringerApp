@@ -1,153 +1,84 @@
 ﻿using LKWSpringerApp.Web.ViewModels.Driver;
 using LKWSpringerApp.Data;
-using LKWSpringerApp.Data.Models;
-using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
-using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
+using LKWSpringerApp.Services.Data.Interfaces;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-
-
-
-
 
 namespace LKWSpringerApp.Web.Controllers
 {
     [Authorize]
     public class DriverController : Controller
     {
-        private readonly LkwSpringerDbContext context;
-
-        public DriverController(LkwSpringerDbContext _context)
+        private readonly IDriverService driverService;
+        private readonly ITourService tourService;
+        public DriverController(IDriverService driverService, ITourService tourService)
         {
-            context = _context;
+            this.driverService = driverService;
+            this.tourService = tourService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var drivers = await context.Drivers
-                .Where(d => !d.IsDeleted) // Filter out deleted drivers
-                .Select(d => new AllDriverModel
-                {
-                    Id = d.Id.ToString(),
-                    FirstName = d.FirstName,
-                    SecondName = d.SecondName,
-                    PhoneNumber = d.PhoneNumber,
-                    Springerdriver = d.Springerdriver,
-                    Stammdriver = d.Stammdriver
-                })
-                .OrderBy(d => d.SecondName)
-                .ToListAsync();
+            ICollection<AllDriverModel> drivers =
+                 await driverService.IndexGetAllOrderedBySecondNameAsync();
 
             return View(drivers);
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> Add()
-        {
-            var model = new AddDriverModel();
-            model.Tours = await context.Tours.ToListAsync();
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Add(AddDriverModel model)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(model);
-            }
-
-            DateTime driverBirthDate;
-
-            if (DateTime.TryParseExact(model.BirthDate, DriverBirthDateFormat, CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out driverBirthDate) == false)
-            {
-                ModelState.AddModelError(nameof(model.BirthDate), DriverBirthDateErrorMessage);
-                model.Tours = await context.Tours.ToListAsync();
-
-                return View(model);
-            }
-
-            int age = DateTime.Now.Year - driverBirthDate.Year;
-            if (driverBirthDate > DateTime.Now.AddYears(-age)) age--; // Adjust if birthdate hasn't occurred this year
-
-            if (age < 18)
-            {
-                ModelState.AddModelError(nameof(model.BirthDate), "The driver must be at least 18 years old.");
-                model.Tours = await context.Tours.ToListAsync();
-                return View(model);
-            }
-
-            DateTime driverStartDate;
-
-            if (DateTime.TryParseExact(model.StartDate, DriverStartDateFormat, CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out driverStartDate) == false)
-            {
-                ModelState.AddModelError(nameof(model.StartDate), DriverStartDateErrorMessage);
-                model.Tours = await context.Tours.ToListAsync();
-
-                return View(model);
-            }
-
-            Driver newDriver = new Driver
-            {
-                FirstName = model.FirstName,
-                SecondName = model.SecondName,
-                BirthDate = driverBirthDate,
-                StartDate = driverStartDate,
-                PhoneNumber = model.PhoneNumber,
-                Springerdriver = model.Springerdriver,
-                Stammdriver = model.Stammdriver
-            };
-
-            await context.Drivers.AddAsync(newDriver);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            var driver = await context.Drivers
-                .Include(d => d.DriverTours)
-                .ThenInclude(dt => dt.Tour)
-                .FirstOrDefaultAsync(d => d.Id == id);
+            var driver = await driverService.GetDriverDetailsByIdAsync(id);
 
             if (driver == null)
             {
                 return NotFound();
             }
 
-            var model = new DetailsDriverModel
+            return View(driver);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Add()
+        {
+
+            var model = new AddDriverModel
             {
-                Id = id,
-                FirstName = driver.FirstName,
-                SecondName = driver.SecondName,
-                BirthDate = driver.BirthDate.ToString("dd/MM/yyyy"),
-                StartDate = driver.StartDate.ToString("dd/MM/yyyy"),
-                PhoneNumber = driver.PhoneNumber,
-                Springerdriver = driver.Springerdriver,
-                Stammdriver = driver.Stammdriver,
-                Tours = driver.DriverTours.Select(dt => dt.Tour.TourName).ToList()
+                Tours = await tourService.GetAllToursAsync() // Fetch available tours
             };
 
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(AddDriverModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Tours = await tourService.GetAllToursAsync(); // Reload tours on validation failure
+                return View(model);
+            }
+
+            try
+            {
+                await driverService.AddDriverAsync(model);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(ex.ParamName ?? string.Empty, ex.Message);
+                model.Tours = await tourService.GetAllToursAsync(); // Reload tours
+                return View(model);
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var driver = await context.Drivers
-                .Include(d => d.DriverTours)
-                .ThenInclude(dt => dt.Tour)
-                .FirstOrDefaultAsync(d => d.Id == id);
+            var driver = await driverService.GetDriverDetailsByIdAsync(id);
 
             if (driver == null)
             {
@@ -159,17 +90,12 @@ namespace LKWSpringerApp.Web.Controllers
                 Id = driver.Id,
                 FirstName = driver.FirstName,
                 SecondName = driver.SecondName,
-                BirthDate = driver.BirthDate.ToString(DriverBirthDateFormat),
-                StartDate = driver.StartDate.ToString(DriverStartDateFormat),
+                BirthDate = driver.BirthDate,
+                StartDate = driver.StartDate,
                 PhoneNumber = driver.PhoneNumber,
                 Springerdriver = driver.Springerdriver,
                 Stammdriver = driver.Stammdriver,
-                Tours = driver.DriverTours.Select(dt => new TourViewModel
-                {
-                    Id = dt.Tour.Id,
-                    TourName = dt.Tour.TourName,
-                    TourNumber = dt.Tour.TourNumber
-                }).ToList()
+                Tours = driver.Tours
             };
 
             return View(model);
@@ -181,32 +107,20 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id != model.Id)
             {
-                return NotFound(); // Make sure the IDs match
+                return NotFound(); // Ensure the IDs match
             }
 
             if (!ModelState.IsValid)
             {
-                return View(model); // If validation fails, return the form with errors
+                return View(model); // Return the form with validation errors
             }
 
-            var driver = await context.Drivers.FindAsync(id);
+            var result = await driverService.UpdateDriverAsync(model);
 
-            if (driver == null)
+            if (!result)
             {
-                return NotFound(); // If the driver doesn't exist, return 404
+                return NotFound(); // Return 404 if the driver wasn't found or update failed
             }
-
-            // Update the driver's properties
-            driver.FirstName = model.FirstName;
-            driver.SecondName = model.SecondName;
-            driver.BirthDate = DateTime.ParseExact(model.BirthDate, DriverBirthDateFormat, CultureInfo.InvariantCulture);
-            driver.StartDate = DateTime.ParseExact(model.StartDate, DriverStartDateFormat, CultureInfo.InvariantCulture);
-            driver.PhoneNumber = model.PhoneNumber;
-            driver.Springerdriver = model.Springerdriver;
-            driver.Stammdriver = model.Stammdriver;
-
-            // Save the changes
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index)); // Redirect to the driver list after saving
         }
@@ -214,22 +128,21 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var driver = await context.Drivers
-                .Where(d => d.Id == id && !d.IsDeleted)
-                .Select(d => new DeleteDriverModel
-                {
-                    Id = d.Id,
-                    FirstName = d.FirstName,
-                    SecondName = d.SecondName
-                })
-                .FirstOrDefaultAsync();
+            var driver = await driverService.GetDriverDetailsByIdAsync(id);
 
             if (driver == null)
             {
                 return NotFound();
             }
 
-            return View(driver);
+            var model = new DeleteDriverModel
+            {
+                Id = driver.Id,
+                FirstName = driver.FirstName,
+                SecondName = driver.SecondName
+            };
+
+            return View(model);
         }
 
         
@@ -237,15 +150,12 @@ namespace LKWSpringerApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var driver = await context.Drivers.FindAsync(id);
-            if (driver == null || driver.IsDeleted)
-            {
-                return NotFound();
-            }
+            var result = await driverService.SoftDeleteDriverAsync(id);
 
-            driver.IsDeleted = true;
-            context.Update(driver);
-            await context.SaveChangesAsync();
+            if (!result)
+            {
+                return NotFound(); // Return 404 if the driver doesn't exist or is already deleted
+            }
 
             return RedirectToAction(nameof(Index)); // Redirect to the list of drivers
         }

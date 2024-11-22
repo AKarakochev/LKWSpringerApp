@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LKWSpringerApp.Web.ViewModels.Driver
+﻿namespace LKWSpringerApp.Web.ViewModels.Driver
 {
     public class DetailsDriverModel
     {
@@ -16,6 +10,6 @@ namespace LKWSpringerApp.Web.ViewModels.Driver
         public string PhoneNumber { get; set; }
         public bool Springerdriver { get; set; }
         public bool Stammdriver { get; set; }
-        public List<string> Tours { get; set; } = new List<string>();
+        public List<TourViewModel> Tours { get; set; } = new List<TourViewModel>();
     }
 }

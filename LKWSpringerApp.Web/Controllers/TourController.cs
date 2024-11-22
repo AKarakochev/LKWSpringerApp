@@ -7,6 +7,7 @@ using LKWSpringerApp.Data;
 using LKWSpringerApp.Web.ViewModels.TourModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LKWSpringerApp.Web.ViewModels.Tour;
+using LKWSpringerApp.Services.Data.Interfaces;
 
 
 namespace LKWSpringerApp.Web.Controllers
@@ -15,10 +16,11 @@ namespace LKWSpringerApp.Web.Controllers
     public class TourController : Controller
     {
         private readonly LkwSpringerDbContext context;
-
-        public TourController(LkwSpringerDbContext _context)
+        private readonly ITourService tourService;
+        public TourController(LkwSpringerDbContext _context, ITourService tourService)
         {
             context = _context;
+            this.tourService = tourService;
         }
 
         [HttpGet]
@@ -52,7 +54,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             var tour = await context.Tours
                 .Where(t => t.Id == id && !t.IsDeleted)
-                .Select(t => new TourDetailsModel
+                .Select(t => new DetailsTourModel
                     {
                         Id = t.Id,
                         TourNumber = t.TourNumber,

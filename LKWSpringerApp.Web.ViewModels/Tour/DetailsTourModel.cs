@@ -1,7 +1,6 @@
-﻿
-namespace LKWSpringerApp.Web.ViewModels.TourModels
+﻿namespace LKWSpringerApp.Web.ViewModels.TourModels
 {
-    public class TourDetailsModel
+    public class DetailsTourModel
     {
         public Guid Id { get; set; }
         public int TourNumber { get; set; }

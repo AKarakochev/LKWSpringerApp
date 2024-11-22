@@ -1,24 +1,18 @@
 ﻿using LKWSpringerApp.Web.ViewModels.Client;
-using LKWSpringerApp.Data;
-using LKWSpringerApp.Data.Models;
 using LKWSpringerApp.Services.Data.Interfaces;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
 
 namespace LKWSpringerApp.Web.Controllers
 {
     [Authorize]
     public class ClientController : Controller
     {
-        private readonly LkwSpringerDbContext context;
         private readonly IClientService clientService;
 
-        public ClientController(LkwSpringerDbContext _context, IClientService clientService)
+        public ClientController(IClientService clientService)
         {
-            this.context = _context;
             this.clientService = clientService;
         }
 
@@ -117,22 +111,22 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var client = await context.Clients
-                .Where(c => c.Id == id && !c.IsDeleted)
-                .Select(c => new DeleteClientModel
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    ClientNumber = c.ClientNumber
-                })
-                .FirstOrDefaultAsync();
+            var client = await clientService.GetClientDetailsByIdAsync(id);
 
             if (client == null)
             {
                 return NotFound();
             }
 
-            return View(client);
+            // Map to DeleteClientModel
+            var model = new DeleteClientModel
+            {
+                Id = client.Id,
+                Name = client.Name,
+                ClientNumber = client.ClientNumber
+            };
+
+            return View(model);
         }
 
         [HttpPost]

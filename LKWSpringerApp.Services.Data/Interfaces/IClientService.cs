@@ -8,7 +8,6 @@ namespace LKWSpringerApp.Services.Data.Interfaces
 
         Task AddClientAsync(AddClientModel model);
 
-        //Dali trqbva pri men da e Guid?
         Task<DetailsClientModel> GetClientDetailsByIdAsync(Guid id);
 
         Task<bool> UpdateClientAsync(EditClientModel model);

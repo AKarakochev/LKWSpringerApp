@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 using LKWSpringerApp.Services.Mapping;
 using LKWSpringerApp.Web.ViewModels;
 using LKWSpringerApp.Data;
 using LKWSpringerApp.Web.Infrastructure.Extensions;
 using LKWSpringerApp.Data.Models;
-using LKWSpringerApp.Data.Repository;
-using Microsoft.Extensions.Options;
-using LKWSpringerApp.Data.Models.Repository.Interfaces;
 using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Services.Data;
 
@@ -62,14 +60,11 @@ namespace LKWSpringerApp.Web
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
 
-            //builder.Services.AddScoped<IRepository<Driver, Guid>, BaseRepository<Driver, Guid>>();
-            //builder.Services.AddScoped<IRepository<Tour, Guid>, BaseRepository<Tour, Guid>>();
-            //builder.Services.AddScoped<IRepository<Client, Guid>, BaseRepository<Client, Guid>>();
-            //builder.Services.AddScoped<IRepository<ClientImage, Guid>, BaseRepository<ClientImage, Guid>>();
-
             builder.Services.RegisterRepositories(typeof(ApplicationUserDriver).Assembly);
             
             builder.Services.AddScoped<IClientService, ClientService>();
+            builder.Services.AddScoped<IDriverService, DriverService>();
+            builder.Services.AddScoped<ITourService, TourService>();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
