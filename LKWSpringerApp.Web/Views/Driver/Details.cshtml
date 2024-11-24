@@ -17,13 +17,23 @@
             <p class="card-text"><strong>Phone Number:</strong> @Model.PhoneNumber</p>
             <p class="card-text"><strong>Type:</strong> @(Model.Stammdriver ? "Stammdriver" : Model.Springerdriver ? "Springerdriver" : "Not Specified")</p>
             <hr />
-            <h6 class="card-subtitle mb-2 text-muted">Tours</h6>
-            <ul>
-                @foreach (var tour in Model.Tours)
-                {
-                    <li>@tour</li>
-                }
-            </ul>
+            <h6 class="card-subtitle mb-2 text-muted">Associated Tours</h6>
+            @if (Model.Tours != null && Model.Tours.Any())
+            {
+                <ul>
+                    @foreach (var tour in Model.Tours)
+                    {
+                        <li>
+                           <strong>Tour Name:</strong> @tour.TourName  /  
+                           <strong>Tour Number:</strong> @tour.TourNumber
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No associated tours found.</p>
+            }
             <hr />
         </div>
         <div class="card-footer text-center">

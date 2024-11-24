@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static LKWSpringerApp.Common.ErrorMessagesConstants.ClientImage;
+﻿using static LKWSpringerApp.Common.ErrorMessagesConstants.ClientImage;
 using static LKWSpringerApp.Common.EntityValidationConstants.ClientImage;
+
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace LKWSpringerApp.Web.ViewModels.ClientImage
 {
@@ -18,13 +14,11 @@ namespace LKWSpringerApp.Web.ViewModels.ClientImage
         [Required]
         public Guid ClientId { get; set; }
 
-        [Required(ErrorMessage = ClientImageUrlErrorMessage)]
         [Display(Name = "Image URL")]
-        public string ImageUrl { get; set; } = null!;
+        public string? ImageUrl { get; set; }
 
-        [Display(Name = "New Image File")]
-        public IFormFile? NewImageFile { get; set; } // Optional new file upload
-
+        [Display(Name = "Upload New Image")]
+        public IFormFile? NewImageFile { get; set; }
         [Display(Name = "Video URL")]
         public string? VideoUrl { get; set; }
 

@@ -8,6 +8,8 @@ using LKWSpringerApp.Web.Infrastructure.Extensions;
 using LKWSpringerApp.Data.Models;
 using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Services.Data;
+using LKWSpringerApp.Data.Models.Repository.Interfaces;
+using LKWSpringerApp.Data.Repository;
 
 namespace LKWSpringerApp.Web
 {
@@ -65,6 +67,8 @@ namespace LKWSpringerApp.Web
             builder.Services.AddScoped<IClientService, ClientService>();
             builder.Services.AddScoped<IDriverService, DriverService>();
             builder.Services.AddScoped<ITourService, TourService>();
+            builder.Services.AddScoped<IRepository<DriverTour, Guid>, BaseRepository<DriverTour, Guid>>();
+            builder.Services.AddScoped<IClientImageService, ClientImageService>();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();

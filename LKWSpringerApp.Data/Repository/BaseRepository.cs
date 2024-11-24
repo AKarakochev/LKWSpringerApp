@@ -33,25 +33,9 @@ namespace LKWSpringerApp.Data.Repository
             return entity;
         }
 
-        public IEnumerable<TType> GetAll()
-        {
-            return dbSet.ToArray();
-        }
-
-        public async Task<IEnumerable<TType>> GetAllAsync()
-        {
-            return await dbSet.ToArrayAsync();
-        }
-
         public IQueryable<TType> GetAllAttached()
         {
             return this.dbSet.AsQueryable();
-        }
-
-        public void Add(TType item)
-        {
-            dbSet.Add(item);
-            dbContext.SaveChanges();
         }
 
         public async Task AddAsync(TType item)
@@ -60,22 +44,11 @@ namespace LKWSpringerApp.Data.Repository
             await dbContext.SaveChangesAsync();
         }
 
-        public bool Delete(TId id)
+        public void Delete(TType entity)
         {
-            TType entity = GetById(id);
-
-            if (entity == null)
-            {
-                return false;
-            }
-
             dbSet.Remove(entity);
             dbContext.SaveChanges();
-
-            return true;
         }
-
-        
 
         public async Task<bool> DeleteAsync(TId id)
         {
@@ -92,19 +65,33 @@ namespace LKWSpringerApp.Data.Repository
             return true;
         }
 
-        public bool SoftDelete(TId id)
+        public async Task<bool> SoftDeleteAsync(Guid driverId, Guid tourId)
         {
-            var entity = GetById(id);
-            if (entity == null) return false;
-
-            if (entity is ISoftDeletable softDeletableEntity)
+            // Ensure that this logic is only applied to composite-key entities
+            if (typeof(TType) == typeof(DriverTour))
             {
-                softDeletableEntity.IsDeleted = true;
-                dbContext.SaveChanges();
-                return true;
+                // Retrieve the entity using the composite key
+                var entity = await dbSet
+                    .FirstOrDefaultAsync(e => EF.Property<Guid>(e, "DriverId") == driverId &&
+                                              EF.Property<Guid>(e, "TourId") == tourId);
+
+                if (entity == null)
+                {
+                    return false; // Entity not found
+                }
+
+                // Check if the entity implements ISoftDeletable
+                if (entity is ISoftDeletable softDeletableEntity)
+                {
+                    softDeletableEntity.IsDeleted = true;
+                    await dbContext.SaveChangesAsync();
+                    return true;
+                }
+
+                throw new InvalidOperationException($"Entity {typeof(TType)} does not implement ISoftDeletable");
             }
 
-            throw new InvalidOperationException($"Entity {typeof(TType)} does not implement ISoftDeletable");
+            throw new InvalidOperationException($"SoftDeleteAsync is not supported for type {typeof(TType)}");
         }
 
         public async Task<bool> SoftDeleteAsync(TId id)
@@ -122,23 +109,6 @@ namespace LKWSpringerApp.Data.Repository
             throw new InvalidOperationException($"Entity {typeof(TType)} does not implement ISoftDeletable");
         }
 
-        public bool Update(TType item)
-        {
-            try
-            {
-                dbSet.Attach(item);
-                dbContext.Entry(item).State = EntityState.Modified;
-                dbContext.SaveChanges();
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-
-        }
-
         public async Task<bool> UpdateAsync(TType item)
         {
             try
@@ -153,6 +123,11 @@ namespace LKWSpringerApp.Data.Repository
             {
                 return false;
             }
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await dbContext.SaveChangesAsync();
         }
     }
 }

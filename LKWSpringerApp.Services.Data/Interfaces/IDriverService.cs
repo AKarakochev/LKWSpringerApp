@@ -1,4 +1,5 @@
 ﻿using LKWSpringerApp.Web.ViewModels.Driver;
+using LKWSpringerApp.Web.ViewModels.TourModels;
 
 namespace LKWSpringerApp.Services.Data.Interfaces
 {
@@ -10,8 +11,11 @@ namespace LKWSpringerApp.Services.Data.Interfaces
 
         Task<DetailsDriverModel> GetDriverDetailsByIdAsync(Guid id);
 
+        Task<List<DriverModel>> GetAllDriversAsync();
+
         Task<bool> UpdateDriverAsync(EditDriverModel model);
 
         Task<bool> SoftDeleteDriverAsync(Guid id);
+        Task<bool> RemoveDriverFromTourAsync(Guid driverId, Guid tourId);
     }
 }

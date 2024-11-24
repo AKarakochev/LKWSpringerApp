@@ -35,7 +35,7 @@ namespace LKWSpringerApp.Data
 
             // Configure the many-to-many relationship
             builder.Entity<ApplicationUserDriver>()
-        .HasKey(ud => new { ud.UserId, ud.DriverId });  // Composite key
+                .HasKey(ud => new { ud.UserId, ud.DriverId });  // Composite key
 
             builder.Entity<ApplicationUserDriver>()
                 .HasOne(ud => ud.User)
@@ -50,7 +50,7 @@ namespace LKWSpringerApp.Data
                 .OnDelete(DeleteBehavior.Cascade);   // Optional, for cascade delete behavior
 
             builder.Entity<DriverTour>()
-        .HasKey(dt => new { dt.DriverId, dt.TourId });
+                .HasKey(dt => new { dt.DriverId, dt.TourId });
 
             builder.Entity<DriverTour>()
                 .HasOne(dt => dt.Driver)

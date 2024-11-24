@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
-
-using static LKWSpringerApp.Common.EntityValidationConstants.Tour;
+﻿using static LKWSpringerApp.Common.EntityValidationConstants.Tour;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Tour;
 
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace LKWSpringerApp.Web.ViewModels.TourModels
 {
@@ -17,10 +16,8 @@ namespace LKWSpringerApp.Web.ViewModels.TourModels
         [StringLength(TourNameMaxLength,MinimumLength =TourNameMinLength)]
         public string TourName { get; set; } = null!;
 
-        // List of selected driver IDs
         public List<Guid> SelectedDriverIds { get; set; } = new List<Guid>();
 
-        // List of drivers for selection
         public List<SelectListItem> Drivers { get; set; } = new List<SelectListItem>();
     }
 }

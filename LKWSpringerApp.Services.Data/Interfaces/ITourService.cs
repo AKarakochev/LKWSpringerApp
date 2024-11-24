@@ -6,7 +6,7 @@ namespace LKWSpringerApp.Services.Data.Interfaces
 {
     public interface ITourService
     {
-        Task<ICollection<AllTourModel>> IndexGetAllOrderedBySecondNameAsync();
+        Task<ICollection<AllTourModel>> IndexGetAllOrderedByTourNameAsync();
 
         Task<DetailsTourModel> GetTourDetailsByIdAsync(Guid id);
 

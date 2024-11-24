@@ -5,52 +5,52 @@ using LKWSpringerApp.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using LKWSpringerApp.Web.ViewModels.Client;
+using LKWSpringerApp.Services.Data;
+using LKWSpringerApp.Services.Data.Interfaces;
 
 namespace LKWSpringerApp.Web.Controllers
 {
     [Authorize]
     public class ClientImageController : Controller
     {
-            private readonly LkwSpringerDbContext context;
-
-            public ClientImageController(LkwSpringerDbContext _context)
-            {
-                context = _context;
-            }
+      
+        private readonly IClientImageService clientImageService;
+        public ClientImageController(IClientImageService clientImageService)
+        {
+            this.clientImageService = clientImageService;
+        }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var images = await context.ClientImages
-                .Include(img => img.Client)
-                .Select(img => new AllClientImageModel
-                {
-                    Id = img.Id,
-                    ClientName = img.Client.Name,
-                    ImageUrl = img.ImageUrl,
-                    Description = img.Description
-                })
-                .OrderBy(img => img.ClientName)
-                .ToListAsync();
 
-            return View(images);
+            var clients = await clientImageService.IndexGetAllOrderedByClientNameAsync();
+            return View(clients);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var model = await clientImageService.GetClientImageDetailsByIdAsync(id);
+
+            if (model == null)
+            {
+                return NotFound(); // Return a 404 page if no data is found
+            }
+
+            return View(model); // Pass the model to the view
         }
 
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var clients = await context.Clients
-                .Where(c => !c.IsDeleted)
-                .Select(c => new { c.Id, c.Name })
-                .ToListAsync();
-
+            var clients = await clientImageService.IndexGetAllOrderedByClientNameAsync(); // Use existing service method
             var model = new AddClientImageModel
             {
-                Clients = clients.Select(c => new SelectListItem
+                Clients = clients.Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
                 {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
+                    Value = c.ClientId.ToString(),
+                    Text = c.ClientName
                 }).ToList()
             };
 
@@ -58,176 +58,103 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddClientImageModel model)
         {
             if (!ModelState.IsValid || model.ImageFile == null)
             {
+                var clients = await clientImageService.IndexGetAllOrderedByClientNameAsync();
+                model.Clients = clients.Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                {
+                    Value = c.ClientId.ToString(),
+                    Text = c.ClientName
+                }).ToList();
+
                 return View(model);
             }
 
-            // Get client information
-            var client = await context.Clients.FindAsync(model.ClientId);
-            if (client == null || client.IsDeleted)
+            try
             {
-                return NotFound("Client not found or deleted.");
+                await clientImageService.AddClientImageAsync(model);
+                return RedirectToAction(nameof(Index));
             }
-
-            // Sanitize client name for folder naming
-            var sanitizedClientName = client.Name.ToLower().Replace(" ", "_");
-            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/clients", sanitizedClientName);
-
-            // Ensure the client-specific folder exists
-            Directory.CreateDirectory(uploadPath);
-
-            // Generate unique file name
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(model.ImageFile.FileName)}";
-            var filePath = Path.Combine(uploadPath, fileName);
-
-            // Save the uploaded file to the server
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            catch (ArgumentException ex)
             {
-                await model.ImageFile.CopyToAsync(fileStream);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(model);
             }
-
-            // Save the relative path to the database
-            var image = new ClientImage
-            {
-                Id = Guid.NewGuid(),
-                ClientId = model.ClientId,
-                ImageUrl = $"images/clients/{sanitizedClientName}/{fileName}", // Relative URL
-                VideoUrl = model.VideoUrl,
-                Description = model.Description
-            };
-
-            context.ClientImages.Add(image);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction("Details", "Client", new { id = model.ClientId });
         }
 
         [HttpGet]
-            public async Task<IActionResult> Edit(Guid id)
-            {
-                var image = await context.ClientImages.FindAsync(id);
-                if (image == null)
-                {
-                    return NotFound();
-                }
-
-                var model = new EditClientImageModel
-                {
-                    Id = image.Id,
-                    ClientId = image.ClientId,
-                    ImageUrl = image.ImageUrl,
-                    VideoUrl = image.VideoUrl,
-                    Description = image.Description
-                };
-
-                return View(model);
-            }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(Guid id, EditClientImageModel model, IFormFile newImageFile)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id != model.Id)
-            {
-                return BadRequest();
-            }
+            var model = await clientImageService.GetSingleMediaFileByIdAsync(id);
 
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var image = await context.ClientImages.FindAsync(id);
-            if (image == null)
+            if (model == null)
             {
                 return NotFound();
             }
 
-            // If a new file is uploaded, replace the existing file
-            if (newImageFile != null)
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, EditClientImageModel model, IFormFile? newImageFile)
+        {
+            if (!ModelState.IsValid)
             {
-                var client = await context.Clients.FindAsync(image.ClientId);
-                if (client == null)
-                {
-                    return NotFound("Client not found.");
-                }
-
-                var sanitizedClientName = client.Name.ToLower().Replace(" ", "_");
-                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/clients", sanitizedClientName);
-
-                // Ensure the folder exists
-                Directory.CreateDirectory(uploadPath);
-
-                // Generate a new unique file name
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(newImageFile.FileName)}";
-                var filePath = Path.Combine(uploadPath, fileName);
-
-                // Save the new file
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await newImageFile.CopyToAsync(fileStream);
-                }
-
-                // Delete the old file
-                var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImageUrl);
-                if (System.IO.File.Exists(oldFilePath))
-                {
-                    System.IO.File.Delete(oldFilePath);
-                }
-
-                // Update the image URL
-                image.ImageUrl = $"images/clients/{sanitizedClientName}/{fileName}";
+                return View(model); // Return the form with validation errors
             }
 
-            // Update other properties
-            image.VideoUrl = model.VideoUrl;
-            image.Description = model.Description;
+            // Update only the changed fields
+            var updateResult = await clientImageService.UpdateClientImageAsync(id, model, newImageFile);
 
-            context.Update(image);
-            await context.SaveChangesAsync();
+            if (!updateResult)
+            {
+                return NotFound(); // Return 404 if the image doesn't exist
+            }
 
-            return RedirectToAction("Details", "Client", new { id = model.ClientId });
+            return RedirectToAction("Details", new { id = model.ClientId });
         }
 
         [HttpGet]
-            public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            // Fetch the client image details using the service
+            var image = await clientImageService.GetClientImageDetailsByIdAsync(id);
+
+            if (image == null || !image.MediaFiles.Any())
             {
-                var image = await context.ClientImages
-                    .Include(ci => ci.Client)
-                    .FirstOrDefaultAsync(ci => ci.Id == id);
-
-                if (image == null)
-                {
-                    return NotFound();
-                }
-
-                var model = new DeleteClientImageModel
-                {
-                    Id = image.Id,
-                    ClientId = image.ClientId,
-                    ImageUrl = image.ImageUrl,
-                    Description = image.Description
-                };
-
-                return View(model);
+                return NotFound();
             }
 
-            [HttpPost]
-            public async Task<IActionResult> DeleteConfirmed(Guid id)
+            // Map the first media file from the details model to DeleteClientImageModel
+            var mediaFile = image.MediaFiles.First();
+            var model = new DeleteClientImageModel
             {
-                var image = await context.ClientImages.FindAsync(id);
-                if (image == null)
-                {
-                    return NotFound();
-                }
+                Id = mediaFile.Id,
+                ClientId = image.ClientId,
+                ImageUrl = mediaFile.ImageUrl ?? string.Empty,
+                Description = mediaFile.Description ?? string.Empty
+            };
 
-                context.ClientImages.Remove(image);
-                await context.SaveChangesAsync();
+            return View(model);
+        }
 
-                return RedirectToAction("Details", "Client", new { id = image.ClientId });
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var result = await clientImageService.DeleteAsync(id);
+
+            if (!result)
+            {
+                return NotFound();
             }
+
+            return RedirectToAction("Index");
         }
     }
+}
 

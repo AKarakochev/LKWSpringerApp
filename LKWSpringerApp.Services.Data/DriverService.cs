@@ -2,6 +2,9 @@
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
 using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.Driver;
+using LKWSpringerApp.Web.ViewModels.Tour;
+using LKWSpringerApp.Web.ViewModels.TourModels;
+using LKWSpringerApp.Data;
 using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
 
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +15,17 @@ namespace LKWSpringerApp.Services.Data
     public class DriverService : IDriverService
     {
         private readonly IRepository<Driver, Guid> driverRepository;
+        private readonly IRepository<DriverTour, Guid> driverTourRepository;
+        private readonly LkwSpringerDbContext dbContext;
 
-        public DriverService(IRepository<Driver, Guid> driverRepository)
+        public DriverService(
+            IRepository<Driver, Guid> driverRepository,
+            IRepository<DriverTour, Guid> driverTourRepository,
+            LkwSpringerDbContext dbContext)
         {
             this.driverRepository = driverRepository;
+            this.driverTourRepository = driverTourRepository;
+            this.dbContext = dbContext;
         }
 
         public async Task<ICollection<AllDriverModel>> IndexGetAllOrderedBySecondNameAsync()
@@ -70,6 +80,18 @@ namespace LKWSpringerApp.Services.Data
 
             return model;
         }
+        public async Task<List<DriverModel>> GetAllDriversAsync()
+        {
+            return await driverRepository.GetAllAttached()
+                .Where(d => !d.IsDeleted)
+                .Select(d => new DriverModel
+                {
+                    Id = d.Id,
+                    FirstName = d.FirstName,
+                    SecondName = d.SecondName
+                })
+                .ToListAsync();
+        }
         public async Task AddDriverAsync(AddDriverModel model)
         {
             if (!DateTime.TryParseExact(model.BirthDate, DriverBirthDateFormat, CultureInfo.CurrentCulture,
@@ -106,7 +128,6 @@ namespace LKWSpringerApp.Services.Data
         }
         public async Task<bool> UpdateDriverAsync(EditDriverModel model)
         {
-            // Retrieve the existing driver from the repository
             var driver = await driverRepository.GetByIdAsync(model.Id);
 
             if (driver == null || driver.IsDeleted)
@@ -123,26 +144,65 @@ namespace LKWSpringerApp.Services.Data
             driver.Springerdriver = model.Springerdriver;
             driver.Stammdriver = model.Stammdriver;
 
+            // Get current associated tours
+            var currentTourIds = driver.DriverTours.Select(dt => dt.TourId).ToList();
+
+            // Compare with selected tours
+            var selectedTourIds = model.SelectedTourIds;
+
+            // Add new tours
+            foreach (var tourId in selectedTourIds.Except(currentTourIds))
+            {
+                await driverTourRepository.AddAsync(new DriverTour
+                {
+                    DriverId = driver.Id,
+                    TourId = tourId
+                });
+            }
+
+            // Remove unselected tours
+            foreach (var tourId in currentTourIds.Except(selectedTourIds))
+            {
+                await RemoveDriverFromTourAsync(driver.Id, tourId); // Use the updated method
+            }
+
             // Save changes using the repository
             return await driverRepository.UpdateAsync(driver);
         }
         public async Task<bool> SoftDeleteDriverAsync(Guid id)
         {
-            // Retrieve the driver from the repository
             var driver = await driverRepository.GetByIdAsync(id);
 
             if (driver == null || driver.IsDeleted)
             {
-                return false; // Return false if the driver doesn't exist or is already soft-deleted
+                return false; // Driver not found or already soft-deleted
             }
 
             // Mark the driver as deleted
             driver.IsDeleted = true;
 
-            // Update the driver in the repository
-            return await driverRepository.UpdateAsync(driver);
+            // Save changes
+            await dbContext.SaveChangesAsync();
+            return true;
         }
 
-        
+        public async Task<bool> RemoveDriverFromTourAsync(Guid driverId, Guid tourId)
+        {
+            var driverTour = await driverTourRepository
+        .GetAllAttached()
+        .FirstOrDefaultAsync(dt => dt.DriverId == driverId && dt.TourId == tourId);
+
+            if (driverTour == null)
+            {
+                return false; // Association not found
+            }
+
+            // Use the hard delete method to remove the entry
+            driverTourRepository.Delete(driverTour);
+
+            // Save changes
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

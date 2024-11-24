@@ -1,0 +1,51 @@
+﻿@model LKWSpringerApp.Web.ViewModels.ClientImage.DetailsClientImageModel
+
+@{
+    ViewData["Title"] = "Client Media Details";
+}
+
+<h2><u>Media Files for @Model.ClientName</u></h2>
+
+@if (Model.MediaFiles == null || !Model.MediaFiles.Any())
+{
+    <p class="text-center text-muted">There is no associated media for this client!</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Image</th>
+                    <th>Video</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var media in Model.MediaFiles)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(media.ImageUrl))
+                            {
+                                <img src="/@media.ImageUrl" alt="@media.Description" class="img-fluid rounded" style="max-width: 100px;" />
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(media.VideoUrl))
+                            {
+                                <a href="/@media.VideoUrl" target="_blank">View Video</a>
+                            }
+                        </td>
+                        <td>@media.Description</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@media.Id" class="btn btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@media.Id" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

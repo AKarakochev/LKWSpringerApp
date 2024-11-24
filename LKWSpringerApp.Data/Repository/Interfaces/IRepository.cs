@@ -3,29 +3,24 @@
     public interface IRepository<TType, TId>
     {
         TType GetById(TId id);
-
         Task<TType> GetByIdAsync(TId id);
-
-        IEnumerable<TType> GetAll();
-
-        Task<IEnumerable<TType>> GetAllAsync();
-
         IQueryable<TType> GetAllAttached();
 
-        void Add(TType item);
-
+        // Addition
         Task AddAsync(TType item);
 
-        bool Delete(TId id);
-
+        // Deletion
+        void Delete(TType entity);
         Task<bool> DeleteAsync(TId id);
 
-        bool SoftDelete(TId id);
-
+        // Soft Deletion
         Task<bool> SoftDeleteAsync(TId id);
+        Task<bool> SoftDeleteAsync(Guid driverId, Guid tourId);
 
-        bool Update(TType item);
-
+        // Update
         Task<bool> UpdateAsync(TType item);
+
+        //Save
+        Task SaveChangesAsync();
     }
 }

@@ -1,7 +1,4 @@
-﻿using LKWSpringerApp.Data.Models;
-using LKWSpringerApp.Services.Mapping;
-
-namespace LKWSpringerApp.Web.ViewModels.Client
+﻿namespace LKWSpringerApp.Web.ViewModels.Client
 {
     public class AllClientModel
     { 
@@ -13,8 +10,6 @@ namespace LKWSpringerApp.Web.ViewModels.Client
         public string DeliveryDescription { get; set; } = null!;
         public string DeliveryTime { get; set; } = null!;
         public string? AddressUrl { get; set; }
-
-        // Collection of images related to the client
         public List<ClientImageModel> Images { get; set; } = new List<ClientImageModel>();
     }
 

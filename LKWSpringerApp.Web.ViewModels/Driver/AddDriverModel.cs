@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
+﻿using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
 using LKWSpringerApp.Web.ViewModels.Tour;
+
+using System.ComponentModel.DataAnnotations;
 
 namespace LKWSpringerApp.Web.ViewModels.Driver
 {

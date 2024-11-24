@@ -95,7 +95,8 @@ namespace LKWSpringerApp.Web.Controllers
                 PhoneNumber = driver.PhoneNumber,
                 Springerdriver = driver.Springerdriver,
                 Stammdriver = driver.Stammdriver,
-                Tours = driver.Tours
+                Tours = driver.Tours,
+                SelectedTourIds = driver.Tours.Select(t => t.Id).ToList() // Populate selected tour IDs
             };
 
             return View(model);
@@ -158,6 +159,20 @@ namespace LKWSpringerApp.Web.Controllers
             }
 
             return RedirectToAction(nameof(Index)); // Redirect to the list of drivers
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteTour(Guid driverId, Guid tourId)
+        {
+            // Call a service method to remove the tour association
+            var result = await driverService.RemoveDriverFromTourAsync(driverId, tourId);
+
+            if (!result)
+            {
+                return NotFound(); // Return 404 if the association wasn't found
+            }
+
+            return RedirectToAction(nameof(Edit), new { id = driverId }); // Redirect back to the edit page
         }
     }
 }

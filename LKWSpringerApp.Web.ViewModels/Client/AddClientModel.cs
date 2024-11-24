@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-using static LKWSpringerApp.Common.EntityValidationConstants.Client;
+﻿using static LKWSpringerApp.Common.EntityValidationConstants.Client;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Client;
+
+using System.ComponentModel.DataAnnotations;
 
 namespace LKWSpringerApp.Web.ViewModels.Client
 {
