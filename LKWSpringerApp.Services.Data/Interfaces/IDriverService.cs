@@ -1,11 +1,12 @@
 ﻿using LKWSpringerApp.Web.ViewModels.Driver;
 using LKWSpringerApp.Web.ViewModels.TourModels;
+using LKWSpringerApp.Services.Data.Helpers;
 
 namespace LKWSpringerApp.Services.Data.Interfaces
 {
     public interface IDriverService
     {
-        Task<ICollection<AllDriverModel>> IndexGetAllOrderedBySecondNameAsync();
+        Task<PaginatedList<AllDriverModel>> IndexGetAllOrderedBySecondNameAsync(int pageIndex, int pageSize);
 
         Task AddDriverAsync(AddDriverModel model);
 

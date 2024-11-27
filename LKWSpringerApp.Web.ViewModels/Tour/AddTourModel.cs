@@ -15,9 +15,7 @@ namespace LKWSpringerApp.Web.ViewModels.TourModels
         [Required(ErrorMessage = TourNameErrorMessage)]
         [StringLength(TourNameMaxLength,MinimumLength =TourNameMinLength)]
         public string TourName { get; set; } = null!;
-
         public List<Guid> SelectedDriverIds { get; set; } = new List<Guid>();
-
         public List<SelectListItem> Drivers { get; set; } = new List<SelectListItem>();
     }
 }

@@ -1,10 +1,11 @@
-﻿using LKWSpringerApp.Web.ViewModels.Client;
+﻿using LKWSpringerApp.Services.Data.Helpers;
+using LKWSpringerApp.Web.ViewModels.Client;
 
 namespace LKWSpringerApp.Services.Data.Interfaces
 {
     public interface IClientService
     {
-        Task<ICollection<AllClientModel>> IndexGetAllOrderedByNameAsync();
+        Task<PaginatedList<AllClientModel>> IndexGetAllOrderedByNameAsync(int pageIndex, int pageSize);
 
         Task AddClientAsync(AddClientModel model);
 

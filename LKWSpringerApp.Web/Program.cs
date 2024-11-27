@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
 using LKWSpringerApp.Services.Mapping;
 using LKWSpringerApp.Web.ViewModels;
 using LKWSpringerApp.Data;
@@ -10,13 +7,17 @@ using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Services.Data;
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
 using LKWSpringerApp.Data.Repository;
+using LKWSpringerApp.Data.Configuration;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace LKWSpringerApp.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -86,13 +87,6 @@ namespace LKWSpringerApp.Web
 
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);
 
-            //Call the seed method for IdentityRole
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var seeder = scope.ServiceProvider.GetRequiredService<IdentityDataSeeder>();
-            //    await seeder.SeedRolesAndAdminUserAsync();
-            //}
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -118,18 +112,24 @@ namespace LKWSpringerApp.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //app.Use(async (context, next) =>
-            //{
-            //    context.Response.Headers.Add("Content-Security-Policy",
-            //        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:;");
-            //    await next();
-            //});
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("Content-Security-Policy",
+                    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;");
+                await next();
+            });
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapRazorPages();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await RoleConfiguration.SeedRolesAndAdminAsync(services);
+            }
 
             app.Run();
         }

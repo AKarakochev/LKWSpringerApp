@@ -33,9 +33,7 @@ namespace LKWSpringerApp.Web.ViewModels.Driver
 
         [Required]
         public bool Stammdriver { get; set; }
-
         public List<TourViewModel> Tours { get; set; } = new List<TourViewModel>();
-
         public List<Guid> SelectedTourIds { get; set; } = new List<Guid>();
     }
 }

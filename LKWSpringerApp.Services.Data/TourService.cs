@@ -1,6 +1,7 @@
 ﻿using LKWSpringerApp.Data;
 using LKWSpringerApp.Data.Models;
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
+using LKWSpringerApp.Services.Data.Helpers;
 using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.Driver;
 using LKWSpringerApp.Web.ViewModels.Tour;
@@ -24,30 +25,29 @@ namespace LKWSpringerApp.Services.Data
             this.driverTourRepository = driverTourRepository;
             this.dbContext = dbContext;
         }
-        public async Task<ICollection<AllTourModel>> IndexGetAllOrderedByTourNameAsync()
+        public async Task<PaginatedList<AllTourModel>> IndexGetAllOrderedByTourNameAsync(int pageIndex, int pageSize)
         {
-            var tours = await tourRepository
+            var query = tourRepository
                 .GetAllAttached()
                 .Where(t => !t.IsDeleted)
                 .Select(t => new AllTourModel
                 {
-                        Id = t.Id,
-                        TourNumber = t.TourNumber,
-                        TourName = t.TourName,
-                        IsDeleted = t.IsDeleted,
-                        Clients = t.ToursClients
+                    Id = t.Id,
+                    TourNumber = t.TourNumber,
+                    TourName = t.TourName,
+                    IsDeleted = t.IsDeleted,
+                    Clients = t.ToursClients
                         .Where(tc => !tc.Client.IsDeleted)
                         .Select(tc => new ClientModel
-                            {
-                                Id = tc.Client.Id,
-                                Name = tc.Client.Name
-                            })
+                        {
+                            Id = tc.Client.Id,
+                            Name = tc.Client.Name
+                        })
                         .ToList()
                 })
-                .OrderBy(t => t.TourName)
-                .ToListAsync();
+                .OrderBy(t => t.TourName);
 
-            return tours;
+            return await PaginatedList<AllTourModel>.CreateAsync(query, pageIndex, pageSize);
         }
         public async Task<DetailsTourModel> GetTourDetailsByIdAsync(Guid id)
         {

@@ -18,15 +18,23 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 20)
         {
-            ICollection<AllClientModel> clients = 
-                await clientService.IndexGetAllOrderedByNameAsync();
-
-            return View(clients);
+            try
+            {
+                var clients = await clientService.IndexGetAllOrderedByNameAsync(pageIndex, pageSize);
+                return View(clients);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while loading clients.";
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Details(Guid id)
         {
             if (id == Guid.Empty)
@@ -45,12 +53,14 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Add()
         {
             return View(new AddClientModel());
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add([Bind("Name,ClientNumber,Address,AddressUrl,PhoneNumber,DeliveryDescription,DeliveryTime")] AddClientModel model)
         {
@@ -79,6 +89,7 @@ namespace LKWSpringerApp.Web.Controllers
     
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
             if (id == Guid.Empty)
@@ -109,6 +120,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,ClientNumber,Address,AddressUrl,PhoneNumber,DeliveryDescription,DeliveryTime")] EditClientModel model)
         {
@@ -122,18 +134,32 @@ namespace LKWSpringerApp.Web.Controllers
                 return View(model);
             }
 
-            var updated = await clientService.UpdateClientAsync(model);
-
-            if (!updated)
+            try
             {
-                return NotFound();
-            }
+                var updated = await clientService.UpdateClientAsync(model);
 
-            TempData["SuccessMessage"] = "Client updated successfully.";
-            return RedirectToAction("Index");
+                if (!updated)
+                {
+                    return NotFound();
+                }
+
+                TempData["SuccessMessage"] = "Client updated successfully.";
+                return RedirectToAction("Index");
+            }
+            catch (DbUpdateException ex)
+            {
+                ModelState.AddModelError(string.Empty, "Database error occurred. Please try again later.");
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                return View(model);
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             if (id == Guid.Empty)
@@ -159,6 +185,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
@@ -167,15 +194,28 @@ namespace LKWSpringerApp.Web.Controllers
                 return BadRequest("Invalid client ID.");
             }
 
-            var result = await clientService.SoftDeleteClientAsync(id);
-
-            if (!result)
+            try
             {
-                return NotFound();
-            }
+                var result = await clientService.SoftDeleteClientAsync(id);
 
-            TempData["SuccessMessage"] = "Client deleted successfully.";
-            return RedirectToAction(nameof(Index));
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                TempData["SuccessMessage"] = "Client deleted successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                TempData["ErrorMessage"] = "A database error occurred while deleting the client.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred. Please try again later.";
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

@@ -2,6 +2,8 @@
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
 using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.Client;
+using LKWSpringerApp.Services.Data.Helpers;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace LKWSpringerApp.Services.Data
@@ -15,9 +17,9 @@ namespace LKWSpringerApp.Services.Data
             this.clientRepository = clientRepository;
         }
 
-        public async Task<ICollection<AllClientModel>> IndexGetAllOrderedByNameAsync()
+        public async Task<PaginatedList<AllClientModel>> IndexGetAllOrderedByNameAsync(int pageIndex, int pageSize)
         {
-            var clients = await this.clientRepository
+            var query = this.clientRepository
                 .GetAllAttached()
                 .Where(c => !c.IsDeleted)
                 .Select(c => new AllClientModel
@@ -38,10 +40,9 @@ namespace LKWSpringerApp.Services.Data
                         Description = img.Description
                     }).ToList()
                 })
-                .OrderBy(c => c.Name)
-                .ToListAsync();
+                .OrderBy(c => c.Name);
 
-            return clients;
+            return await PaginatedList<AllClientModel>.CreateAsync(query, pageIndex, pageSize);
         }
         public async Task<DetailsClientModel> GetClientDetailsByIdAsync(Guid id)
         {

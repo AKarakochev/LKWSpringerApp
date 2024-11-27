@@ -1,5 +1,4 @@
 ﻿using LKWSpringerApp.Web.ViewModels.Driver;
-using LKWSpringerApp.Data;
 using LKWSpringerApp.Services.Data.Interfaces;
 
 using Microsoft.AspNetCore.Authorization;
@@ -19,15 +18,24 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 20)
         {
-            ICollection<AllDriverModel> drivers =
-                 await driverService.IndexGetAllOrderedBySecondNameAsync();
-
-            return View(drivers);
+            try
+            {
+                var paginatedDrivers = await driverService.IndexGetAllOrderedBySecondNameAsync(pageIndex, pageSize);
+                ViewData["PageSize"] = pageSize;
+                return View(paginatedDrivers);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while loading drivers.";
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Details(Guid id)
         {
             if (id == Guid.Empty)
@@ -46,18 +54,20 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add()
         {
 
             var model = new AddDriverModel
             {
-                Tours = await tourService.GetAllToursAsync() // Fetch available tours
+                Tours = await tourService.GetAllToursAsync()
             };
 
             return View(model);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddDriverModel model)
         {
@@ -82,6 +92,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
             if (id == Guid.Empty)
@@ -114,6 +125,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, EditDriverModel model)
         {
@@ -127,18 +139,27 @@ namespace LKWSpringerApp.Web.Controllers
                 return View(model);
             }
 
-            var result = await driverService.UpdateDriverAsync(model);
-
-            if (!result)
+            try
             {
-                return NotFound();
-            }
+                var result = await driverService.UpdateDriverAsync(model);
 
-            TempData["SuccessMessage"] = "Driver updated successfully.";
-            return RedirectToAction(nameof(Index));
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                TempData["SuccessMessage"] = "Driver updated successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                return View(model);
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             if (id == Guid.Empty)
@@ -165,6 +186,7 @@ namespace LKWSpringerApp.Web.Controllers
 
         
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
@@ -173,18 +195,27 @@ namespace LKWSpringerApp.Web.Controllers
                 return BadRequest("Invalid driver ID.");
             }
 
-            var result = await driverService.SoftDeleteDriverAsync(id);
-
-            if (!result)
+            try
             {
-                return NotFound();
-            }
+                var result = await driverService.SoftDeleteDriverAsync(id);
 
-            TempData["SuccessMessage"] = "Driver deleted successfully.";
-            return RedirectToAction(nameof(Index));
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                TempData["SuccessMessage"] = "Driver deleted successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting the driver. Please try again later.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteTour(Guid driverId, Guid tourId)
         {
             if (driverId == Guid.Empty || tourId == Guid.Empty)

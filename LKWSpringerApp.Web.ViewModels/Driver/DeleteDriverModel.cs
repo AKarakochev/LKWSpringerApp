@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-namespace LKWSpringerApp.Web.ViewModels.Driver
+﻿namespace LKWSpringerApp.Web.ViewModels.Driver
 {
     public class DeleteDriverModel
     {

@@ -1,13 +1,15 @@
 ﻿using LKWSpringerApp.Web.ViewModels.ClientImage;
+using LKWSpringerApp.Services.Data.Helpers;
+
 using Microsoft.AspNetCore.Http;
-using System.Security.Cryptography;
 
 namespace LKWSpringerApp.Services.Data.Interfaces
 {
     public interface IClientImageService
     {
-        Task<ICollection<AllClientImageModel>> IndexGetAllOrderedByClientNameAsync();
+        Task<PaginatedList<AllClientImageModel>> IndexGetAllOrderedByClientNameAsync(int pageIndex, int pageSize);
         Task<DetailsClientImageModel> GetClientImageDetailsByIdAsync(Guid id);
+        Task<List<AllClientImageModel>> GetAllClientsAsync();
         Task AddClientImageAsync(AddClientImageModel model);
         
         Task<EditClientImageModel> GetSingleMediaFileByIdAsync(Guid id);

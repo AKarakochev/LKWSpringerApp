@@ -1,7 +1,10 @@
 ﻿using LKWSpringerApp.Data.Models;
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
+using LKWSpringerApp.Services.Data.Helpers;
 using LKWSpringerApp.Services.Data.Interfaces;
+using LKWSpringerApp.Web.ViewModels.Client;
 using LKWSpringerApp.Web.ViewModels.ClientImage;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +20,9 @@ namespace LKWSpringerApp.Services.Data
             this.clientImageRepository = clientImageRepository;
             this.clientRepository = clientRepository;
         }
-        public async Task<ICollection<AllClientImageModel>> IndexGetAllOrderedByClientNameAsync()
+        public async Task<PaginatedList<AllClientImageModel>> IndexGetAllOrderedByClientNameAsync(int pageIndex, int pageSize)
         {
-            var clients = await clientRepository
+            var query = clientRepository
                 .GetAllAttached()
                 .Where(c => !c.IsDeleted)
                 .Select(c => new AllClientImageModel
@@ -28,10 +31,9 @@ namespace LKWSpringerApp.Services.Data
                     ClientName = c.Name,
                     MediaCount = c.Images.Count + c.Images.Where(img => !string.IsNullOrEmpty(img.VideoUrl)).Count()
                 })
-                .OrderBy(c => c.ClientName)
-                .ToListAsync();
+                .OrderBy(c => c.ClientName);
 
-            return clients;
+            return await PaginatedList<AllClientImageModel>.CreateAsync(query, pageIndex, pageSize);
         }
         public async Task<DetailsClientImageModel> GetClientImageDetailsByIdAsync(Guid id)
         {
@@ -60,7 +62,20 @@ namespace LKWSpringerApp.Services.Data
 
             return model;
         }
-
+        public async Task<List<AllClientImageModel>> GetAllClientsAsync()
+        {
+            return await clientRepository
+                .GetAllAttached()
+                .Where(c => !c.IsDeleted)
+                .Select(c => new AllClientImageModel
+                {
+                    ClientId = c.Id,
+                    ClientName = c.Name,
+                    MediaCount = c.Images.Count + c.Images.Where(img => !string.IsNullOrEmpty(img.VideoUrl)).Count()
+                })
+                .OrderBy(c => c.ClientName)
+                .ToListAsync();
+        }
         public async Task<EditClientImageModel> GetSingleMediaFileByIdAsync(Guid id)
         {
             var image = await clientImageRepository.GetByIdAsync(id);
@@ -191,8 +206,6 @@ namespace LKWSpringerApp.Services.Data
                 Description = image.Description ?? string.Empty
             };
         }
-
-
     }
 }
 

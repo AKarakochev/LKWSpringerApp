@@ -9,6 +9,7 @@ using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
 
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using LKWSpringerApp.Services.Data.Helpers;
 
 namespace LKWSpringerApp.Services.Data
 {
@@ -28,9 +29,9 @@ namespace LKWSpringerApp.Services.Data
             this.dbContext = dbContext;
         }
 
-        public async Task<ICollection<AllDriverModel>> IndexGetAllOrderedBySecondNameAsync()
+        public async Task<PaginatedList<AllDriverModel>> IndexGetAllOrderedBySecondNameAsync(int pageIndex, int pageSize)
         {
-            var drivers = await this.driverRepository
+            var query = driverRepository
                 .GetAllAttached()
                 .Where(d => !d.IsDeleted)
                 .Select(d => new AllDriverModel
@@ -42,10 +43,9 @@ namespace LKWSpringerApp.Services.Data
                     Springerdriver = d.Springerdriver,
                     Stammdriver = d.Stammdriver
                 })
-                .OrderBy(d => d.SecondName)
-                .ToListAsync();
+                .OrderBy(d => d.SecondName);
 
-            return drivers;
+            return await PaginatedList<AllDriverModel>.CreateAsync(query, pageIndex, pageSize);
         }
         public async Task<DetailsDriverModel> GetDriverDetailsByIdAsync(Guid id)
         {

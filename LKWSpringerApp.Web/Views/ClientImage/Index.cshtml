@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LKWSpringerApp.Web.ViewModels.ClientImage.AllClientImageModel>
+﻿@model LKWSpringerApp.Services.Data.Helpers.PaginatedList<LKWSpringerApp.Web.ViewModels.ClientImage.AllClientImageModel>
 
 @{
     ViewData["Title"] = "Client Media";
@@ -26,10 +26,27 @@
                     <td>@client.ClientName</td>
                     <td>@client.MediaCount</td>
                     <td class="text-center">
-                        <a asp-action="Details" asp-route-id="@client.ClientId" class="btn btn-primary">View Details</a>
+                        <a asp-action="Details" asp-route-id="@client.ClientId" class="btn btn-primary btn-sm">View Details</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 <div/>
+
+<nav>
+    <ul class="pagination">
+        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+            <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-pageSize="@ViewData["PageSize"]">Previous</a>
+        </li>
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageIndex="@i" asp-route-pageSize="@ViewData["PageSize"]">@i</a>
+            </li>
+        }
+        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+            <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-pageSize="@ViewData["PageSize"]">Next</a>
+        </li>
+    </ul>
+</nav>

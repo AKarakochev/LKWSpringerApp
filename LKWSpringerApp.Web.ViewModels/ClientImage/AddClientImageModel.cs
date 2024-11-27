@@ -22,7 +22,6 @@ namespace LKWSpringerApp.Web.ViewModels.ClientImage
         [StringLength(DescriptionMaxLength,MinimumLength = DescriptionMinLength)]
         [Display(Name = "Description")]
         public string? Description { get; set; }
-
-        public List<SelectListItem> Clients { get; set; } = new(); // For dropdown list
+        public List<SelectListItem> Clients { get; set; } = new();
     }
 }

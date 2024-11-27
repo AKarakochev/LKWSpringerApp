@@ -18,14 +18,24 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 20)
         {
-
-            var clients = await clientImageService.IndexGetAllOrderedByClientNameAsync();
-            return View(clients);
+            try
+            {
+                var paginatedClients = await clientImageService.IndexGetAllOrderedByClientNameAsync(pageIndex, pageSize);
+                ViewData["PageSize"] = pageSize; // Pass the page size for the view
+                return View(paginatedClients);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while loading client media.";
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Details(Guid id)
         {
             if (id == Guid.Empty)
@@ -44,9 +54,10 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Add()
         {
-            var clients = await clientImageService.IndexGetAllOrderedByClientNameAsync(); // Use existing service method
+            var clients = await clientImageService.GetAllClientsAsync(); // Use existing service method
             var model = new AddClientImageModel
             {
                 Clients = clients.Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
@@ -60,12 +71,13 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,User")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddClientImageModel model)
         {
             if (!ModelState.IsValid || model.ImageFile == null)
             {
-                var clients = await clientImageService.IndexGetAllOrderedByClientNameAsync();
+                var clients = await clientImageService.GetAllClientsAsync();
                 model.Clients = clients.Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
                 {
                     Value = c.ClientId.ToString(),
@@ -89,6 +101,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
             if (id == Guid.Empty)
@@ -107,6 +120,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, EditClientImageModel model, IFormFile? newImageFile)
         {
@@ -120,18 +134,27 @@ namespace LKWSpringerApp.Web.Controllers
                 return View(model);
             }
 
-            var updateResult = await clientImageService.UpdateClientImageAsync(id, model, newImageFile);
-
-            if (!updateResult)
+            try
             {
-                return NotFound();
-            }
+                var updateResult = await clientImageService.UpdateClientImageAsync(id, model, newImageFile);
 
-            TempData["SuccessMessage"] = "Client image updated successfully.";
-            return RedirectToAction("Details", new { id = model.ClientId });
+                if (!updateResult)
+                {
+                    return NotFound();
+                }
+
+                TempData["SuccessMessage"] = "Client image updated successfully.";
+                return RedirectToAction("Details", new { id = model.ClientId });
+            }
+            catch
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                return View(model);
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             if (id == Guid.Empty)
@@ -150,6 +173,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
@@ -158,15 +182,23 @@ namespace LKWSpringerApp.Web.Controllers
                 return BadRequest("Invalid client image ID.");
             }
 
-            var result = await clientImageService.DeleteAsync(id);
-
-            if (!result)
+            try
             {
-                return NotFound();
-            }
+                var result = await clientImageService.DeleteAsync(id);
 
-            TempData["SuccessMessage"] = "Client image deleted successfully.";
-            return RedirectToAction("Index");
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                TempData["SuccessMessage"] = "Client image deleted successfully.";
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting the client image. Please try again later.";
+                return RedirectToAction("Index");
+            }
         }
     }
 }

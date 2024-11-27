@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+
 using LKWSpringerApp.Data.Models;
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore.Migrations;
 using LKWSpringerApp.Data.Repository;
 
 namespace LKWSpringerApp.Web.Infrastructure.Extensions
