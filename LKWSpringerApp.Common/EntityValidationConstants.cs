@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LKWSpringerApp.Common
+﻿namespace LKWSpringerApp.Common
 {
     public static class EntityValidationConstants
     {
@@ -29,7 +23,7 @@ namespace LKWSpringerApp.Common
             public const string ClientPhoneNumberFormatPattern = @"^(\+?\d{10,14})$";
             public const int DeliveryDescriptionMaxLength = 250;
             public const int DeliveryDescriptionMinLength = 10;
-            public const string ClientDeliveryTimeRegexFormat = @"^\d{2}:\d{2}$";
+            public const string ClientDeliveryTimeRegexFormat = @"^\d{2}:\d{2} - \d{2}:\d{2}$";
         }
 
         public static class Tour

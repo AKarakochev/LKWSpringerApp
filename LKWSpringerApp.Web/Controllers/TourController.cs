@@ -1,15 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LKWSpringerApp.Data.Models;
-using Microsoft.AspNetCore.Authorization;
-
-using LKWSpringerApp.Data;
-using LKWSpringerApp.Web.ViewModels.TourModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using LKWSpringerApp.Web.ViewModels.TourModels;
 using LKWSpringerApp.Web.ViewModels.Tour;
 using LKWSpringerApp.Services.Data.Interfaces;
-using LKWSpringerApp.Services.Data;
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LKWSpringerApp.Web.Controllers
 {
@@ -35,6 +30,11 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid tour ID.");
+            }
+
             var tour = await tourService.GetTourDetailsByIdAsync(id);
 
             if (tour == null)
@@ -67,7 +67,6 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Reload drivers for the dropdown in case of validation errors
                 var drivers = await driverService.GetAllDriversAsync();
                 model.Drivers = drivers.Select(d => new SelectListItem
                 {
@@ -81,13 +80,13 @@ namespace LKWSpringerApp.Web.Controllers
             try
             {
                 await tourService.AddTourAsync(model);
+                TempData["SuccessMessage"] = "Tour added successfully.";
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
 
-                // Reload drivers for the dropdown
                 var drivers = await driverService.GetAllDriversAsync();
                 model.Drivers = drivers.Select(d => new SelectListItem
                 {
@@ -102,6 +101,11 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid tour ID.");
+            }
+
             var tour = await tourService.GetTourDetailsByIdAsync(id);
 
             if (tour == null)
@@ -131,9 +135,9 @@ namespace LKWSpringerApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, EditTourModel model)
         {
-            if (id != model.Id)
+            if (id == Guid.Empty || id != model.Id)
             {
-                return NotFound();
+                return BadRequest("Invalid tour ID.");
             }
 
             if (!ModelState.IsValid)
@@ -155,12 +159,18 @@ namespace LKWSpringerApp.Web.Controllers
                 return NotFound();
             }
 
+            TempData["SuccessMessage"] = "Tour updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid tour ID.");
+            }
+
             var tour = await tourService.GetTourDetailsByIdAsync(id);
 
             if (tour == null)
@@ -182,6 +192,11 @@ namespace LKWSpringerApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid tour ID.");
+            }
+
             var result = await tourService.SoftDeleteTourAsync(id);
 
             if (!result)
@@ -189,6 +204,7 @@ namespace LKWSpringerApp.Web.Controllers
                 return NotFound();
             }
 
+            TempData["SuccessMessage"] = "Tour deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
     }

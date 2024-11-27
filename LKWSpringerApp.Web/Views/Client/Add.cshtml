@@ -35,7 +35,7 @@
 
     <div class="form-group">
         <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
-        <input asp-for="PhoneNumber" class="form-control" placeholder="example: 0049... or +49... or 0162..." />
+        <input asp-for="PhoneNumber" class="form-control" placeholder="example: 0049... or +49... or 0162..." pattern="^\+?\d{10,15}$" />
         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
     </div>
 
@@ -47,7 +47,7 @@
 
     <div class="form-group">
         <label asp-for="DeliveryTime" class="control-label">Delivery Time</label>
-        <input asp-for="DeliveryTime" class="form-control" placeholder="Format: HH:MM" />
+        <input asp-for="DeliveryTime" class="form-control" placeholder="Format: HH:MM - HH:MM" pattern="^\d{2}:\d{2} - \d{2}:\d{2}$ />
         <span asp-validation-for="DeliveryTime" class="text-danger"></span>
     </div>
 

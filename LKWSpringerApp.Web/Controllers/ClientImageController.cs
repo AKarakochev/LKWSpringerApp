@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.ClientImage;
-using LKWSpringerApp.Data;
-using LKWSpringerApp.Data.Models;
+
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using LKWSpringerApp.Services.Data;
-using LKWSpringerApp.Services.Data.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace LKWSpringerApp.Web.Controllers
 {
@@ -31,14 +28,19 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid client image ID.");
+            }
+
             var model = await clientImageService.GetClientImageDetailsByIdAsync(id);
 
             if (model == null)
             {
-                return NotFound(); // Return a 404 page if no data is found
+                return NotFound();
             }
 
-            return View(model); // Pass the model to the view
+            return View(model);
         }
 
         [HttpGet]
@@ -76,6 +78,7 @@ namespace LKWSpringerApp.Web.Controllers
             try
             {
                 await clientImageService.AddClientImageAsync(model);
+                TempData["SuccessMessage"] = "Client image added successfully.";
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException ex)
@@ -88,6 +91,11 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid client image ID.");
+            }
+
             var model = await clientImageService.GetSingleMediaFileByIdAsync(id);
 
             if (model == null)
@@ -102,42 +110,41 @@ namespace LKWSpringerApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, EditClientImageModel model, IFormFile? newImageFile)
         {
-            if (!ModelState.IsValid)
+            if (id == Guid.Empty || id != model.Id)
             {
-                return View(model); // Return the form with validation errors
+                return BadRequest("Invalid client image ID.");
             }
 
-            // Update only the changed fields
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             var updateResult = await clientImageService.UpdateClientImageAsync(id, model, newImageFile);
 
             if (!updateResult)
             {
-                return NotFound(); // Return 404 if the image doesn't exist
+                return NotFound();
             }
 
+            TempData["SuccessMessage"] = "Client image updated successfully.";
             return RedirectToAction("Details", new { id = model.ClientId });
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
-            // Fetch the client image details using the service
-            var image = await clientImageService.GetClientImageDetailsByIdAsync(id);
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid client image ID.");
+            }
 
-            if (image == null || !image.MediaFiles.Any())
+            var model = await clientImageService.GetClientImageByIdAsync(id);
+
+            if (model == null)
             {
                 return NotFound();
             }
-
-            // Map the first media file from the details model to DeleteClientImageModel
-            var mediaFile = image.MediaFiles.First();
-            var model = new DeleteClientImageModel
-            {
-                Id = mediaFile.Id,
-                ClientId = image.ClientId,
-                ImageUrl = mediaFile.ImageUrl ?? string.Empty,
-                Description = mediaFile.Description ?? string.Empty
-            };
 
             return View(model);
         }
@@ -146,6 +153,11 @@ namespace LKWSpringerApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid client image ID.");
+            }
+
             var result = await clientImageService.DeleteAsync(id);
 
             if (!result)
@@ -153,6 +165,7 @@ namespace LKWSpringerApp.Web.Controllers
                 return NotFound();
             }
 
+            TempData["SuccessMessage"] = "Client image deleted successfully.";
             return RedirectToAction("Index");
         }
     }

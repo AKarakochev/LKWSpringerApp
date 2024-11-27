@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LKWSpringerApp.Common
+﻿namespace LKWSpringerApp.Common
 {
     public static class ErrorMessagesConstants
     {
@@ -24,7 +17,7 @@ namespace LKWSpringerApp.Common
             public const string ClientAddressErrorMessage = "The client address is required.";
             public const string ClientPhoneNumberErrorMessage = "The client phone number is required.";
             public const string ClientDeliveryDescriptionErrorMessage = "Delivery description is required.";
-            public const string ClientDeliveryTimeErrorMessage = "Delivery time is required.";
+            public const string ClientDeliveryTimeErrorMessage = "Delivery time is required in format HH:MM - HH:MM";
             public const string ClientNumberErrorMessage = "The client number is required.";
             public const string ClientNumberRangeErrorMessage = "The number of the client must be between 1 and 10000.";
         }

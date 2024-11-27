@@ -171,7 +171,28 @@ namespace LKWSpringerApp.Services.Data
             return await clientImageRepository.DeleteAsync(id);
         }
 
-        
+        public async Task<DeleteClientImageModel> GetClientImageByIdAsync(Guid id)
+        {
+            var image = await clientImageRepository
+                .GetAllAttached()
+                .Include(ci => ci.Client) // Include client for context
+                .FirstOrDefaultAsync(ci => ci.Id == id);
+
+            if (image == null)
+            {
+                return null!;
+            }
+
+            return new DeleteClientImageModel
+            {
+                Id = image.Id,
+                ClientId = image.ClientId,
+                ImageUrl = image.ImageUrl ?? string.Empty,
+                Description = image.Description ?? string.Empty
+            };
+        }
+
+
     }
 }
 

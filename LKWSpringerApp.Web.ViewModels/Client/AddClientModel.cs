@@ -33,6 +33,7 @@ namespace LKWSpringerApp.Web.ViewModels.Client
         [RegularExpression(ClientDeliveryTimeRegexFormat)]
         public string DeliveryTime { get; set; } = null!;
 
+        [Url(ErrorMessage = "Please enter a valid URL.")]
         [StringLength(ClientAddressUrlMaxLength)]
         public string? AddressUrl { get; set; }
     }

@@ -30,6 +30,11 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid driver ID.");
+            }
+
             var driver = await driverService.GetDriverDetailsByIdAsync(id);
 
             if (driver == null)
@@ -58,19 +63,20 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Tours = await tourService.GetAllToursAsync(); // Reload tours on validation failure
+                model.Tours = await tourService.GetAllToursAsync();
                 return View(model);
             }
 
             try
             {
                 await driverService.AddDriverAsync(model);
+                TempData["SuccessMessage"] = "Driver added successfully.";
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException ex)
             {
                 ModelState.AddModelError(ex.ParamName ?? string.Empty, ex.Message);
-                model.Tours = await tourService.GetAllToursAsync(); // Reload tours
+                model.Tours = await tourService.GetAllToursAsync();
                 return View(model);
             }
         }
@@ -78,6 +84,11 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid driver ID.");
+            }
+
             var driver = await driverService.GetDriverDetailsByIdAsync(id);
 
             if (driver == null)
@@ -96,7 +107,7 @@ namespace LKWSpringerApp.Web.Controllers
                 Springerdriver = driver.Springerdriver,
                 Stammdriver = driver.Stammdriver,
                 Tours = driver.Tours,
-                SelectedTourIds = driver.Tours.Select(t => t.Id).ToList() // Populate selected tour IDs
+                SelectedTourIds = driver.Tours.Select(t => t.Id).ToList()
             };
 
             return View(model);
@@ -106,29 +117,35 @@ namespace LKWSpringerApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, EditDriverModel model)
         {
-            if (id != model.Id)
+            if (id == Guid.Empty || id != model.Id)
             {
-                return NotFound(); // Ensure the IDs match
+                return BadRequest("Invalid driver ID.");
             }
 
             if (!ModelState.IsValid)
             {
-                return View(model); // Return the form with validation errors
+                return View(model);
             }
 
             var result = await driverService.UpdateDriverAsync(model);
 
             if (!result)
             {
-                return NotFound(); // Return 404 if the driver wasn't found or update failed
+                return NotFound();
             }
 
-            return RedirectToAction(nameof(Index)); // Redirect to the driver list after saving
+            TempData["SuccessMessage"] = "Driver updated successfully.";
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid driver ID.");
+            }
+
             var driver = await driverService.GetDriverDetailsByIdAsync(id);
 
             if (driver == null)
@@ -151,28 +168,39 @@ namespace LKWSpringerApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid driver ID.");
+            }
+
             var result = await driverService.SoftDeleteDriverAsync(id);
 
             if (!result)
             {
-                return NotFound(); // Return 404 if the driver doesn't exist or is already deleted
+                return NotFound();
             }
 
-            return RedirectToAction(nameof(Index)); // Redirect to the list of drivers
+            TempData["SuccessMessage"] = "Driver deleted successfully.";
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> DeleteTour(Guid driverId, Guid tourId)
         {
-            // Call a service method to remove the tour association
+            if (driverId == Guid.Empty || tourId == Guid.Empty)
+            {
+                return BadRequest("Invalid driver or tour ID.");
+            }
+            
             var result = await driverService.RemoveDriverFromTourAsync(driverId, tourId);
 
             if (!result)
             {
-                return NotFound(); // Return 404 if the association wasn't found
+                return NotFound();
             }
 
-            return RedirectToAction(nameof(Edit), new { id = driverId }); // Redirect back to the edit page
+            TempData["SuccessMessage"] = "Tour removed from driver successfully.";
+            return RedirectToAction(nameof(Edit), new { id = driverId });
         }
     }
 }

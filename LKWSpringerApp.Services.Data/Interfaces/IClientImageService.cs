@@ -7,13 +7,13 @@ namespace LKWSpringerApp.Services.Data.Interfaces
     public interface IClientImageService
     {
         Task<ICollection<AllClientImageModel>> IndexGetAllOrderedByClientNameAsync();
-
-        Task AddClientImageAsync(AddClientImageModel model);
-
         Task<DetailsClientImageModel> GetClientImageDetailsByIdAsync(Guid id);
+        Task AddClientImageAsync(AddClientImageModel model);
+        
         Task<EditClientImageModel> GetSingleMediaFileByIdAsync(Guid id);
         Task<bool> UpdateClientImageAsync(Guid id, EditClientImageModel model, IFormFile? newImageFile);
 
+        Task<DeleteClientImageModel> GetClientImageByIdAsync(Guid id);
         Task<bool> DeleteAsync(Guid id);
     }
 }

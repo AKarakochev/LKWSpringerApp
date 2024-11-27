@@ -10,6 +10,7 @@ using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Services.Data;
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
 using LKWSpringerApp.Data.Repository;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LKWSpringerApp.Web
 {
@@ -57,6 +58,10 @@ namespace LKWSpringerApp.Web
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+
                 options.LoginPath = "/Identity/Account/Login";
                 options.LogoutPath = "/Identity/Account/Logout";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
@@ -70,7 +75,11 @@ namespace LKWSpringerApp.Web
             builder.Services.AddScoped<IRepository<DriverTour, Guid>, BaseRepository<DriverTour, Guid>>();
             builder.Services.AddScoped<IClientImageService, ClientImageService>();
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
             builder.Services.AddRazorPages();
 
             var app = builder.Build();
@@ -91,7 +100,12 @@ namespace LKWSpringerApp.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                // Exception handler for server errors
+                app.UseExceptionHandler("/Error/500");
+
+                // Re-execute middleware for other status codes (e.g., 404)
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -103,6 +117,13 @@ namespace LKWSpringerApp.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //app.Use(async (context, next) =>
+            //{
+            //    context.Response.Headers.Add("Content-Security-Policy",
+            //        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:;");
+            //    await next();
+            //});
 
             app.MapControllerRoute(
                 name: "default",
