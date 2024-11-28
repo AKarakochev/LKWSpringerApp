@@ -37,6 +37,24 @@ namespace LKWSpringerApp.Data.Configuration
                     await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
             }
+
+            string userEmail = "user@user.com";
+            string userPassword = "User!1";
+
+            if (await userManager.FindByEmailAsync(userEmail) == null)
+            {
+                var regularUser = new IdentityUser
+                {
+                    Email = userEmail,
+                    UserName = userEmail
+                };
+
+                var result = await userManager.CreateAsync(regularUser, userPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(regularUser, "User");
+                }
+            }
         }
     }
 }

@@ -23,7 +23,7 @@
             @foreach (var driver in Model)
             {
                 <tr>
-                    <td>@driver.FirstName @driver.SecondName</td>
+                    <td>@driver.SecondName, @driver.FirstName </td>
                     <td>@driver.PhoneNumber</td>
                     <td>
                         @(driver.Stammdriver ? "Stammdriver" :

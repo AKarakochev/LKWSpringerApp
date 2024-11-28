@@ -57,13 +57,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\clients\fussen\" />
-    <Folder Include="wwwroot\images\clients\kempten\" />
-    <Folder Include="wwwroot\images\clients\memmingen\" />
-    <Folder Include="wwwroot\images\clients\wangen\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <UpToDateCheckInput Remove="Views\ClientImage\Details.cshtml" />
   </ItemGroup>
 
