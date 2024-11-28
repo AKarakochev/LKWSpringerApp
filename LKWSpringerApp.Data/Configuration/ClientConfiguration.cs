@@ -1,7 +1,7 @@
 ﻿using LKWSpringerApp.Data.Models;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static System.Net.WebRequestMethods;
 
 namespace LKWSpringerApp.Web.Data.Configuration
 {
@@ -9,7 +9,6 @@ namespace LKWSpringerApp.Web.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Client> builder)
         {
-            //Fluent API
             builder.HasData(this.SeedClients());
         }
 

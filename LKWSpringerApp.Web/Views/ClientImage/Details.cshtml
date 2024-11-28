@@ -18,7 +18,7 @@ else
                 <tr>
                     <th>Image</th>
                     <th>Video</th>
-                    <th style="width: 200px;">Description</th> <!-- Adjust width as needed -->
+                    <th style="width: 200px;">Description</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -29,7 +29,6 @@ else
                         <td>
                             @if (!string.IsNullOrEmpty(media.ImageUrl))
                             {
-                                <!-- Display larger images -->
                                 <img src="/@media.ImageUrl" alt="@media.Description" class="img-fluid rounded" style="max-width: 300px; height: auto;" />
                             }
                         </td>

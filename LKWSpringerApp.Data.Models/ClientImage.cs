@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 using static LKWSpringerApp.Common.ErrorMessagesConstants.ClientImage;
 using static LKWSpringerApp.Common.EntityValidationConstants.ClientImage;
 

@@ -1,4 +1,5 @@
 ﻿using LKWSpringerApp.Data.Models;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,11 +9,11 @@ namespace LKWSpringerApp.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<DriverTour> builder)
         {
-            //Fluent API
+            
             builder.HasData(this.SeedDriverTour());
         }
 
-        private List<DriverTour> SeedDriverTour() // Return List<DriverTour> here
+        private List<DriverTour> SeedDriverTour()
         {
             List<DriverTour> driverTours = new List<DriverTour>
             {

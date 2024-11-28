@@ -132,10 +132,9 @@ namespace LKWSpringerApp.Services.Data
 
             if (driver == null || driver.IsDeleted)
             {
-                return false; // Driver not found or soft-deleted
+                return false;
             }
-
-            // Update driver properties
+            
             driver.FirstName = model.FirstName;
             driver.SecondName = model.SecondName;
             driver.BirthDate = DateTime.ParseExact(model.BirthDate, DriverBirthDateFormat, CultureInfo.InvariantCulture);
@@ -144,13 +143,10 @@ namespace LKWSpringerApp.Services.Data
             driver.Springerdriver = model.Springerdriver;
             driver.Stammdriver = model.Stammdriver;
 
-            // Get current associated tours
             var currentTourIds = driver.DriverTours.Select(dt => dt.TourId).ToList();
 
-            // Compare with selected tours
             var selectedTourIds = model.SelectedTourIds;
 
-            // Add new tours
             foreach (var tourId in selectedTourIds.Except(currentTourIds))
             {
                 await driverTourRepository.AddAsync(new DriverTour
@@ -160,13 +156,11 @@ namespace LKWSpringerApp.Services.Data
                 });
             }
 
-            // Remove unselected tours
             foreach (var tourId in currentTourIds.Except(selectedTourIds))
             {
-                await RemoveDriverFromTourAsync(driver.Id, tourId); // Use the updated method
+                await RemoveDriverFromTourAsync(driver.Id, tourId);
             }
-
-            // Save changes using the repository
+            
             return await driverRepository.UpdateAsync(driver);
         }
         public async Task<bool> SoftDeleteDriverAsync(Guid id)
@@ -175,17 +169,14 @@ namespace LKWSpringerApp.Services.Data
 
             if (driver == null || driver.IsDeleted)
             {
-                return false; // Driver not found or already soft-deleted
+                return false;
             }
 
-            // Mark the driver as deleted
             driver.IsDeleted = true;
 
-            // Save changes
             await dbContext.SaveChangesAsync();
             return true;
         }
-
         public async Task<bool> RemoveDriverFromTourAsync(Guid driverId, Guid tourId)
         {
             var driverTour = await driverTourRepository
@@ -194,13 +185,11 @@ namespace LKWSpringerApp.Services.Data
 
             if (driverTour == null)
             {
-                return false; // Association not found
+                return false;
             }
 
-            // Use the hard delete method to remove the entry
             driverTourRepository.Delete(driverTour);
 
-            // Save changes
             await dbContext.SaveChangesAsync();
             return true;
         }

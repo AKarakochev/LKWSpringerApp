@@ -15,8 +15,4 @@
     <ProjectReference Include="..\LKWSpringerApp.Data\LKWSpringerApp.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>

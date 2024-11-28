@@ -21,10 +21,9 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (string.IsNullOrEmpty(searchQuery))
             {
-                return View("No Results"); // Optional: A "No Results" page
+                return View("No Results");
             }
 
-            // Materialize Drivers Query
             var drivers = await _context.Drivers
                 .Where(d => !d.IsDeleted && (d.FirstName.Contains(searchQuery) || d.SecondName.Contains(searchQuery)))
                 .Select(d => new
@@ -35,7 +34,6 @@ namespace LKWSpringerApp.Web.Controllers
                 })
                 .ToListAsync();
 
-            // Materialize Clients Query
             var clients = await _context.Clients
                 .Where(c => c.Name.Contains(searchQuery))
                 .Select(c => new
@@ -46,7 +44,6 @@ namespace LKWSpringerApp.Web.Controllers
                 })
                 .ToListAsync();
 
-            // Materialize Tours Query
             var tours = await _context.Tours
                 .Where(t => t.TourName.Contains(searchQuery))
                 .Select(t => new
@@ -57,7 +54,6 @@ namespace LKWSpringerApp.Web.Controllers
                 })
                 .ToListAsync();
 
-            // Materialize Client Images Query
             var clientMedia = await _context.ClientImages
                 .Include(ci => ci.Client)
                 .Where(ci => ci.Description.Contains(searchQuery) || ci.Client.Name.Contains(searchQuery))
@@ -69,12 +65,11 @@ namespace LKWSpringerApp.Web.Controllers
                 })
                 .ToListAsync();
 
-            // Combine Results
             var results = drivers
                 .Union(clients)
                 .Union(tours)
                 .Union(clientMedia)
-                .OrderBy(r => r.Type); // Order results in memory
+                .OrderBy(r => r.Type);
 
             return View(results);
         }

@@ -11,10 +11,10 @@ namespace LKWSpringerApp.Web.Infrastructure.Extensions
     {
         public static void RegisterRepositories(this IServiceCollection services, Assembly modelsAssembly)
         {
-            Type[] typesToExclude = { typeof(ApplicationUserDriver) }; // Optionally exclude models
+            Type[] typesToExclude = { typeof(ApplicationUserDriver) };
             Type[] modelTypes = modelsAssembly
                 .GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.Namespace == "LKWSpringerApp.Data.Models") // Adjust namespace
+                .Where(t => t.IsClass && !t.IsAbstract && t.Namespace == "LKWSpringerApp.Data.Models")
                 .ToArray();
 
             foreach (var type in modelTypes)

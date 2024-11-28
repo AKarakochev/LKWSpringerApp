@@ -2,7 +2,6 @@
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
 using LKWSpringerApp.Services.Data.Helpers;
 using LKWSpringerApp.Services.Data.Interfaces;
-using LKWSpringerApp.Web.ViewModels.Client;
 using LKWSpringerApp.Web.ViewModels.ClientImage;
 
 using Microsoft.AspNetCore.Http;
@@ -95,7 +94,6 @@ namespace LKWSpringerApp.Services.Data
 
             return model;
         }
-
         public async Task AddClientImageAsync(AddClientImageModel model)
         {
             var client = await clientRepository.GetByIdAsync(model.ClientId);
@@ -129,7 +127,6 @@ namespace LKWSpringerApp.Services.Data
 
             await clientImageRepository.AddAsync(clientImage);
         }
-
         public async Task<bool> UpdateClientImageAsync(Guid id, EditClientImageModel model, IFormFile? newImageFile)
         {
             var image = await clientImageRepository.GetByIdAsync(model.Id);
@@ -139,7 +136,6 @@ namespace LKWSpringerApp.Services.Data
                 return false;
             }
 
-            // Update the image file only if a new file is uploaded
             if (newImageFile != null)
             {
                 var client = await clientRepository.GetByIdAsync(image.ClientId);
@@ -174,23 +170,20 @@ namespace LKWSpringerApp.Services.Data
                 image.ImageUrl = $"images/clients/{sanitizedClientName}/{fileName}";
             }
 
-            // Update other fields
             image.VideoUrl = model.VideoUrl;
             image.Description = model.Description;
 
             return await clientImageRepository.UpdateAsync(image);
         }
-
         public async Task<bool> DeleteAsync(Guid id)
         {
             return await clientImageRepository.DeleteAsync(id);
         }
-
         public async Task<DeleteClientImageModel> GetClientImageByIdAsync(Guid id)
         {
             var image = await clientImageRepository
                 .GetAllAttached()
-                .Include(ci => ci.Client) // Include client for context
+                .Include(ci => ci.Client)
                 .FirstOrDefaultAsync(ci => ci.Id == id);
 
             if (image == null)

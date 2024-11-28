@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using System.Reflection;
 
-
 namespace LKWSpringerApp.Services.Mapping
 {
     public static class AutoMapperConfig

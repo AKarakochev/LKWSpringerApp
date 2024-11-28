@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
 using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
-using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LKWSpringerApp.Data.Models
 {

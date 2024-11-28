@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+
 using static LKWSpringerApp.Common.EntityValidationConstants.Client;
 using static LKWSpringerApp.Common.ErrorMessagesConstants.Client;
-
 
 namespace LKWSpringerApp.Data.Models
 {

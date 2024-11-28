@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using LKWSpringerApp.Data.Models;
-using LKWSpringerApp.Data.Configuration;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+using LKWSpringerApp.Data.Models;
 
 namespace LKWSpringerApp.Data
 {

@@ -19,12 +19,12 @@ namespace LKWSpringerApp.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 20)
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
         {
             try
             {
                 var paginatedClients = await clientImageService.IndexGetAllOrderedByClientNameAsync(pageIndex, pageSize);
-                ViewData["PageSize"] = pageSize; // Pass the page size for the view
+                ViewData["PageSize"] = pageSize;
                 return View(paginatedClients);
             }
             catch (Exception ex)

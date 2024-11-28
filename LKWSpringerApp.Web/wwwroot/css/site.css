@@ -21,16 +21,6 @@ body {
   margin-bottom: 60px;
 }
 
-.eddc-text p {
-    font-size: 2.5rem; 
-    color: #343a40; 
-    margin: 0.5rem 0;
-}
-
-.eddc-text .welcome {
-    font-weight: bold;
-}
-
 .ms-4 {
     margin-left: 2rem !important;
 }
@@ -40,6 +30,18 @@ body {
     color: #343a40;
     border-color: #6c757d;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-nav {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: nowrap; 
+    overflow: hidden;
+}
+
+.nav-item {
+    padding: 0.5rem;
 }
 
 @media (max-width: 768px) {
@@ -52,7 +54,6 @@ body {
     }
 }
 
-/* Show header navigation on larger screens */
 @media (min-width: 769px) {
     .navbar-collapse {
         display: flex !important;
@@ -61,4 +62,152 @@ body {
     .footer-nav {
         display: none !important;
     }
+}
+
+.home-page-wallpaper {
+    background-image: url('/images/appIndexPageWallpaper/1.jpg'); 
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+    min-height: calc(100vh - 120px); 
+    padding: 20px; 
+}
+
+
+header, footer {
+    background-color: #ffffff;
+}
+
+.custom-button {
+    background-color: white;
+    color: #000;
+    border-color: white;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+    .custom-button:hover {
+        background-color: #BDBDBD;
+        color: #333;
+        border-color: #ddd;
+    }
+
+.eddc-text p {
+    font-size: 2.9rem;
+    color: white;
+    margin: 0.5rem 0;
+}
+
+.eddc-text .welcome {
+    font-weight: bold;
+}
+
+.driver-index-wallpaper {
+    background-image: url('/images/driverIndexPageWallpaper/1.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: calc(100vh - 120px); 
+    padding: 20px;
+    color: #fff;
+}
+
+.driver-index-wallpaper h2 {
+    color: #fff; 
+}
+
+.table {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    color: #000;
+}
+
+.tour-index-wallpaper {
+    background-image: url('/images/tourIndexPageWallpaper/1.jpg'); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: calc(100vh - 120px); 
+    padding: 20px;
+    color: #fff; 
+}
+
+.tour-index-wallpaper h2 {
+    color: #fff;
+}
+
+.table {
+    background-color: rgba(255, 255, 255, 0.9); 
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    color: #000;
+}
+
+.client-index-wallpaper {
+    background-image: url('/images/clientIndexPageWallpaper/1.jpg'); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: calc(100vh - 120px);
+    padding: 20px;
+    color: #fff;
+}
+
+.client-index-wallpaper h2 {
+    color: #fff; 
+}
+
+.table {
+    background-color: rgba(255, 255, 255, 0.9); 
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    color: #000;
+}
+
+.client-image-wallpaper {
+    background-image: url('/images/clientImageIndexPageWallpaper/1.jpg'); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: calc(100vh - 120px); 
+    padding: 20px;
+    color: #fff; 
+}
+
+.client-image-wallpaper h2 {
+    color: #fff;
+}
+
+.table {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    color: #000;
+}
+
+.nav-link {
+    color: #343a40;
+    text-decoration: none;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+.nav-link:hover {
+    color: white;
+    background-color: #BDBDBD;
+    text-decoration: none;
 }

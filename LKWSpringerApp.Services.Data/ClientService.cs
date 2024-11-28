@@ -111,7 +111,5 @@ namespace LKWSpringerApp.Services.Data
         {
             return await clientRepository.SoftDeleteAsync(id);
         }
-
-        
     }
 }

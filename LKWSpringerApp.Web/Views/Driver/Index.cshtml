@@ -3,59 +3,61 @@
 @{
     ViewData["Title"] = "All Drivers";
 }
-<h2><u>All Drivers</u></h2>
+<div class="driver-index-wallpaper">
+    <h2><u>All Drivers</u></h2>
 
-<div class="mb-3 text-end">
-    <a asp-action="Add" class="btn btn-success">Add New Driver</a>
-</div>
-    
-<div class="table-responsive">
-    <table class="table table-striped table-bordered">
-        <thead class="table-light">
-            <tr>
-                <th>Name</th>
-                <th>Phone Number</th>
-                <th>Type</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var driver in Model)
-            {
+    <div class="mb-3 text-end">
+        <a asp-action="Add" class="btn btn-success">Add New Driver</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
                 <tr>
-                    <td>@driver.SecondName, @driver.FirstName </td>
-                    <td>@driver.PhoneNumber</td>
-                    <td>
-                        @(driver.Stammdriver ? "Stammdriver" :
-                        driver.Springerdriver ? "Springerdriver" : "Not Specified")
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-center align-items-center gap-2">
-                            <a asp-action="Details" asp-route-id="@driver.Id" class="btn btn-primary btn-sm">View details</a>
-                        </div>
-                    </td>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Type</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var driver in Model)
+                {
+                    <tr>
+                        <td>@driver.SecondName, @driver.FirstName </td>
+                        <td>@driver.PhoneNumber</td>
+                        <td>
+                            @(driver.Stammdriver ? "Stammdriver" :
+                                driver.Springerdriver ? "Springerdriver" : "Not Specified")
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                <a asp-action="Details" asp-route-id="@driver.Id" class="btn btn-primary btn-sm">View details</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-<nav>
-    <ul class="pagination">
-        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-            <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-pageSize="@ViewData["PageSize"]">Previous</a>
-        </li>
-        @for (var i = 1; i <= Model.TotalPages; i++)
-        {
-            <li class="page-item @(Model.PageIndex == i ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-pageIndex="@i" asp-route-pageSize="@ViewData["PageSize"]">@i</a>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-pageSize="@ViewData["PageSize"]">Previous</a>
             </li>
-        }
-        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-            <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-pageSize="@ViewData["PageSize"]">Next</a>
-        </li>
-    </ul>
-</nav>
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageIndex="@i" asp-route-pageSize="@ViewData["PageSize"]">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-pageSize="@ViewData["PageSize"]">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>

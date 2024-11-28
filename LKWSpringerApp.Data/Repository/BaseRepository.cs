@@ -67,20 +67,17 @@ namespace LKWSpringerApp.Data.Repository
 
         public async Task<bool> SoftDeleteAsync(Guid driverId, Guid tourId)
         {
-            // Ensure that this logic is only applied to composite-key entities
             if (typeof(TType) == typeof(DriverTour))
             {
-                // Retrieve the entity using the composite key
                 var entity = await dbSet
                     .FirstOrDefaultAsync(e => EF.Property<Guid>(e, "DriverId") == driverId &&
                                               EF.Property<Guid>(e, "TourId") == tourId);
 
                 if (entity == null)
                 {
-                    return false; // Entity not found
+                    return false;
                 }
 
-                // Check if the entity implements ISoftDeletable
                 if (entity is ISoftDeletable softDeletableEntity)
                 {
                     softDeletableEntity.IsDeleted = true;

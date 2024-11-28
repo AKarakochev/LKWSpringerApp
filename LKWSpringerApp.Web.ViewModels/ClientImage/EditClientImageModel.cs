@@ -1,5 +1,4 @@
-﻿using static LKWSpringerApp.Common.ErrorMessagesConstants.ClientImage;
-using static LKWSpringerApp.Common.EntityValidationConstants.ClientImage;
+﻿using static LKWSpringerApp.Common.EntityValidationConstants.ClientImage;
 
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;

@@ -21,7 +21,7 @@ namespace LKWSpringerApp.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 20)
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 15)
         {
             try
             {

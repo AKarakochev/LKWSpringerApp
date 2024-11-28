@@ -1,4 +1,5 @@
 ﻿using LKWSpringerApp.Data.Models;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,8 +30,7 @@ namespace LKWSpringerApp.Data.Configuration
             {
                 TourId = new Guid("A3101694-8D27-4D93-8B76-A2BC7CDEED7A"),
                 ClientId = new Guid("7A80F16D-F7B0-467C-9F96-61D506702150")
-            },
-
+            }
         });
         }
     }

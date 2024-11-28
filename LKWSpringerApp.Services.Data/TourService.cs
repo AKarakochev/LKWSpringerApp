@@ -3,7 +3,6 @@ using LKWSpringerApp.Data.Models;
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
 using LKWSpringerApp.Services.Data.Helpers;
 using LKWSpringerApp.Services.Data.Interfaces;
-using LKWSpringerApp.Web.ViewModels.Driver;
 using LKWSpringerApp.Web.ViewModels.Tour;
 using LKWSpringerApp.Web.ViewModels.TourModels;
 
@@ -84,7 +83,7 @@ namespace LKWSpringerApp.Services.Data
         {
             var tours = await tourRepository
                 .GetAllAttached()
-                .Where(t => !t.IsDeleted) // Exclude soft-deleted tours
+                .Where(t => !t.IsDeleted)
                 .Select(t => new TourViewModel
                     {
                         Id = t.Id,
@@ -117,7 +116,6 @@ namespace LKWSpringerApp.Services.Data
 
             await tourRepository.AddAsync(newTour);
 
-            // Add entries to the DriverTour join table for each selected driver
             foreach (var driverId in model.SelectedDriverIds)
             {
                 await driverTourRepository.AddAsync(new DriverTour
@@ -132,23 +130,21 @@ namespace LKWSpringerApp.Services.Data
         public async Task<bool> UpdateTourAsync(EditTourModel model)
         {
             var tour = await tourRepository
-       .GetAllAttached()
-       .Include(t => t.DriverTours)
-       .FirstOrDefaultAsync(t => t.Id == model.Id && !t.IsDeleted);
+                .GetAllAttached()
+                .Include(t => t.DriverTours)
+                .FirstOrDefaultAsync(t => t.Id == model.Id && !t.IsDeleted);
 
             if (tour == null)
             {
                 return false;
             }
 
-            // Update basic details
             tour.TourName = model.TourName;
             tour.TourNumber = model.TourNumber;
 
             var currentDriverIds = tour.DriverTours.Select(dt => dt.DriverId).ToList();
             var selectedDriverIds = model.SelectedDriverIds;
 
-            // Add new drivers
             foreach (var driverId in selectedDriverIds.Except(currentDriverIds))
             {
                 await driverTourRepository.AddAsync(new DriverTour
@@ -158,13 +154,12 @@ namespace LKWSpringerApp.Services.Data
                 });
             }
 
-            // Remove unselected drivers
             foreach (var driverId in currentDriverIds.Except(selectedDriverIds))
             {
                 var driverTour = tour.DriverTours.FirstOrDefault(dt => dt.DriverId == driverId);
                 if (driverTour != null)
                 {
-                    driverTourRepository.Delete(driverTour); // Use hard delete
+                    driverTourRepository.Delete(driverTour);
                 }
             }
 
