@@ -22,24 +22,43 @@ body {
 }
 
 .eddc-text p {
-    font-size: 2.5rem; /* Match font size across all text */
-    color: #343a40; /* Dark text color */
-    margin: 0.5rem 0; /* Add spacing between lines */
+    font-size: 2.5rem; 
+    color: #343a40; 
+    margin: 0.5rem 0;
 }
 
 .eddc-text .welcome {
-    font-weight: bold; /* Keep "Welcome to E.D.D.C!" bold */
+    font-weight: bold;
 }
 
-/* Adjust spacing between buttons and text */
 .ms-4 {
-    margin-left: 2rem !important; /* Add consistent horizontal spacing */
+    margin-left: 2rem !important;
 }
 
-/* Button hover styles (already in place, but adding for completeness) */
 .btn-outline-secondary:hover {
-    background-color: #6c757d; /* Darker gray background */
-    color: #343a40; /* Dark text color */
-    border-color: #6c757d; /* Match background */
+    background-color: #6c757d; 
+    color: #343a40;
+    border-color: #6c757d;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .navbar-collapse {
+        display: none !important;
+    }
+
+    .footer-nav {
+        display: flex !important;
+    }
+}
+
+/* Show header navigation on larger screens */
+@media (min-width: 769px) {
+    .navbar-collapse {
+        display: flex !important;
+    }
+
+    .footer-nav {
+        display: none !important;
+    }
 }
