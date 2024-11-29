@@ -23,7 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LKWSpringerApp.Services.Map
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LKWSpringerApp.Data", "LKWSpringerApp.Data\LKWSpringerApp.Data.csproj", "{3B8A09B5-F6DD-414D-965A-0E6445FEB348}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LKWSpringerApp.Web.Infrastructure", "LKWSpringerApp.Web.Infrastructure\LKWSpringerApp.Web.Infrastructure.csproj", "{C58A02D6-29DF-46E9-8B5C-309F371F0A73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LKWSpringerApp.Web.Infrastructure", "LKWSpringerApp.Web.Infrastructure\LKWSpringerApp.Web.Infrastructure.csproj", "{C58A02D6-29DF-46E9-8B5C-309F371F0A73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LKWSpringerApp.Tests.Services", "LKWSpringerApp.Tests\LKWSpringerApp.Tests.Services.csproj", "{B99EBA66-CBC6-4687-A2FA-BC4DF79DB277}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6A1728E2-5EB7-4923-813F-C210A160A1EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,10 @@ Global
 		{C58A02D6-29DF-46E9-8B5C-309F371F0A73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C58A02D6-29DF-46E9-8B5C-309F371F0A73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C58A02D6-29DF-46E9-8B5C-309F371F0A73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B99EBA66-CBC6-4687-A2FA-BC4DF79DB277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B99EBA66-CBC6-4687-A2FA-BC4DF79DB277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B99EBA66-CBC6-4687-A2FA-BC4DF79DB277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B99EBA66-CBC6-4687-A2FA-BC4DF79DB277}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +83,7 @@ Global
 		{F125C0F6-2957-4E06-B02B-DCB1609936BA} = {89D7B6E6-E8FD-4A29-942C-9C0C1F0DD031}
 		{3B8A09B5-F6DD-414D-965A-0E6445FEB348} = {C3078159-C3C4-4221-9B15-DD29477AB51B}
 		{C58A02D6-29DF-46E9-8B5C-309F371F0A73} = {94399898-7F90-4DA6-97F7-DA2E8250E4FF}
+		{B99EBA66-CBC6-4687-A2FA-BC4DF79DB277} = {6A1728E2-5EB7-4923-813F-C210A160A1EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BA0B2814-6784-4A7A-9D47-1260B5F7B592}

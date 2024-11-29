@@ -1,5 +1,4 @@
-﻿using System;
-namespace LKWSpringerApp.Data.Models
+﻿namespace LKWSpringerApp.Data.Models
 {
     public interface ISoftDeletable
     {
