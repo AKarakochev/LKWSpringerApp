@@ -6,6 +6,20 @@
 
 <div class="client-index-wallpaper">
     <h2><u>All Clients</u></h2>
+    
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
 
     <div class="mb-3 text-end">
         <a asp-action="Add" class="btn btn-success">Add New Client</a>

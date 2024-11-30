@@ -5,6 +5,7 @@ using LKWSpringerApp.Services.Data.Helpers;
 using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.Tour;
 using LKWSpringerApp.Web.ViewModels.TourModels;
+using static LKWSpringerApp.Common.ErrorMessagesConstants.Tour;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -103,7 +104,7 @@ namespace LKWSpringerApp.Services.Data
 
             if (tourExists)
             {
-                throw new ArgumentException("A tour with the same name or number already exists.");
+                throw new ArgumentException(TourWithSameNumberErrorMessage);
             }
 
             var newTour = new Tour

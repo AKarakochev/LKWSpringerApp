@@ -1,8 +1,11 @@
 ﻿using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.ClientImage;
+using static LKWSpringerApp.Common.ErrorMessagesConstants.ClientImage;
+using static LKWSpringerApp.Common.SuccessMessagesConstants.ClientImage;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace LKWSpringerApp.Web.Controllers
@@ -29,7 +32,7 @@ namespace LKWSpringerApp.Web.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An unexpected error occurred while loading client media.";
+                TempData["ErrorMessage"] = ClientImageTryAgainErrorMessage;
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -40,7 +43,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid client image ID.");
+                return BadRequest(ClientImageInvalidIdErrorMessage);
             }
 
             var model = await clientImageService.GetClientImageDetailsByIdAsync(id);
@@ -60,7 +63,7 @@ namespace LKWSpringerApp.Web.Controllers
             var clients = await clientImageService.GetAllClientsAsync(); // Use existing service method
             var model = new AddClientImageModel
             {
-                Clients = clients.Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                Clients = clients.Select(c => new SelectListItem
                 {
                     Value = c.ClientId.ToString(),
                     Text = c.ClientName
@@ -75,10 +78,35 @@ namespace LKWSpringerApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddClientImageModel model)
         {
-            if (!ModelState.IsValid || model.ImageFile == null)
+            if (!ModelState.IsValid)
             {
                 var clients = await clientImageService.GetAllClientsAsync();
-                model.Clients = clients.Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                model.Clients = clients.Select(c => new SelectListItem
+                {
+                    Value = c.ClientId.ToString(),
+                    Text = c.ClientName
+                }).ToList();
+
+                return View(model);
+            }
+
+            var allowedImageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var allowedVideoExtensions = new[] { ".mp4", ".avi", ".mov", ".mkv" };
+
+            if (model.ImageFile != null && !allowedImageExtensions.Contains(Path.GetExtension(model.ImageFile.FileName).ToLower()))
+            {
+                ModelState.AddModelError("ImageFile", ClientImageInvalidImageFormatErrorMessage);
+            }
+
+            if (model.VideoFile != null && !allowedVideoExtensions.Contains(Path.GetExtension(model.VideoFile.FileName).ToLower()))
+            {
+                ModelState.AddModelError("VideoFile", ClientImageInvalidVideoFormatErrorMessage);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var clients = await clientImageService.GetAllClientsAsync();
+                model.Clients = clients.Select(c => new SelectListItem
                 {
                     Value = c.ClientId.ToString(),
                     Text = c.ClientName
@@ -90,7 +118,7 @@ namespace LKWSpringerApp.Web.Controllers
             try
             {
                 await clientImageService.AddClientImageAsync(model);
-                TempData["SuccessMessage"] = "Client image added successfully.";
+                TempData["SuccessMessage"] = ClientImageAddedSuccessMessage;
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException ex)
@@ -106,7 +134,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid client image ID.");
+                return BadRequest(ClientImageInvalidIdErrorMessage);
             }
 
             var model = await clientImageService.GetSingleMediaFileByIdAsync(id);
@@ -122,11 +150,24 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, EditClientImageModel model, IFormFile? newImageFile)
+        public async Task<IActionResult> Edit(Guid id, EditClientImageModel model, IFormFile? newImageFile,IFormFile? newVideoFile)
         {
             if (id == Guid.Empty || id != model.Id)
             {
-                return BadRequest("Invalid client image ID.");
+                return BadRequest(ClientImageInvalidIdErrorMessage);
+            }
+
+            var allowedImageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var allowedVideoExtensions = new[] { ".mp4", ".avi", ".mov", ".mkv" };
+
+            if (newImageFile != null && !allowedImageExtensions.Contains(Path.GetExtension(newImageFile.FileName).ToLower()))
+            {
+                ModelState.AddModelError("NewImageFile", ClientImageInvalidImageFormatErrorMessage);
+            }
+
+            if (newVideoFile != null && !allowedVideoExtensions.Contains(Path.GetExtension(newVideoFile.FileName).ToLower()))
+            {
+                ModelState.AddModelError("NewVideoFile", ClientImageInvalidVideoFormatErrorMessage);
             }
 
             if (!ModelState.IsValid)
@@ -136,19 +177,19 @@ namespace LKWSpringerApp.Web.Controllers
 
             try
             {
-                var updateResult = await clientImageService.UpdateClientImageAsync(id, model, newImageFile);
+                var updateResult = await clientImageService.UpdateClientImageAsync(id, model, newImageFile,newVideoFile);
 
                 if (!updateResult)
                 {
                     return NotFound();
                 }
 
-                TempData["SuccessMessage"] = "Client image updated successfully.";
+                TempData["SuccessMessage"] = ClientImageUpdatedSuccessMessage;
                 return RedirectToAction("Details", new { id = model.ClientId });
             }
             catch
             {
-                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                ModelState.AddModelError(string.Empty, ClientImageTryAgainErrorMessage);
                 return View(model);
             }
         }
@@ -159,7 +200,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid client image ID.");
+                return BadRequest(ClientImageInvalidIdErrorMessage);
             }
 
             var model = await clientImageService.GetClientImageByIdAsync(id);
@@ -179,7 +220,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid client image ID.");
+                return BadRequest(ClientImageInvalidIdErrorMessage);
             }
 
             try
@@ -191,12 +232,12 @@ namespace LKWSpringerApp.Web.Controllers
                     return NotFound();
                 }
 
-                TempData["SuccessMessage"] = "Client image deleted successfully.";
+                TempData["SuccessMessage"] = ClientImageDeletedSuccessMessage;
                 return RedirectToAction("Index");
             }
             catch
             {
-                TempData["ErrorMessage"] = "An error occurred while deleting the client image. Please try again later.";
+                TempData["ErrorMessage"] = ClientImageTryAgainErrorMessage;
                 return RedirectToAction("Index");
             }
         }

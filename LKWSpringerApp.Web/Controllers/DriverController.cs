@@ -1,5 +1,7 @@
 ﻿using LKWSpringerApp.Web.ViewModels.Driver;
 using LKWSpringerApp.Services.Data.Interfaces;
+using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
+using static LKWSpringerApp.Common.SuccessMessagesConstants.Driver;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +31,7 @@ namespace LKWSpringerApp.Web.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An unexpected error occurred while loading drivers.";
+                TempData["ErrorMessage"] = DriverTryAgainErrorMessage;
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -40,7 +42,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid driver ID.");
+                return BadRequest(DriverInvalidIdErrorMessage);
             }
 
             var driver = await driverService.GetDriverDetailsByIdAsync(id);
@@ -80,7 +82,7 @@ namespace LKWSpringerApp.Web.Controllers
             try
             {
                 await driverService.AddDriverAsync(model);
-                TempData["SuccessMessage"] = "Driver added successfully.";
+                TempData["SuccessMessage"] = DriverAddedSuccessMessage;
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException ex)
@@ -97,7 +99,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid driver ID.");
+                return BadRequest(DriverInvalidIdErrorMessage);
             }
 
             var driver = await driverService.GetDriverDetailsByIdAsync(id);
@@ -131,7 +133,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty || id != model.Id)
             {
-                return BadRequest("Invalid driver ID.");
+                return BadRequest(DriverInvalidIdErrorMessage);
             }
 
             if (!ModelState.IsValid)
@@ -148,12 +150,12 @@ namespace LKWSpringerApp.Web.Controllers
                     return NotFound();
                 }
 
-                TempData["SuccessMessage"] = "Driver updated successfully.";
+                TempData["SuccessMessage"] = DriverUpdatedSuccessMessage;
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                ModelState.AddModelError(string.Empty, DriverTryAgainErrorMessage);
                 return View(model);
             }
         }
@@ -164,7 +166,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid driver ID.");
+                return BadRequest(DriverInvalidIdErrorMessage);
             }
 
             var driver = await driverService.GetDriverDetailsByIdAsync(id);
@@ -192,7 +194,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid driver ID.");
+                return BadRequest(DriverInvalidIdErrorMessage);
             }
 
             try
@@ -204,12 +206,12 @@ namespace LKWSpringerApp.Web.Controllers
                     return NotFound();
                 }
 
-                TempData["SuccessMessage"] = "Driver deleted successfully.";
+                TempData["SuccessMessage"] = DriverDeletedSuccessMessage;
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                TempData["ErrorMessage"] = "An error occurred while deleting the driver. Please try again later.";
+                TempData["ErrorMessage"] = DriverTryAgainErrorMessage;
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -220,7 +222,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (driverId == Guid.Empty || tourId == Guid.Empty)
             {
-                return BadRequest("Invalid driver or tour ID.");
+                return BadRequest(DriverOrTourInvalidIdErrorMessage);
             }
             
             var result = await driverService.RemoveDriverFromTourAsync(driverId, tourId);
@@ -230,7 +232,7 @@ namespace LKWSpringerApp.Web.Controllers
                 return NotFound();
             }
 
-            TempData["SuccessMessage"] = "Tour removed from driver successfully.";
+            TempData["SuccessMessage"] = DriverTourDeletedSuccessMessage;
             return RedirectToAction(nameof(Edit), new { id = driverId });
         }
     }

@@ -60,4 +60,8 @@
     <UpToDateCheckInput Remove="Views\ClientImage\Details.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\media\clients\" />
+  </ItemGroup>
+
 </Project>

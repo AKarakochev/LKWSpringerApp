@@ -3,6 +3,7 @@ using LKWSpringerApp.Data.Models.Repository.Interfaces;
 using LKWSpringerApp.Services.Data.Helpers;
 using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.ClientImage;
+using static LKWSpringerApp.Common.ErrorMessagesConstants.ClientImage;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -99,78 +100,124 @@ namespace LKWSpringerApp.Services.Data
             var client = await clientRepository.GetByIdAsync(model.ClientId);
             if (client == null || client.IsDeleted)
             {
-                throw new ArgumentException("Client not found or is deleted.");
+                throw new ArgumentException(ClientImageIsDeletedOrNotFoundErrorMessage);
             }
 
-            // File path logic (similar to the one in the controller)
             var sanitizedClientName = client.Name.ToLower().Replace(" ", "_");
-            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/clients", sanitizedClientName);
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/media/clients", sanitizedClientName);
 
             Directory.CreateDirectory(uploadPath);
 
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(model.ImageFile.FileName)}";
-            var filePath = Path.Combine(uploadPath, fileName);
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            string? imageFilePath = null;
+            if (model.ImageFile != null)
             {
-                await model.ImageFile.CopyToAsync(fileStream);
+                var imageFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.ImageFile.FileName)}";
+                imageFilePath = Path.Combine(uploadPath, imageFileName);
+                using (var imageStream = new FileStream(imageFilePath, FileMode.Create))
+                {
+                    await model.ImageFile.CopyToAsync(imageStream);
+                }
+            }
+
+            string? videoFilePath = null;
+            if (model.VideoFile != null)
+            {
+                var videoFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.VideoFile.FileName)}";
+                videoFilePath = Path.Combine(uploadPath, videoFileName);
+                using (var videoStream = new FileStream(videoFilePath, FileMode.Create))
+                {
+                    await model.VideoFile.CopyToAsync(videoStream);
+                }
             }
 
             var clientImage = new ClientImage
             {
                 Id = Guid.NewGuid(),
                 ClientId = model.ClientId,
-                ImageUrl = $"images/clients/{sanitizedClientName}/{fileName}",
-                VideoUrl = model.VideoUrl,
+                ImageUrl = imageFilePath != null ? $"media/clients/{sanitizedClientName}/{Path.GetFileName(imageFilePath)}" : null,
+                VideoUrl = videoFilePath != null ? $"media/clients/{sanitizedClientName}/{Path.GetFileName(videoFilePath)}" : null,
                 Description = model.Description
             };
 
             await clientImageRepository.AddAsync(clientImage);
         }
-        public async Task<bool> UpdateClientImageAsync(Guid id, EditClientImageModel model, IFormFile? newImageFile)
+        public async Task<bool> UpdateClientImageAsync(Guid id, EditClientImageModel model, IFormFile? newImageFile, IFormFile? newVideoFile)
         {
-            var image = await clientImageRepository.GetByIdAsync(model.Id);
+            var image = await clientImageRepository.GetByIdAsync(id);
 
             if (image == null)
             {
                 return false;
             }
 
+            var client = await clientRepository.GetByIdAsync(image.ClientId);
+            if (client == null || client.IsDeleted)
+            {
+                return false;
+            }
+
+            var sanitizedClientName = client.Name.ToLower().Replace(" ", "_");
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/media/clients", sanitizedClientName);
+            Directory.CreateDirectory(uploadPath);
+
             if (newImageFile != null)
             {
-                var client = await clientRepository.GetByIdAsync(image.ClientId);
-                if (client == null || client.IsDeleted)
+                var allowedImageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var imageExtension = Path.GetExtension(newImageFile.FileName).ToLower();
+                if (!allowedImageExtensions.Contains(imageExtension))
                 {
-                    return false;
+                    throw new ArgumentException(ClientImageInvalidImageFormatErrorMessage);
                 }
 
-                var sanitizedClientName = client.Name.ToLower().Replace(" ", "_");
-                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/clients", sanitizedClientName);
+                var newImageFileName = $"{Guid.NewGuid()}{imageExtension}";
+                var newImagePath = Path.Combine(uploadPath, newImageFileName);
 
-                Directory.CreateDirectory(uploadPath);
-
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(newImageFile.FileName)}";
-                var filePath = Path.Combine(uploadPath, fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                using (var imageStream = new FileStream(newImagePath, FileMode.Create))
                 {
-                    await newImageFile.CopyToAsync(fileStream);
+                    await newImageFile.CopyToAsync(imageStream);
                 }
 
-                // Delete the old file
                 if (!string.IsNullOrEmpty(image.ImageUrl))
                 {
-                    var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImageUrl);
-                    if (System.IO.File.Exists(oldFilePath))
+                    var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImageUrl);
+                    if (File.Exists(oldImagePath))
                     {
-                        System.IO.File.Delete(oldFilePath);
+                        File.Delete(oldImagePath);
                     }
                 }
 
-                image.ImageUrl = $"images/clients/{sanitizedClientName}/{fileName}";
+                image.ImageUrl = $"media/clients/{sanitizedClientName}/{newImageFileName}";
             }
 
-            image.VideoUrl = model.VideoUrl;
+            if (newVideoFile != null)
+            {
+                var allowedVideoExtensions = new[] { ".mp4", ".avi", ".mov", ".mkv" };
+                var videoExtension = Path.GetExtension(newVideoFile.FileName).ToLower();
+                if (!allowedVideoExtensions.Contains(videoExtension))
+                {
+                    throw new ArgumentException(ClientImageInvalidVideoFormatErrorMessage);
+                }
+
+                var newVideoFileName = $"{Guid.NewGuid()}{videoExtension}";
+                var newVideoPath = Path.Combine(uploadPath, newVideoFileName);
+
+                using (var videoStream = new FileStream(newVideoPath, FileMode.Create))
+                {
+                    await newVideoFile.CopyToAsync(videoStream);
+                }
+
+                if (!string.IsNullOrEmpty(image.VideoUrl))
+                {
+                    var oldVideoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.VideoUrl);
+                    if (File.Exists(oldVideoPath))
+                    {
+                        File.Delete(oldVideoPath);
+                    }
+                }
+
+                image.VideoUrl = $"media/clients/{sanitizedClientName}/{newVideoFileName}";
+            }
+
             image.Description = model.Description;
 
             return await clientImageRepository.UpdateAsync(image);

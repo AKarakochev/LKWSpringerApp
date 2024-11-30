@@ -1,5 +1,7 @@
 ﻿using LKWSpringerApp.Web.ViewModels.Client;
 using LKWSpringerApp.Services.Data.Interfaces;
+using static LKWSpringerApp.Common.ErrorMessagesConstants.Client;
+using static LKWSpringerApp.Common.SuccessMessagesConstants.Client;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +30,7 @@ namespace LKWSpringerApp.Web.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An unexpected error occurred while loading clients.";
+                TempData["ErrorMessage"] = ClientLoadingErrorMessage;
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -39,7 +41,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid client ID.");
+                return BadRequest(ClientInvalidIdErrorMessage);
             }
 
             var client = await clientService.GetClientDetailsByIdAsync(id);
@@ -72,17 +74,17 @@ namespace LKWSpringerApp.Web.Controllers
             try
             {
                 await clientService.AddClientAsync(model);
-                TempData["SuccessMessage"] = "Client added successfully.";
+                TempData["SuccessMessage"] = ClientAddedSuccessMessage;
                 return RedirectToAction("Index");
             }
             catch (DbUpdateException ex)
             {
-                ModelState.AddModelError(string.Empty, "Database error occurred. Please try again later.");
+                ModelState.AddModelError(string.Empty, ClientDatabaseErrorMessage);
                 return View(model);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                ModelState.AddModelError(string.Empty, ClientTryAgainErrorMessage);
                 return View(model);
             }
         }
@@ -94,7 +96,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid client ID.");
+                return BadRequest(ClientInvalidIdErrorMessage);
             }
 
             var client = await clientService.GetClientDetailsByIdAsync(id);
@@ -126,7 +128,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty || id != model.Id)
             {
-                return BadRequest("Invalid client ID.");
+                return BadRequest(ClientInvalidIdErrorMessage);
             }
 
             if (!ModelState.IsValid)
@@ -143,17 +145,17 @@ namespace LKWSpringerApp.Web.Controllers
                     return NotFound();
                 }
 
-                TempData["SuccessMessage"] = "Client updated successfully.";
+                TempData["SuccessMessage"] = ClientUpdatedSuccessMessage;
                 return RedirectToAction("Index");
             }
             catch (DbUpdateException ex)
             {
-                ModelState.AddModelError(string.Empty, "Database error occurred. Please try again later.");
+                ModelState.AddModelError(string.Empty, ClientDatabaseErrorMessage);
                 return View(model);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                ModelState.AddModelError(string.Empty, ClientTryAgainErrorMessage);
                 return View(model);
             }
         }
@@ -164,7 +166,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid client ID.");
+                return BadRequest(ClientInvalidIdErrorMessage);
             }
 
             var client = await clientService.GetClientDetailsByIdAsync(id);
@@ -191,7 +193,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid client ID.");
+                return BadRequest(ClientInvalidIdErrorMessage);
             }
 
             try
@@ -203,17 +205,17 @@ namespace LKWSpringerApp.Web.Controllers
                     return NotFound();
                 }
 
-                TempData["SuccessMessage"] = "Client deleted successfully.";
+                TempData["SuccessMessage"] = ClientDeletedSuccessMessage;
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException ex)
             {
-                TempData["ErrorMessage"] = "A database error occurred while deleting the client.";
+                TempData["ErrorMessage"] = ClientDatabaseErrorMessage;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An unexpected error occurred. Please try again later.";
+                TempData["ErrorMessage"] = ClientTryAgainErrorMessage;
                 return RedirectToAction(nameof(Index));
             }
         }

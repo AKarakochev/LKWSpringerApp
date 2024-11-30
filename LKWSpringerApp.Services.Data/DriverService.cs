@@ -6,6 +6,7 @@ using LKWSpringerApp.Web.ViewModels.Tour;
 using LKWSpringerApp.Web.ViewModels.TourModels;
 using LKWSpringerApp.Data;
 using static LKWSpringerApp.Common.EntityValidationConstants.Driver;
+using static LKWSpringerApp.Common.ErrorMessagesConstants.Driver;
 
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -97,20 +98,20 @@ namespace LKWSpringerApp.Services.Data
             if (!DateTime.TryParseExact(model.BirthDate, DriverBirthDateFormat, CultureInfo.CurrentCulture,
                     DateTimeStyles.None, out DateTime driverBirthDate))
             {
-                throw new ArgumentException("Invalid Birth Date format.", nameof(model.BirthDate));
+                throw new ArgumentException(DriverBirthDateFormatErrorMessage, nameof(model.BirthDate));
             }
 
             int age = DateTime.Now.Year - driverBirthDate.Year;
             if (driverBirthDate > DateTime.Now.AddYears(-age)) age--;
             if (age < 18)
             {
-                throw new ArgumentException("Driver must be at least 18 years old.", nameof(model.BirthDate));
+                throw new ArgumentException(DriverMustBeEighteenYearsOldErrorMessage, nameof(model.BirthDate));
             }
 
             if (!DateTime.TryParseExact(model.StartDate, DriverStartDateFormat, CultureInfo.CurrentCulture,
                     DateTimeStyles.None, out DateTime driverStartDate))
             {
-                throw new ArgumentException("Invalid Start Date format.", nameof(model.StartDate));
+                throw new ArgumentException(DriverStartDateFormatErrorMessage, nameof(model.StartDate));
             }
 
             var newDriver = new Driver

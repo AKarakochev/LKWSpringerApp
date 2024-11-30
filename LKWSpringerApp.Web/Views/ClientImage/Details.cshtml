@@ -6,6 +6,19 @@
 
 <h2><u>Media Files for @Model.ClientName</u></h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 @if (Model.MediaFiles == null || !Model.MediaFiles.Any())
 {
     <p class="text-center text-muted">There is no associated media for this client!</p>
@@ -35,7 +48,10 @@ else
                         <td>
                             @if (!string.IsNullOrEmpty(media.VideoUrl))
                             {
-                                <a href="/@media.VideoUrl" target="_blank">View Video</a>
+                                <video controls style="max-width: 300px; height: auto;">
+                                    <source src="/@media.VideoUrl" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
                             }
                         </td>
                         <td style="width: 200px;">@media.Description</td>

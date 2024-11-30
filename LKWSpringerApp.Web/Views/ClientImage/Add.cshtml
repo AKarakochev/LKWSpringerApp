@@ -1,6 +1,26 @@
 ﻿@model LKWSpringerApp.Web.ViewModels.ClientImage.AddClientImageModel
 
-<h2><u>Add client media file</u></h2>
+<h2><u>Add Client Media File</u></h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false)
+    </div>
+}
+
 <form asp-action="Add" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="ClientId"></label>
@@ -9,15 +29,15 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="ImageFile"></label>
+        <label asp-for="ImageFile">Upload Image</label>
         <input asp-for="ImageFile" type="file" class="form-control" />
         <span asp-validation-for="ImageFile" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="VideoUrl"></label>
-        <input asp-for="VideoUrl" class="form-control" />
-        <span asp-validation-for="VideoUrl" class="text-danger"></span>
+        <label asp-for="VideoFile">Upload Video</label>
+        <input asp-for="VideoFile" type="file" class="form-control" />
+        <span asp-validation-for="VideoFile" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -29,3 +49,36 @@
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('mediaForm').addEventListener('submit', function (e) {
+            const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+            const allowedVideoExtensions = ['.mp4', '.avi', '.mov', '.mkv'];
+
+            const imageInput = document.querySelector('input[name="ImageFile"]');
+            const videoInput = document.querySelector('input[name="VideoFile"]');
+
+            let errorMessage = '';
+            if (imageInput.files.length > 0) {
+                const imageExtension = imageInput.files[0].name.split('.').pop().toLowerCase();
+                if (!allowedImageExtensions.includes(`.${imageExtension}`)) {
+                    errorMessage += 'The selected file is not a valid image.\n';
+                }
+            }
+
+            if (videoInput.files.length > 0) {
+                const videoExtension = videoInput.files[0].name.split('.').pop().toLowerCase();
+                if (!allowedVideoExtensions.includes(`.${videoExtension}`)) {
+                    errorMessage += 'The selected file is not a valid video.\n';
+                }
+            }
+
+            if (errorMessage) {
+                e.preventDefault();
+                alert(errorMessage);
+            }
+        });
+    </script>
+}

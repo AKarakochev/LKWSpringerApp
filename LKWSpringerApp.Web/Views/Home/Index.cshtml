@@ -2,6 +2,19 @@
     ViewData["Title"] = "Home";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <div class="home-page-wallpaper">
     <div class="row">
         <div class="col-md-3">

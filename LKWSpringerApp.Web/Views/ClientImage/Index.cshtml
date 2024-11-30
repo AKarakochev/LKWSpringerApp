@@ -6,6 +6,19 @@
 
 <div class="client-image-wallpaper">
     <h2><u>Client Media List</u></h2>
+    
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
 
     <div class="mb-3 text-end">
         <a asp-action="Add" class="btn btn-success">Add Media</a>

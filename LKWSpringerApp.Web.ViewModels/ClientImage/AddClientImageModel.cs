@@ -17,7 +17,7 @@ namespace LKWSpringerApp.Web.ViewModels.ClientImage
         public IFormFile ImageFile { get; set; } = null!;
 
         [Display(Name = "Video URL")]
-        public string? VideoUrl { get; set; }
+        public IFormFile? VideoFile { get; set; }
 
         [StringLength(DescriptionMaxLength,MinimumLength = DescriptionMinLength)]
         [Display(Name = "Description")]

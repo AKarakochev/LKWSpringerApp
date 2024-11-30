@@ -1,6 +1,8 @@
 ﻿using LKWSpringerApp.Web.ViewModels.TourModels;
 using LKWSpringerApp.Web.ViewModels.Tour;
 using LKWSpringerApp.Services.Data.Interfaces;
+using static LKWSpringerApp.Common.SuccessMessagesConstants.Tour;
+using static LKWSpringerApp.Common.ErrorMessagesConstants.Tour;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +33,7 @@ namespace LKWSpringerApp.Web.Controllers
             }
             catch (Exception)
             {
-                TempData["ErrorMessage"] = "An unexpected error occurred while loading tours.";
+                TempData["ErrorMessage"] = TourTryAgainErrorMessage;
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -42,7 +44,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid tour ID.");
+                return BadRequest(TourInvalidIdErrorMessage);
             }
 
             var tour = await tourService.GetTourDetailsByIdAsync(id);
@@ -92,7 +94,7 @@ namespace LKWSpringerApp.Web.Controllers
             try
             {
                 await tourService.AddTourAsync(model);
-                TempData["SuccessMessage"] = "Tour added successfully.";
+                TempData["SuccessMessage"] = TourAddedSuccessMessage;
                 return RedirectToAction(nameof(Index));
             }
             catch (ArgumentException ex)
@@ -116,7 +118,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid tour ID.");
+                return BadRequest(TourInvalidIdErrorMessage);
             }
 
             var tour = await tourService.GetTourDetailsByIdAsync(id);
@@ -151,7 +153,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty || id != model.Id)
             {
-                return BadRequest("Invalid tour ID.");
+                return BadRequest(TourInvalidIdErrorMessage);
             }
 
             if (!ModelState.IsValid)
@@ -167,7 +169,7 @@ namespace LKWSpringerApp.Web.Controllers
                 }
                 catch
                 {
-                    TempData["ErrorMessage"] = "An error occurred while preparing the Edit Tour page. Please try again later.";
+                    TempData["ErrorMessage"] = TourTryAgainErrorMessage;
                 }
 
                 return View(model);
@@ -182,12 +184,12 @@ namespace LKWSpringerApp.Web.Controllers
                     return NotFound();
                 }
 
-                TempData["SuccessMessage"] = "Tour updated successfully.";
+                TempData["SuccessMessage"] = TourUpdatedSuccessMessage;
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                ModelState.AddModelError(string.Empty, "An error occurred while updating the tour. Please try again later.");
+                ModelState.AddModelError(string.Empty, TourTryAgainErrorMessage);
                 return View(model);
             }
         }
@@ -198,7 +200,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid tour ID.");
+                return BadRequest(TourInvalidIdErrorMessage);
             }
 
             var tour = await tourService.GetTourDetailsByIdAsync(id);
@@ -225,7 +227,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("Invalid tour ID.");
+                return BadRequest(TourInvalidIdErrorMessage);
             }
 
             try
@@ -237,12 +239,12 @@ namespace LKWSpringerApp.Web.Controllers
                     return NotFound();
                 }
 
-                TempData["SuccessMessage"] = "Tour deleted successfully.";
+                TempData["SuccessMessage"] = TourDeletedSuccessMessage;
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                TempData["ErrorMessage"] = "An error occurred while deleting the tour. Please try again later.";
+                TempData["ErrorMessage"] = TourTryAgainErrorMessage;
                 return RedirectToAction(nameof(Index));
             }
         }
