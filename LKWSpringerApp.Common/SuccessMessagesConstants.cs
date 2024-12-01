@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LKWSpringerApp.Common
+﻿namespace LKWSpringerApp.Common
 {
     public static class SuccessMessagesConstants
     {
@@ -15,11 +9,11 @@ namespace LKWSpringerApp.Common
             public const string ClientDeletedSuccessMessage = "Client deleted successfully.";
         }
 
-        public static class ClientImage
+        public static class Media
         {
-            public const string ClientImageDeletedSuccessMessage = "Client image deleted successfully.";
-            public const string ClientImageAddedSuccessMessage = "Client image added successfully.";
-            public const string ClientImageUpdatedSuccessMessage = "Client image updated successfully.";
+            public const string MediaDeletedSuccessMessage = "Client image deleted successfully.";
+            public const string MediaAddedSuccessMessage = "Client image added successfully.";
+            public const string MediaUpdatedSuccessMessage = "Client image updated successfully.";
         }
 
         public static class Driver

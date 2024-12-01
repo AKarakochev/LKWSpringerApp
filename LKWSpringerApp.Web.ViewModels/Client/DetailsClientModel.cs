@@ -10,6 +10,6 @@
         public string PhoneNumber { get; set; } = null!;
         public string DeliveryDescription { get; set; } = null!;
         public string DeliveryTime { get; set; } = null!;
-        public List<ClientImageModel> Images { get; set; } = new List<ClientImageModel>();
+        public List<ClientMediaModel> Images { get; set; } = new List<ClientMediaModel>();
     }
 }

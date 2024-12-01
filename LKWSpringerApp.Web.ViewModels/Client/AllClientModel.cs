@@ -10,10 +10,10 @@
         public string DeliveryDescription { get; set; } = null!;
         public string DeliveryTime { get; set; } = null!;
         public string? AddressUrl { get; set; }
-        public List<ClientImageModel> Images { get; set; } = new List<ClientImageModel>();
+        public List<ClientMediaModel> Images { get; set; } = new List<ClientMediaModel>();
     }
 
-    public class ClientImageModel
+    public class ClientMediaModel
     {
         public Guid Id { get; set; }
         public string ImageUrl { get; set; } = null!;

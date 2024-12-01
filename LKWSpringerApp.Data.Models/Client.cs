@@ -23,7 +23,7 @@ namespace LKWSpringerApp.Data.Models
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = ClientNumberErrorMessage)]
-        [Comment("The number of the client is required.")]
+        [Comment("The number of the client.")]
         [Range(1,10000,ErrorMessage = ClientNumberRangeErrorMessage)]
         public int ClientNumber { get; set; }
 
@@ -32,6 +32,7 @@ namespace LKWSpringerApp.Data.Models
         [MaxLength(ClientAddressMaxLength)]
         public string Address { get; set; } = null!;
 
+        [Comment("The google Url address of the client.")]
         [MaxLength(ClientAddressUrlMaxLength)]
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         public string? AddressUrl { get; set; }
@@ -43,7 +44,7 @@ namespace LKWSpringerApp.Data.Models
         public string PhoneNumber { get; set; } = null!;
 
         [Required(ErrorMessage = ClientDeliveryDescriptionErrorMessage)]
-        [Comment("How the client want we to make his delivery.")]
+        [Comment("How the client want to make his delivery.")]
         [MaxLength(DeliveryDescriptionMaxLength)]
         public string DeliveryDescription { get; set; } = null!;
 
@@ -56,6 +57,6 @@ namespace LKWSpringerApp.Data.Models
 
         public ICollection<TourClient> ClientsTours { get; set; } = new HashSet<TourClient>();
 
-        public ICollection<ClientImage> Images { get; set; } = new List<ClientImage>();
+        public ICollection<Media> Media { get; set; } = new List<Media>();
     }
 }

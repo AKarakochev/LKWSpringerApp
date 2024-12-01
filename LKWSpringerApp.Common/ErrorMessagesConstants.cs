@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace LKWSpringerApp.Common
+﻿namespace LKWSpringerApp.Common
 {
     public static class ErrorMessagesConstants
     {
@@ -37,15 +35,15 @@ namespace LKWSpringerApp.Common
             public const string ClientTryAgainErrorMessage = "An unexpected error occurred.Please try again later.";
         }
 
-        public static class ClientImage
+        public static class Media
         {
-            public const string ClientImageUrlErrorMessage = "ImageUrl is required.";
+            public const string MediaImageUrlErrorMessage = "ImageUrl is required.";
 
-            public const string ClientImageInvalidIdErrorMessage = "Invalid client image ID.";
-            public const string ClientImageTryAgainErrorMessage = "An unexpected error occurred.Please try again later.";
-            public const string ClientImageInvalidImageFormatErrorMessage = "Invalid image file format.";
-            public const string ClientImageInvalidVideoFormatErrorMessage = "Invalid video file format.";
-            public const string ClientImageIsDeletedOrNotFoundErrorMessage = "Client not found or is deleted.";
+            public const string MediaInvalidIdErrorMessage = "Invalid client image ID.";
+            public const string MediaTryAgainErrorMessage = "An unexpected error occurred.Please try again later.";
+            public const string MediaInvalidImageFormatErrorMessage = "Invalid image file format.";
+            public const string MediaInvalidVideoFormatErrorMessage = "Invalid video file format.";
+            public const string MediaIsDeletedOrNotFoundErrorMessage = "Client not found or is deleted.";
         }
 
         public static class Tour

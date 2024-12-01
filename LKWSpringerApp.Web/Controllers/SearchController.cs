@@ -54,7 +54,7 @@ namespace LKWSpringerApp.Web.Controllers
                 })
                 .ToListAsync();
 
-            var clientMedia = await _context.ClientImages
+            var clientMedia = await _context.Media
                 .Include(ci => ci.Client)
                 .Where(ci => ci.Description.Contains(searchQuery) || ci.Client.Name.Contains(searchQuery))
                 .Select(ci => new

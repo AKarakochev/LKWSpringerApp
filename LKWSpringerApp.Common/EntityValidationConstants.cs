@@ -32,7 +32,7 @@
             public const int TourNameMinLength = 4;
         }
 
-        public static class ClientImage
+        public static class Media
         {
             public const int DescriptionMaxLength = 500;
             public const int DescriptionMinLength = 5;

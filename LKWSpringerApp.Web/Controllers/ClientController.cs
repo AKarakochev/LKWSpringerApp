@@ -67,7 +67,7 @@ namespace LKWSpringerApp.Web.Controllers
         public async Task<IActionResult> Add([Bind("Name,ClientNumber,Address,AddressUrl,PhoneNumber,DeliveryDescription,DeliveryTime")] AddClientModel model)
         {
             if(!ModelState.IsValid)
-    {
+            {
                 return View(model);
             }
 

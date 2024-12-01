@@ -52,17 +52,18 @@ namespace LKWSpringerApp.Data.Migrations
 
                     b.Property<string>("AddressUrl")
                         .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(150)")
+                        .HasComment("The google Url address of the client.");
 
                     b.Property<int>("ClientNumber")
                         .HasColumnType("int")
-                        .HasComment("The number of the client is required.");
+                        .HasComment("The number of the client.");
 
                     b.Property<string>("DeliveryDescription")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)")
-                        .HasComment("How the client want we to make his delivery.");
+                        .HasComment("How the client want to make his delivery.");
 
                     b.Property<string>("DeliveryTime")
                         .IsRequired()
@@ -92,6 +93,7 @@ namespace LKWSpringerApp.Data.Migrations
                         {
                             Id = new Guid("162abc8f-af39-415d-956d-c288a4f401d4"),
                             Address = "87435 Kempten,Kemptener Str. 1",
+                            AddressUrl = "https://maps.app.goo.gl/DZyJSoceAaAvx1cN9",
                             ClientNumber = 101,
                             DeliveryDescription = "Front door",
                             DeliveryTime = "04:00",
@@ -103,6 +105,7 @@ namespace LKWSpringerApp.Data.Migrations
                         {
                             Id = new Guid("0ceac7e0-f9d5-45f0-9845-8a58141184d5"),
                             Address = "87629 Fussen,Fussenner Str. 2",
+                            AddressUrl = "https://maps.app.goo.gl/GzDSJXPr1PFcpXmb9",
                             ClientNumber = 3000,
                             DeliveryDescription = "Hospital main entrance",
                             DeliveryTime = "06:00",
@@ -114,6 +117,7 @@ namespace LKWSpringerApp.Data.Migrations
                         {
                             Id = new Guid("47f3539d-42a7-47c2-86f5-67ebf9638b87"),
                             Address = "87000 Wangen,Wangener Str. 3",
+                            AddressUrl = "https://maps.app.goo.gl/NHu42wMmYcDWMJop6",
                             ClientNumber = 5555,
                             DeliveryDescription = "Ramp 13",
                             DeliveryTime = "02:30",
@@ -125,73 +129,13 @@ namespace LKWSpringerApp.Data.Migrations
                         {
                             Id = new Guid("7a80f16d-f7b0-467c-9f96-61d506702150"),
                             Address = "87435 Memmingen,Memmingener Str. 4",
+                            AddressUrl = "https://maps.app.goo.gl/ZzMGLmmM15hgpEFY9",
                             ClientNumber = 110,
                             DeliveryDescription = "Behind the restaurant",
                             DeliveryTime = "10:00",
                             IsDeleted = false,
                             Name = "Memmingen",
                             PhoneNumber = "+491624389333"
-                        });
-                });
-
-            modelBuilder.Entity("LKWSpringerApp.Data.Models.ClientImage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Unique identifier.");
-
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .HasComment("Description of the video or/and images.");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("ImageUrl of the client location and delivery area.");
-
-                    b.Property<string>("VideoUrl")
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("VideoUrl of the client location and delivery area.");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("ClientImages");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("63a7d3f2-0fc8-4ede-aa4d-81ef68f9601e"),
-                            ClientId = new Guid("162abc8f-af39-415d-956d-c288a4f401d4"),
-                            Description = "Image of Kempten location.",
-                            ImageUrl = "images/clients/kempten/1.jpg"
-                        },
-                        new
-                        {
-                            Id = new Guid("94d28ff4-a327-46c4-9351-3123308655d1"),
-                            ClientId = new Guid("0ceac7e0-f9d5-45f0-9845-8a58141184d5"),
-                            Description = "Image of Fussen location.",
-                            ImageUrl = "images/clients/fussen/1.jpg"
-                        },
-                        new
-                        {
-                            Id = new Guid("cc69f15d-7970-4e57-b824-c45072ec604c"),
-                            ClientId = new Guid("47f3539d-42a7-47c2-86f5-67ebf9638b87"),
-                            Description = "Image of Wangen location.",
-                            ImageUrl = "images/clients/wangen/1.jpg"
-                        },
-                        new
-                        {
-                            Id = new Guid("880ae005-0342-4e67-8733-f340e658a42f"),
-                            ClientId = new Guid("7a80f16d-f7b0-467c-9f96-61d506702150"),
-                            Description = "Image of Memmingen location.",
-                            ImageUrl = "images/clients/memmingen/1.jpg"
                         });
                 });
 
@@ -297,10 +241,12 @@ namespace LKWSpringerApp.Data.Migrations
             modelBuilder.Entity("LKWSpringerApp.Data.Models.DriverTour", b =>
                 {
                     b.Property<Guid>("DriverId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Unique identifier.");
 
                     b.Property<Guid>("TourId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Unique identifier.");
 
                     b.HasKey("DriverId", "TourId");
 
@@ -328,6 +274,69 @@ namespace LKWSpringerApp.Data.Migrations
                         {
                             DriverId = new Guid("a22dd3bc-24f9-4dea-b986-8a198d460a8f"),
                             TourId = new Guid("a3101694-8d27-4d93-8b76-a2bc7cdeed7a")
+                        });
+                });
+
+            modelBuilder.Entity("LKWSpringerApp.Data.Models.Media", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Unique identifier.");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasComment("Description of the video or/and images.");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("ImageUrl of the client location and delivery area.");
+
+                    b.Property<string>("VideoUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("VideoUrl of the client location and delivery area.");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("Media", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("d8a3ff6a-6f55-4df8-ba57-fcc785b79b33"),
+                            ClientId = new Guid("162abc8f-af39-415d-956d-c288a4f401d4"),
+                            Description = "Image of Kempten location.",
+                            ImageUrl = "media/clients/kempten/1.jpg",
+                            VideoUrl = "media/clients/kempten/video2.mp4"
+                        },
+                        new
+                        {
+                            Id = new Guid("2f672697-4b0f-4957-b19b-a06a3d29ead2"),
+                            ClientId = new Guid("0ceac7e0-f9d5-45f0-9845-8a58141184d5"),
+                            Description = "Image of Fussen location.",
+                            ImageUrl = "media/clients/fussen/1.jpg",
+                            VideoUrl = "media/clients/fussen/video1.mp4"
+                        },
+                        new
+                        {
+                            Id = new Guid("dcf55204-cfa9-4380-bd6a-860887b02e12"),
+                            ClientId = new Guid("47f3539d-42a7-47c2-86f5-67ebf9638b87"),
+                            Description = "Image of Wangen location.",
+                            ImageUrl = "media/clients/wangen/1.jpg"
+                        },
+                        new
+                        {
+                            Id = new Guid("b8028002-caee-416c-954d-f4192a9865a2"),
+                            ClientId = new Guid("7a80f16d-f7b0-467c-9f96-61d506702150"),
+                            Description = "Image of Memmingen location.",
+                            ImageUrl = "media/clients/memmingen/1.jpg"
                         });
                 });
 
@@ -645,17 +654,6 @@ namespace LKWSpringerApp.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LKWSpringerApp.Data.Models.ClientImage", b =>
-                {
-                    b.HasOne("LKWSpringerApp.Data.Models.Client", "Client")
-                        .WithMany("Images")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-                });
-
             modelBuilder.Entity("LKWSpringerApp.Data.Models.DriverTour", b =>
                 {
                     b.HasOne("LKWSpringerApp.Data.Models.Driver", "Driver")
@@ -673,6 +671,17 @@ namespace LKWSpringerApp.Data.Migrations
                     b.Navigation("Driver");
 
                     b.Navigation("Tour");
+                });
+
+            modelBuilder.Entity("LKWSpringerApp.Data.Models.Media", b =>
+                {
+                    b.HasOne("LKWSpringerApp.Data.Models.Client", "Client")
+                        .WithMany("Media")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("LKWSpringerApp.Data.Models.TourClient", b =>
@@ -749,7 +758,7 @@ namespace LKWSpringerApp.Data.Migrations
                 {
                     b.Navigation("ClientsTours");
 
-                    b.Navigation("Images");
+                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("LKWSpringerApp.Data.Models.Driver", b =>

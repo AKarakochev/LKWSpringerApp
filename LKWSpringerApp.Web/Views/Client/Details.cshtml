@@ -40,7 +40,7 @@
         <td>
             <button class="btn btn-outline-secondary" style="width: 170px;" onclick="toggleSection('description')">Delivery Description</button>
             <button class="btn btn-outline-secondary" style="width: 170px;" onclick="toggleSection('googleMaps')">Google Maps</button>
-            <button class="btn btn-outline-secondary" style="width: 170px;" onclick="toggleSection('images')">Images</button>
+            <button class="btn btn-outline-secondary" style="width: 170px;" onclick="toggleSection('images')">Media</button>
         </td>
     </tr>
 </table>
@@ -63,7 +63,7 @@
 </div>
 
 <div id="images" class="toggle-section mt-3" style="display:none;">
-    <h4>Images</h4>
+    <h4>Media</h4>
     <div class="d-flex flex-wrap">
         @if (Model.Images.Any())
         {

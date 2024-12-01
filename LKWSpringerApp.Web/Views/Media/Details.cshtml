@@ -1,0 +1,70 @@
+﻿@model LKWSpringerApp.Web.ViewModels.Media.DetailsMediaModel
+
+@{
+    ViewData["Title"] = "Client Media Details";
+}
+
+<h2><u>Media Files for @Model.ClientName</u></h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (Model.MediaFiles == null || !Model.MediaFiles.Any())
+{
+    <p class="text-center text-muted">There is no associated media for this client!</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Image</th>
+                    <th>Video</th>
+                    <th style="width: 200px;">Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var media in Model.MediaFiles)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(media.ImageUrl))
+                            {
+                                <img src="/@media.ImageUrl" alt="@media.Description" class="img-fluid rounded" style="max-width: 300px; height: auto;" />
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(media.VideoUrl))
+                            {
+                                <video controls style="max-width: 300px; height: auto;">
+                                    <source src="/@media.VideoUrl" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            }
+                        </td>
+                        <td style="width: 200px;">@media.Description</td>
+                        <td style="vertical-align: middle;">
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                <a asp-action="Edit" asp-route-id="@media.Id" class="btn btn-warning">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@media.Id" class="btn btn-danger">Delete</a>
+                                <a asp-action="Index" class="btn btn-primary">Back</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -32,7 +32,7 @@ namespace LKWSpringerApp.Services.Data
                     DeliveryDescription = c.DeliveryDescription,
                     DeliveryTime = c.DeliveryTime,
                     AddressUrl = c.AddressUrl,
-                    Images = c.Images.Select(img => new ClientImageModel
+                    Images = c.Media.Select(img => new ClientMediaModel
                     {
                         Id = img.Id,
                         ImageUrl = img.ImageUrl,
@@ -59,7 +59,7 @@ namespace LKWSpringerApp.Services.Data
                     PhoneNumber = c.PhoneNumber,
                     DeliveryDescription = c.DeliveryDescription,
                     DeliveryTime = c.DeliveryTime,
-                    Images = c.Images.Select(img => new ClientImageModel
+                    Images = c.Media.Select(img => new ClientMediaModel
                     {
                         Id = img.Id,
                         ImageUrl = img.ImageUrl,

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 using LKWSpringerApp.Data.Models;
+using System.Reflection.Emit;
 
 namespace LKWSpringerApp.Data
 {
@@ -23,12 +24,14 @@ namespace LKWSpringerApp.Data
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Tour> Tours { get; set; }
         public virtual DbSet<TourClient> TourClients { get; set; }
-        public virtual DbSet<ClientImage> ClientImages { get; set; }
+        public virtual DbSet<Media> Media { get; set; }
         public virtual DbSet<ApplicationUserDriver> UsersDrivers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Media>().ToTable("Media");
 
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -72,6 +75,12 @@ namespace LKWSpringerApp.Data
                 .HasOne(tc => tc.Client)
                 .WithMany(c => c.ClientsTours)
                 .HasForeignKey(tc => tc.ClientId);
+
+            builder.Entity<Media>()
+                .HasOne(m => m.Client)
+                .WithMany(c => c.Media)
+                .HasForeignKey(m => m.ClientId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

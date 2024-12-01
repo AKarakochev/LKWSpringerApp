@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\ClientImage\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Media\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Client\Add.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Client\Details.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Tour\Edit.cshtml" />
@@ -57,11 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Remove="Views\ClientImage\Details.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\media\clients\" />
+    <UpToDateCheckInput Remove="Views\Media\Details.cshtml" />
   </ItemGroup>
 
 </Project>
