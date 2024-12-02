@@ -37,5 +37,17 @@
             public const int DescriptionMaxLength = 500;
             public const int DescriptionMinLength = 5;
         }
+
+        public static class PinBoard
+        {
+            public const int PinBoardUpcomingCourseMaxLength = 100;
+            public const string PinBoardUpcomingCourseDateFormat = "dd/MM/yyyy";
+            public const int PinBoardNewsMaxLength = 500;
+            public const int PinBoardImportantNewsMaxLength = 500;
+            public const int PinBoardDrivingLicenseExpDateMaxLength = 7;
+            public const int PinBoardDrivingCardExpDateMaxLength = 7;
+            public const int PinBoardDrivingLicenseRenewalDateMaxLength = 7;
+            public const int PinBoardDrivingCardRenewalDateMaxLength = 7;
+        }
     }
 }

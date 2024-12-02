@@ -56,5 +56,12 @@
             public const string TourInvalidIdErrorMessage = "Invalid tour ID.";
             public const string TourTryAgainErrorMessage = "An unexpected error occurred.Please try again later.";
         }
+
+        public static class PinBoard
+        {
+            public const string PinBoardDrivingLicenseExpDateErrorMessage = "Driving license ExpDate must be in format MM/YYYY and it is required field.";
+            public const string PinBoardDrivingCardExpDateErrorMessage = "Driving card ExpDate must be in format MM/YYYY and it is required field.";
+
+        }
     }
 }

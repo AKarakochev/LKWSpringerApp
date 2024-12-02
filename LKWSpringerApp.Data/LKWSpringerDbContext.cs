@@ -26,6 +26,7 @@ namespace LKWSpringerApp.Data
         public virtual DbSet<TourClient> TourClients { get; set; }
         public virtual DbSet<Media> Media { get; set; }
         public virtual DbSet<ApplicationUserDriver> UsersDrivers { get; set; }
+        public virtual DbSet<PinBoard> PinBoards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

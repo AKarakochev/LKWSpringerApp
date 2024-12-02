@@ -55,5 +55,7 @@ namespace LKWSpringerApp.Data.Models
         public bool IsDeleted { get; set; }
 
         public ICollection<DriverTour> DriverTours { get; set; } = new List<DriverTour>();
+
+        public ICollection<PinBoard> PinBoards { get; set; } = new List<PinBoard>();
     }
 }
