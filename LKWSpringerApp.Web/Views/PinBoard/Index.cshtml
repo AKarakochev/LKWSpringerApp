@@ -1,0 +1,83 @@
+﻿@model Tuple<LKWSpringerApp.Services.Data.Helpers.PaginatedList<LKWSpringerApp.Web.ViewModels.Driver.DriverPinBoardModel>, LKWSpringerApp.Web.ViewModels.PinBoard.PinBoardNewsModel>
+
+@{
+    ViewData["Title"] = "Pin Board";
+}
+<div class="pinboard-index-wallpaper">
+    <h2><u>Pin Board</u></h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="mb-3 text-end">
+        <a asp-action="EditNews" class="btn btn-primary">Edit News</a>
+    </div>
+
+    <div class="table-responsive mb-5">
+        <h3><u>News</u></h3>
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>News</th>
+                    <th>Important News</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.Item2.News</td>
+                    <td>@Model.Item2.ImportantNews</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-responsive">
+        <h3><u>Drivers</u></h3>
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Driver Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var driver in Model.Item1)
+                {
+                    <tr>
+                        <td>@driver.FirstName @driver.SecondName</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@driver.Id" class="btn btn-primary btn-sm">View Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(Model.Item1.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.Item1.PageIndex - 1)" asp-route-pageSize="@ViewData["PageSize"]">Previous</a>
+            </li>
+            @for (var i = 1; i <= Model.Item1.TotalPages; i++)
+            {
+                <li class="page-item @(Model.Item1.PageIndex == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageIndex="@i" asp-route-pageSize="@ViewData["PageSize"]">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.Item1.HasNextPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageIndex="@(Model.Item1.PageIndex + 1)" asp-route-pageSize="@ViewData["PageSize"]">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>

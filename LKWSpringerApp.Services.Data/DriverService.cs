@@ -93,6 +93,19 @@ namespace LKWSpringerApp.Services.Data
                 })
                 .ToListAsync();
         }
+        public async Task<PaginatedList<DriverPinBoardModel>> GetAllDriversForPinBoardAsync(int pageIndex, int pageSize)
+        {
+            var query = dbContext.Drivers
+                .Where(d => !d.IsDeleted)
+                .Select(d => new DriverPinBoardModel
+                {
+                    Id = d.Id,
+                    FirstName = d.FirstName,
+                    SecondName = d.SecondName
+                });
+
+            return await PaginatedList<DriverPinBoardModel>.CreateAsync(query, pageIndex, pageSize);
+        }
         public async Task AddDriverAsync(AddDriverModel model)
         {
             if (!DateTime.TryParseExact(model.BirthDate, DriverBirthDateFormat, CultureInfo.CurrentCulture,

@@ -75,6 +75,7 @@ namespace LKWSpringerApp.Web
             builder.Services.AddScoped<ITourService, TourService>();
             builder.Services.AddScoped<IRepository<DriverTour, Guid>, BaseRepository<DriverTour, Guid>>();
             builder.Services.AddScoped<IMediaService, MediaService>();
+            builder.Services.AddScoped<IPinBoardService, PinBoardService>();
 
             builder.Services.AddControllersWithViews(options =>
             {

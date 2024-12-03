@@ -4,6 +4,7 @@ using LKWSpringerApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LKWSpringerApp.Data.Migrations
 {
     [DbContext(typeof(LkwSpringerDbContext))]
-    partial class LkwSpringerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241203152308_AddingNewEntityPinBoard")]
+    partial class AddingNewEntityPinBoard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,7 +313,7 @@ namespace LKWSpringerApp.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("aa44e1c6-b09a-479e-8c5b-96bf18e71a8d"),
+                            Id = new Guid("2e66ea4e-6765-4e1c-9dc5-e04c8e574bbc"),
                             ClientId = new Guid("162abc8f-af39-415d-956d-c288a4f401d4"),
                             Description = "Image of Kempten location.",
                             ImageUrl = "media/clients/kempten/1.jpg",
@@ -318,7 +321,7 @@ namespace LKWSpringerApp.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("cb142f18-2a6d-49d3-b5df-3170cb5a3b23"),
+                            Id = new Guid("781567ce-9745-47a0-a925-cbf92fe37f2c"),
                             ClientId = new Guid("0ceac7e0-f9d5-45f0-9845-8a58141184d5"),
                             Description = "Image of Fussen location.",
                             ImageUrl = "media/clients/fussen/1.jpg",
@@ -326,14 +329,14 @@ namespace LKWSpringerApp.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("02bf54e2-e37f-49c2-b40f-6d2fdb19805b"),
+                            Id = new Guid("b76f6a5c-ada7-4840-a932-7656fe3d9fda"),
                             ClientId = new Guid("47f3539d-42a7-47c2-86f5-67ebf9638b87"),
                             Description = "Image of Wangen location.",
                             ImageUrl = "media/clients/wangen/1.jpg"
                         },
                         new
                         {
-                            Id = new Guid("a9523a54-02e8-4dc0-8f08-183558a32f62"),
+                            Id = new Guid("fe9c0622-b2a8-4119-b473-290a23de891e"),
                             ClientId = new Guid("7a80f16d-f7b0-467c-9f96-61d506702150"),
                             Description = "Image of Memmingen location.",
                             ImageUrl = "media/clients/memmingen/1.jpg"
@@ -347,7 +350,7 @@ namespace LKWSpringerApp.Data.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier.");
 
-                    b.Property<Guid?>("DriverId")
+                    b.Property<Guid>("DriverId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DrivingCardExpDate")
@@ -740,7 +743,9 @@ namespace LKWSpringerApp.Data.Migrations
                 {
                     b.HasOne("LKWSpringerApp.Data.Models.Driver", "Driver")
                         .WithMany("PinBoards")
-                        .HasForeignKey("DriverId");
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Driver");
                 });

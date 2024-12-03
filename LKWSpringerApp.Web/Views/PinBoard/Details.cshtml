@@ -1,0 +1,15 @@
+﻿@model LKWSpringerApp.Web.ViewModels.PinBoard.PinBoardDetailsModel
+
+<h2>Driver Details</h2>
+<p><strong>Driving License Expiry Date:</strong> @Model.DrivingLicenseExpDate</p>
+<p><strong>Driving Card Expiry Date:</strong> @Model.DrivingCardExpDate</p>
+<p><strong>Driving License Renewal Date:</strong> @Model.DrivingLicenseRenewalDate</p>
+<p><strong>Driving Card Renewal Date:</strong> @Model.DrivingCardRenewalDate</p>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" class="btn btn-primary">Edit</a>
+    }
+</div>

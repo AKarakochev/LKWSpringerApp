@@ -44,10 +44,10 @@
             public const string PinBoardUpcomingCourseDateFormat = "dd/MM/yyyy";
             public const int PinBoardNewsMaxLength = 500;
             public const int PinBoardImportantNewsMaxLength = 500;
-            public const int PinBoardDrivingLicenseExpDateMaxLength = 7;
-            public const int PinBoardDrivingCardExpDateMaxLength = 7;
-            public const int PinBoardDrivingLicenseRenewalDateMaxLength = 7;
-            public const int PinBoardDrivingCardRenewalDateMaxLength = 7;
+            public const string PinBoardDrivingLicenseExpDateFormat = "MM/yyyy";
+            public const string PinBoardDrivingCardExpDateFormat = "MM/yyyy";
+            public const string PinBoardDrivingLicenseRenewalDateFormat = "MM/yyyy";
+            public const string PinBoardDrivingCardRenewalDateFormat = "MM/yyyy";
         }
     }
 }

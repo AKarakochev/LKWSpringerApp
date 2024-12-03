@@ -1,0 +1,26 @@
+﻿@model LKWSpringerApp.Web.ViewModels.PinBoard.PinBoardNewsModel
+
+@{
+    ViewData["Title"] = "Edit News";
+}
+
+<h2><u>Edit News</u></h2>
+
+<form asp-action="EditNews" method="post">
+    <div class="form-group">
+        <label asp-for="News" class="control-label">News</label>
+        <textarea asp-for="News" class="form-control"></textarea>
+        <span asp-validation-for="News" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ImportantNews" class="control-label">Important News</label>
+        <textarea asp-for="ImportantNews" class="form-control"></textarea>
+        <span asp-validation-for="ImportantNews" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Index" class="btn btn-secondary ml-2">Back</a>
+    </div>
+</form>
