@@ -1,7 +1,7 @@
-﻿using LKWSpringerApp.Services.Data;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+
 using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.PinBoard;
 using LKWSpringerApp.Services.Data.Helpers;
@@ -22,6 +22,7 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10)
         {
             var drivers = await driverService.GetAllDriversForPinBoardAsync(pageIndex, pageSize);
@@ -32,6 +33,7 @@ namespace LKWSpringerApp.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
             var loggedInDriverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -39,7 +41,7 @@ namespace LKWSpringerApp.Web.Controllers
 
             if (!isAdmin && loggedInDriverId != id.ToString())
             {
-                TempData["ErrorMessage"] = "You do not have permission to view this information.";
+                TempData["ErrorMessage"] = "You do not have permission to view this information!";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -56,25 +58,6 @@ namespace LKWSpringerApp.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult AddNews()
-        {
-            return View(new PinBoardNewsModel());
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddNews(PinBoardNewsModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            await pinBoardService.AddNewsAsync(model);
-            TempData["SuccessMessage"] = "News added successfully.";
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditNews()
         {
             var news = await pinBoardService.GetNewsAsync();
@@ -83,6 +66,7 @@ namespace LKWSpringerApp.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditNews(PinBoardNewsModel model)
         {
             if (!ModelState.IsValid)
@@ -91,6 +75,51 @@ namespace LKWSpringerApp.Web.Controllers
             await pinBoardService.EditNewsAsync(model);
             TempData["SuccessMessage"] = "News updated successfully.";
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = "Invalid driver ID.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var pinBoardData = await pinBoardService.GetPinBoardDataForEditAsync(id);
+
+            if (pinBoardData == null)
+            {
+                TempData["ErrorMessage"] = "Driver PinBoard data not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(pinBoardData);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(PinBoardEditDriverModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Invalid data. Please correct the errors and try again.";
+                return View(model);
+            }
+
+            try
+            {
+                await pinBoardService.UpdatePinBoardAsync(model);
+                TempData["SuccessMessage"] = "PinBoard details updated successfully.";
+                return RedirectToAction(nameof(Details), new { id = model.DriverId });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+                return View(model);
+            }
         }
     }
 }

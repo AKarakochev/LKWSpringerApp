@@ -27,29 +27,6 @@ namespace LKWSpringerApp.Services.Data
                 .FirstOrDefaultAsync() ?? new PinBoardNewsModel { News = "No news available", ImportantNews = "No important news available" };
         }
 
-        public async Task AddNewsAsync(PinBoardNewsModel model)
-        {
-            var existingNews = await dbContext.PinBoards.FirstOrDefaultAsync(pb => pb.DriverId == null);
-
-            if (existingNews != null)
-            {
-                existingNews.News = model.News;
-                existingNews.ImportantNews = model.ImportantNews;
-                dbContext.PinBoards.Update(existingNews);
-            }
-            else
-            {
-                var pinBoard = new PinBoard
-                {
-                    News = model.News,
-                    ImportantNews = model.ImportantNews
-                };
-                await dbContext.PinBoards.AddAsync(pinBoard);
-            }
-
-            await dbContext.SaveChangesAsync();
-        }
-
         public async Task EditNewsAsync(PinBoardNewsModel model)
         {
             var pinBoard = await dbContext.PinBoards.FirstOrDefaultAsync();
@@ -66,22 +43,105 @@ namespace LKWSpringerApp.Services.Data
 
         public async Task<PinBoardDetailsModel?> GetPinBoardDataForDriverAsync(Guid driverId)
         {
-            return await dbContext.PinBoards
-                .Where(pb => pb.DriverId == driverId || pb.DriverId == null)
-                .Select(pb => new PinBoardDetailsModel
+            var pinBoard = await dbContext.PinBoards.FirstOrDefaultAsync(pb => pb.DriverId == driverId);
+
+            if (pinBoard == null)
+            {
+                pinBoard = new PinBoard
                 {
-                    DrivingLicenseExpDate = pb.DrivingLicenseExpDate.ToString("MM/yyyy"),
-                    DrivingCardExpDate = pb.DrivingCardExpDate.ToString("MM/yyyy"),
-                    DrivingLicenseRenewalDate = pb.DrivingLicenseRenewalDate.HasValue
-                        ? pb.DrivingLicenseRenewalDate.Value.ToString("MM/yyyy")
-                        : null,
-                    DrivingCardRenewalDate = pb.DrivingCardRenewalDate.HasValue
-                        ? pb.DrivingCardRenewalDate.Value.ToString("MM/yyyy")
-                        : null,
-                    News = pb.News,
-                    ImportantNews = pb.ImportantNews
-                })
-                .FirstOrDefaultAsync();
+                    DriverId = driverId,
+                    DrivingLicenseExpDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                    DrivingCardExpDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                    DrivingLicenseRenewalDate = null,
+                    DrivingCardRenewalDate = null,
+                    UpcomingCourse = null,
+                    UpcomingCourseDate = null,
+                    News = "No news available",
+                    ImportantNews = "No important news available"
+                };
+
+                await dbContext.PinBoards.AddAsync(pinBoard);
+                await dbContext.SaveChangesAsync();
+            }
+
+            return new PinBoardDetailsModel
+            {
+                DriverId = pinBoard.DriverId ?? Guid.Empty,
+                DrivingLicenseExpDate = pinBoard.DrivingLicenseExpDate.ToString("MM/yyyy"),
+                DrivingCardExpDate = pinBoard.DrivingCardExpDate.ToString("MM/yyyy"),
+                DrivingLicenseRenewalDate = pinBoard.DrivingLicenseRenewalDate?.ToString("MM/yyyy"),
+                DrivingCardRenewalDate = pinBoard.DrivingCardRenewalDate?.ToString("MM/yyyy"),
+                UpcomingCourse = pinBoard.UpcomingCourse,
+                UpcomingCourseDate = pinBoard.UpcomingCourseDate?.ToString("dd/MM/yyyy"),
+                News = pinBoard.News,
+                ImportantNews = pinBoard.ImportantNews
+            };
+        }
+
+        public async Task<PinBoardEditDriverModel?> GetPinBoardDataForEditAsync(Guid driverId)
+        {
+            var driverExists = await dbContext.Drivers.AnyAsync(d => d.Id == driverId && !d.IsDeleted);
+
+            if (!driverExists)
+            {
+                throw new InvalidOperationException("Driver does not exist.");
+            }
+
+            var pinBoard = await dbContext.PinBoards.FirstOrDefaultAsync(pb => pb.DriverId == driverId);
+
+            if (pinBoard == null)
+            {
+                pinBoard = new PinBoard
+                {
+                    DriverId = driverId,
+                    DrivingLicenseExpDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                    DrivingCardExpDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                    DrivingLicenseRenewalDate = null,
+                    DrivingCardRenewalDate = null,
+                    UpcomingCourse = null,
+                    UpcomingCourseDate = null
+                };
+
+                await dbContext.PinBoards.AddAsync(pinBoard);
+                await dbContext.SaveChangesAsync();
+            }
+
+            return new PinBoardEditDriverModel
+            {
+                DriverId = pinBoard.DriverId ?? Guid.Empty,
+                DrivingLicenseExpDate = pinBoard.DrivingLicenseExpDate.ToString("MM/yyyy"),
+                DrivingCardExpDate = pinBoard.DrivingCardExpDate.ToString("MM/yyyy"),
+                DrivingLicenseRenewalDate = pinBoard.DrivingLicenseRenewalDate?.ToString("MM/yyyy"),
+                DrivingCardRenewalDate = pinBoard.DrivingCardRenewalDate?.ToString("MM/yyyy"),
+                UpcomingCourse = pinBoard.UpcomingCourse,
+                UpcomingCourseDate = pinBoard.UpcomingCourseDate?.ToString("dd/MM/yyyy")
+            };
+        }
+
+        public async Task UpdatePinBoardAsync(PinBoardEditDriverModel model)
+        {
+            var pinBoard = await dbContext.PinBoards.FirstOrDefaultAsync(pb => pb.DriverId == model.DriverId);
+
+            if (pinBoard == null)
+            {
+                throw new InvalidOperationException($"PinBoard record not found for DriverId: {model.DriverId}");
+            }
+
+            pinBoard.DrivingLicenseExpDate = DateTime.ParseExact(model.DrivingLicenseExpDate, "MM/yyyy", null);
+            pinBoard.DrivingCardExpDate = DateTime.ParseExact(model.DrivingCardExpDate, "MM/yyyy", null);
+            pinBoard.DrivingLicenseRenewalDate = string.IsNullOrEmpty(model.DrivingLicenseRenewalDate)
+                ? (DateTime?)null
+                : DateTime.ParseExact(model.DrivingLicenseRenewalDate, "MM/yyyy", null);
+            pinBoard.DrivingCardRenewalDate = string.IsNullOrEmpty(model.DrivingCardRenewalDate)
+                ? (DateTime?)null
+                : DateTime.ParseExact(model.DrivingCardRenewalDate, "MM/yyyy", null);
+            pinBoard.UpcomingCourse = model.UpcomingCourse;
+            pinBoard.UpcomingCourseDate = string.IsNullOrEmpty(model.UpcomingCourseDate)
+                ? (DateTime?)null
+                : DateTime.ParseExact(model.UpcomingCourseDate, "dd/MM/yyyy", null);
+
+            dbContext.PinBoards.Update(pinBoard);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

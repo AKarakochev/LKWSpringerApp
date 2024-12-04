@@ -5,8 +5,9 @@ namespace LKWSpringerApp.Services.Data.Interfaces
     public interface IPinBoardService
     {
         Task<PinBoardNewsModel> GetNewsAsync();
-        Task AddNewsAsync(PinBoardNewsModel model);
         Task EditNewsAsync(PinBoardNewsModel model);
         Task<PinBoardDetailsModel?> GetPinBoardDataForDriverAsync(Guid driverId);
+        Task<PinBoardEditDriverModel?> GetPinBoardDataForEditAsync(Guid driverId);
+        Task UpdatePinBoardAsync(PinBoardEditDriverModel model);
     }
 }

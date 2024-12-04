@@ -82,6 +82,14 @@ namespace LKWSpringerApp.Data
                 .WithMany(c => c.Media)
                 .HasForeignKey(m => m.ClientId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<PinBoard>().HasData(
+                new PinBoard
+                {
+                    Id = Guid.NewGuid(),
+                    News = "Welcome to the Driver's PinBoard!",
+                    ImportantNews = "Keep an eye on this section for updates and important news."
+                });
         }
     }
 }

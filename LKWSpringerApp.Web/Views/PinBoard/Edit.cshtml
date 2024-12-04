@@ -1,0 +1,69 @@
+﻿@model LKWSpringerApp.Web.ViewModels.PinBoard.PinBoardEditDriverModel
+
+@{
+    ViewData["Title"] = "Edit PinBoard";
+}
+
+<h2>Edit PinBoard</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label asp-for="DrivingLicenseExpDate" class="control-label">Driving License Expiration Date (MM/YYYY)</label>
+        <input asp-for="DrivingLicenseExpDate" class="form-control" />
+        <span asp-validation-for="DrivingLicenseExpDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DrivingCardExpDate" class="control-label">Driving Card Expiration Date (MM/YYYY)</label>
+        <input asp-for="DrivingCardExpDate" class="form-control" />
+        <span asp-validation-for="DrivingCardExpDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DrivingLicenseRenewalDate" class="control-label">Driving License Renewal Date (MM/YYYY)</label>
+        <input asp-for="DrivingLicenseRenewalDate" class="form-control" />
+        <span asp-validation-for="DrivingLicenseRenewalDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DrivingCardRenewalDate" class="control-label">Driving Card Renewal Date (MM/YYYY)</label>
+        <input asp-for="DrivingCardRenewalDate" class="form-control" />
+        <span asp-validation-for="DrivingCardRenewalDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="UpcomingCourse" class="control-label">Upcoming Course</label>
+        <input asp-for="UpcomingCourse" class="form-control" />
+        <span asp-validation-for="UpcomingCourse" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="UpcomingCourseDate" class="control-label">Upcoming Course Date (dd/MM/yyyy)</label>
+        <input asp-for="UpcomingCourseDate" class="form-control" />
+        <span asp-validation-for="UpcomingCourseDate" class="text-danger"></span>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Details" asp-route-id="@Model.DriverId" class="btn btn-secondary ml-2">Back</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

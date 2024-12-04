@@ -1,15 +1,19 @@
 ﻿@model LKWSpringerApp.Web.ViewModels.PinBoard.PinBoardDetailsModel
 
-<h2>Driver Details</h2>
-<p><strong>Driving License Expiry Date:</strong> @Model.DrivingLicenseExpDate</p>
-<p><strong>Driving Card Expiry Date:</strong> @Model.DrivingCardExpDate</p>
-<p><strong>Driving License Renewal Date:</strong> @Model.DrivingLicenseRenewalDate</p>
-<p><strong>Driving Card Renewal Date:</strong> @Model.DrivingCardRenewalDate</p>
+<h2>Driver Pin Board Details</h2>
+
+<p><strong>Driver ID:</strong> @Model.DriverId</p>
+<p><strong>Driving License Expiration Date:</strong> @Model.DrivingLicenseExpDate</p>
+<p><strong>Driving Card Expiration Date:</strong> @Model.DrivingCardExpDate</p>
+<p><strong>Upcoming Course:</strong> @Model.UpcomingCourse</p>
+<p><strong>Upcoming Course Date:</strong> @Model.UpcomingCourseDate</p>
+<p><strong>News:</strong> @Model.News</p>
+<p><strong>Important News:</strong> @Model.ImportantNews</p>
 
 <div>
     <a asp-action="Index" class="btn btn-secondary">Back</a>
     @if (User.IsInRole("Admin"))
     {
-        <a asp-action="Edit" class="btn btn-primary">Edit</a>
+        <a asp-action="Edit" asp-route-id="@Model.DriverId" class="btn btn-primary">Edit</a>
     }
 </div>
