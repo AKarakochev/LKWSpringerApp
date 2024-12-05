@@ -97,6 +97,7 @@ namespace LKWSpringerApp.Services.Data
         {
             var query = dbContext.Drivers
                 .Where(d => !d.IsDeleted)
+                .OrderBy(d => d.SecondName)
                 .Select(d => new DriverPinBoardModel
                 {
                     Id = d.Id,

@@ -21,7 +21,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (string.IsNullOrEmpty(searchQuery))
             {
-                return View("No Results");
+                return View(Enumerable.Empty<dynamic>());
             }
 
             var drivers = await _context.Drivers
@@ -29,7 +29,7 @@ namespace LKWSpringerApp.Web.Controllers
                 .Select(d => new
                 {
                     Type = "Driver",
-                    Name = $"{d.FirstName} {d.SecondName}",
+                    Name = $"{d.SecondName}, {d.FirstName} ",
                     Link = Url.Action("Details", "Driver", new { id = d.Id })
                 })
                 .ToListAsync();
@@ -54,21 +54,36 @@ namespace LKWSpringerApp.Web.Controllers
                 })
                 .ToListAsync();
 
-            var clientMedia = await _context.Media
-                .Include(ci => ci.Client)
-                .Where(ci => ci.Description.Contains(searchQuery) || ci.Client.Name.Contains(searchQuery))
-                .Select(ci => new
+            var media = await _context.Media
+                .Include(m => m.Client)
+                .Where(m => m.Description.Contains(searchQuery) || m.Client.Name.Contains(searchQuery))
+                .Select(m => new
                 {
-                    Type = "Client Media",
-                    Name = $"{ci.Client.Name} - {ci.Description}",
-                    Link = Url.Action("Edit", "ClientImage", new { id = ci.Id })
+                    Type = "Media",
+                    Name = $"{m.Client.Name} - {m.Description}",
+                    Link = Url.Action("Details", "Media", new { id = m.Id }) ?? "#"
+                })
+                .ToListAsync();
+
+            var pinBoards = await _context.PinBoards
+                .Include(pb => pb.Driver)
+                .Where(pb => pb.Driver.FirstName.Contains(searchQuery)
+                             || pb.Driver.SecondName.Contains(searchQuery)
+                             || pb.News.Contains(searchQuery)
+                             || pb.ImportantNews.Contains(searchQuery))
+                .Select(pb => new
+                {
+                    Type = "Pin Board",
+                    Name = $"{pb.Driver.SecondName}, {pb.Driver.FirstName}",
+                    Link = Url.Action("Details", "PinBoard", new { id = pb.DriverId })
                 })
                 .ToListAsync();
 
             var results = drivers
                 .Union(clients)
                 .Union(tours)
-                .Union(clientMedia)
+                .Union(media)
+                .Union(pinBoards)
                 .OrderBy(r => r.Type);
 
             return View(results);

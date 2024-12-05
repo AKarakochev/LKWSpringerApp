@@ -16,6 +16,18 @@
 }
 
 <div class="home-page-wallpaper">
+    
+    <div class="search-bar mb-4">
+        <form asp-controller="Search" asp-action="Index" method="get" class="d-flex">
+            <input type="text"
+                   name="searchQuery"
+                   class="form-control me-2"
+                   placeholder="Search for drivers, clients, tours, media, or pin board..."
+                   aria-label="Search" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
     <div class="row">
         <div class="col-md-3">
             <div class="list-group">

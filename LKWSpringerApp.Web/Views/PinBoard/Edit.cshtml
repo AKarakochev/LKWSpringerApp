@@ -22,6 +22,8 @@
 <form asp-action="Edit" method="post">
     @Html.AntiForgeryToken()
 
+    <input type="hidden" asp-for="DriverId" />
+
     <div class="form-group">
         <label asp-for="DrivingLicenseExpDate" class="control-label">Driving License Expiration Date (MM/YYYY)</label>
         <input asp-for="DrivingLicenseExpDate" class="form-control" />
@@ -58,7 +60,7 @@
         <span asp-validation-for="UpcomingCourseDate" class="text-danger"></span>
     </div>
 
-    <div class="mt-4 d-flex justify-content-between">
+    <div class="mt-4 d-flex justify-content-start">
         <button type="submit" class="btn btn-primary">Save</button>
         <a asp-action="Details" asp-route-id="@Model.DriverId" class="btn btn-secondary ml-2">Back</a>
     </div>

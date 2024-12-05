@@ -1,19 +1,44 @@
 ﻿@model LKWSpringerApp.Web.ViewModels.PinBoard.PinBoardDetailsModel
 
-<h2>Driver Pin Board Details</h2>
+<div style="margin-top: 20px;">
+    <h2><u>Driver Pin Board Details</u></h2>
 
-<p><strong>Driver ID:</strong> @Model.DriverId</p>
-<p><strong>Driving License Expiration Date:</strong> @Model.DrivingLicenseExpDate</p>
-<p><strong>Driving Card Expiration Date:</strong> @Model.DrivingCardExpDate</p>
-<p><strong>Upcoming Course:</strong> @Model.UpcomingCourse</p>
-<p><strong>Upcoming Course Date:</strong> @Model.UpcomingCourseDate</p>
-<p><strong>News:</strong> @Model.News</p>
-<p><strong>Important News:</strong> @Model.ImportantNews</p>
-
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Back</a>
-    @if (User.IsInRole("Admin"))
+    @if (TempData["SuccessMessage"] != null)
     {
-        <a asp-action="Edit" asp-route-id="@Model.DriverId" class="btn btn-primary">Edit</a>
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
     }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+</div>
+<hr />
+
+<div class="row justify-content-center" style="margin: 0 auto; max-width: 800px;">
+    <div class="col-md-8">
+        <div class="card-body">
+            <h5 class="card-title">Driver Information</h5>
+            <hr />
+            <p class="card-text"><strong>Driving License Expiration Date:</strong> @Model.DrivingLicenseExpDate</p>
+            <p class="card-text"><strong>Driving Card Expiration Date:</strong> @Model.DrivingCardExpDate</p>
+            <p class="card-text"><strong>Driving License Renewal Date:</strong> @Model.DrivingLicenseRenewalDate</p>
+            <p class="card-text"><strong>Driving Card Renewal Date:</strong> @Model.DrivingCardRenewalDate</p>
+            <p class="card-text"><strong>Upcoming Course:</strong> @Model.UpcomingCourse</p>
+            <p class="card-text"><strong>Upcoming Course Date:</strong> @Model.UpcomingCourseDate</p>
+            <hr />
+        </div>
+        <div class="card-footer text-center">
+            <div class="d-flex justify-content-between align-items-center">
+                <a asp-action="Index" class="btn btn-primary d-flex justify-content-center align-items-center flex-fill mx-1">Back</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.DriverId" class="btn btn-success d-flex justify-content-center align-items-center flex-fill mx-1">Edit</a>
+                }
+            </div>
+        </div>
+    </div>
 </div>

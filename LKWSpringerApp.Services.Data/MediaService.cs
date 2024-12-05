@@ -20,6 +20,7 @@ namespace LKWSpringerApp.Services.Data
             this.mediaRepository = mediaRepository;
             this.clientRepository = clientRepository;
         }
+
         public async Task<PaginatedList<AllMediaModel>> IndexGetAllOrderedByClientNameAsync(int pageIndex, int pageSize)
         {
             var query = clientRepository
@@ -35,33 +36,35 @@ namespace LKWSpringerApp.Services.Data
 
             return await PaginatedList<AllMediaModel>.CreateAsync(query, pageIndex, pageSize);
         }
+
         public async Task<DetailsMediaModel> GetClientMediaDetailsByIdAsync(Guid id)
         {
-            var client = await clientRepository
+            var media = await mediaRepository
                 .GetAllAttached()
-                .Include(c => c.Media)
-                .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
+                .Include(m => m.Client)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (client == null)
+            if (media == null || media.Client == null)
             {
-                return null!;
+                return null;
             }
 
             var model = new DetailsMediaModel
             {
-                ClientId = client.Id,
-                ClientName = client.Name,
-                MediaFiles = client.Media.Select(img => new MediaFileModel
+                ClientId = media.Client.Id,
+                ClientName = media.Client.Name,
+                MediaFiles = media.Client.Media.Select(m => new MediaFileModel
                 {
-                    Id = img.Id,
-                    ImageUrl = img.ImageUrl,
-                    VideoUrl = img.VideoUrl,
-                    Description = img.Description
+                    Id = m.Id,
+                    ImageUrl = m.ImageUrl,
+                    VideoUrl = m.VideoUrl,
+                    Description = m.Description
                 }).ToList()
             };
 
             return model;
         }
+
         public async Task<List<AllMediaModel>> GetAllClientsMediaAsync()
         {
             return await clientRepository
@@ -76,6 +79,7 @@ namespace LKWSpringerApp.Services.Data
                 .OrderBy(c => c.ClientName)
                 .ToListAsync();
         }
+
         public async Task<EditMediaModel> GetSingleMediaFileByIdAsync(Guid id)
         {
             var image = await mediaRepository.GetByIdAsync(id);
@@ -95,6 +99,7 @@ namespace LKWSpringerApp.Services.Data
 
             return model;
         }
+
         public async Task AddClientMediaAsync(AddMediaModel model)
         {
             var client = await clientRepository.GetByIdAsync(model.ClientId);
@@ -104,7 +109,8 @@ namespace LKWSpringerApp.Services.Data
             }
 
             var sanitizedClientName = client.Name.ToLower().Replace(" ", "_");
-            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/media/clients", sanitizedClientName);
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/media/clients",
+                sanitizedClientName);
 
             Directory.CreateDirectory(uploadPath);
 
@@ -134,14 +140,20 @@ namespace LKWSpringerApp.Services.Data
             {
                 Id = Guid.NewGuid(),
                 ClientId = model.ClientId,
-                ImageUrl = imageFilePath != null ? $"media/clients/{sanitizedClientName}/{Path.GetFileName(imageFilePath)}" : null,
-                VideoUrl = videoFilePath != null ? $"media/clients/{sanitizedClientName}/{Path.GetFileName(videoFilePath)}" : null,
+                ImageUrl = imageFilePath != null
+                    ? $"media/clients/{sanitizedClientName}/{Path.GetFileName(imageFilePath)}"
+                    : null,
+                VideoUrl = videoFilePath != null
+                    ? $"media/clients/{sanitizedClientName}/{Path.GetFileName(videoFilePath)}"
+                    : null,
                 Description = model.Description
             };
 
             await mediaRepository.AddAsync(clientImage);
         }
-        public async Task<bool> UpdateClientMediaAsync(Guid id, EditMediaModel model, IFormFile? newImageFile, IFormFile? newVideoFile)
+
+        public async Task<bool> UpdateClientMediaAsync(Guid id, EditMediaModel model, IFormFile? newImageFile,
+            IFormFile? newVideoFile)
         {
             var image = await mediaRepository.GetByIdAsync(id);
 
@@ -157,7 +169,8 @@ namespace LKWSpringerApp.Services.Data
             }
 
             var sanitizedClientName = client.Name.ToLower().Replace(" ", "_");
-            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/media/clients", sanitizedClientName);
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/media/clients",
+                sanitizedClientName);
             Directory.CreateDirectory(uploadPath);
 
             if (newImageFile != null)
@@ -222,28 +235,32 @@ namespace LKWSpringerApp.Services.Data
 
             return await mediaRepository.UpdateAsync(image);
         }
+
         public async Task<bool> DeleteAsync(Guid id)
         {
             return await mediaRepository.DeleteAsync(id);
         }
-        public async Task<DeleteMediaModel> GetClientMediaByIdAsync(Guid id)
-        {
-            var image = await mediaRepository
-                .GetAllAttached()
-                .Include(ci => ci.Client)
-                .FirstOrDefaultAsync(ci => ci.Id == id);
 
-            if (image == null)
+        public async Task<DeleteMediaModel?> GetClientMediaByIdAsync(Guid id)
+        {
+            var media = await mediaRepository
+                .GetAllAttached()
+                .Include(m => m.Client)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (media == null)
             {
-                return null!;
+                return null;
             }
 
             return new DeleteMediaModel
             {
-                Id = image.Id,
-                ClientId = image.ClientId,
-                ImageUrl = image.ImageUrl ?? string.Empty,
-                Description = image.Description ?? string.Empty
+                Id = media.Id,
+                ClientId = media.ClientId,
+                ImageUrl = media.ImageUrl ?? string.Empty,
+                VideoUrl = media.VideoUrl ?? string.Empty,
+                Description = media.Description ?? string.Empty,
+                ClientName = media.Client?.Name ?? "Unknown Client"
             };
         }
     }

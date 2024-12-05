@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Pin Board";
 }
+
 <div class="pinboard-index-wallpaper">
     <h2><u>Pin Board</u></h2>
 
@@ -54,9 +55,11 @@
                 @foreach (var driver in Model.Item1)
                 {
                     <tr>
-                        <td>@driver.FirstName @driver.SecondName</td>
+                        <td>@driver.SecondName, @driver.FirstName</td>
                         <td>
-                            <a asp-action="Details" asp-route-id="@driver.Id" class="btn btn-primary btn-sm">View Details</a>
+                            <div class="d-flex justify-content-center">
+                                <a asp-action="Details" asp-route-id="@driver.Id" class="btn btn-primary btn-sm">View Details</a>
+                            </div>
                         </td>
                     </tr>
                 }

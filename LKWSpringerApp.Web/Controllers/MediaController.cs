@@ -43,24 +43,26 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest(MediaInvalidIdErrorMessage);
+                TempData["ErrorMessage"] = "Invalid media ID.";
+                return RedirectToAction("Index");
             }
 
-            var model = await mediaService.GetClientMediaDetailsByIdAsync(id);
+            var mediaDetails = await mediaService.GetClientMediaDetailsByIdAsync(id);
 
-            if (model == null)
+            if (mediaDetails == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Media not found.";
+                return RedirectToAction("Index");
             }
 
-            return View(model);
+            return View(mediaDetails);
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Add()
         {
-            var clients = await mediaService.GetAllClientsMediaAsync(); // Use existing service method
+            var clients = await mediaService.GetAllClientsMediaAsync();
             var model = new AddMediaModel
             {
                 Clients = clients.Select(c => new SelectListItem

@@ -13,7 +13,12 @@ namespace LKWSpringerApp.Web.ViewModels.Media
         [Display(Name = "Image URL")]
         public string ImageUrl { get; set; } = null!;
 
+        [Display(Name = "Video URL")]
+        public string? VideoUrl { get; set; }
+
         [Display(Name = "Description")]
         public string? Description { get; set; }
+
+        public string ClientName { get; set; } = string.Empty;
     }
 }
