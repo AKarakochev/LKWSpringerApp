@@ -67,7 +67,7 @@ namespace LKWSpringerApp.Web.Controllers
                 {
                     Type = "Media",
                     Name = $"{m.Client.Name} - {m.Description}",
-                    Link = Url.Action("Details", "Media", new { id = m.Id }) ?? "#"
+                    Link = Url.Action("Details", "Media", new { id = m.ClientId }) ?? "#"
                 })
                 .ToListAsync();
 

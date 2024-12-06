@@ -39,21 +39,21 @@ namespace LKWSpringerApp.Services.Data
 
         public async Task<DetailsMediaModel> GetClientMediaDetailsByIdAsync(Guid id)
         {
-            var media = await mediaRepository
+            var client = await clientRepository
                 .GetAllAttached()
-                .Include(m => m.Client)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(c => c.Media)
+                .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
 
-            if (media == null || media.Client == null)
+            if (client == null)
             {
-                return null;
+                return null!;
             }
 
-            var model = new DetailsMediaModel
+            return new DetailsMediaModel
             {
-                ClientId = media.Client.Id,
-                ClientName = media.Client.Name,
-                MediaFiles = media.Client.Media.Select(m => new MediaFileModel
+                ClientId = client.Id,
+                ClientName = client.Name,
+                MediaFiles = client.Media.Select(m => new MediaFileModel
                 {
                     Id = m.Id,
                     ImageUrl = m.ImageUrl,
@@ -61,8 +61,6 @@ namespace LKWSpringerApp.Services.Data
                     Description = m.Description
                 }).ToList()
             };
-
-            return model;
         }
 
         public async Task<List<AllMediaModel>> GetAllClientsMediaAsync()

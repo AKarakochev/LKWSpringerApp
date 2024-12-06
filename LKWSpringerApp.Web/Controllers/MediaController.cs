@@ -43,15 +43,15 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                TempData["ErrorMessage"] = "Invalid media ID.";
+                TempData["ErrorMessage"] = "Invalid client ID.";
                 return RedirectToAction("Index");
             }
 
             var mediaDetails = await mediaService.GetClientMediaDetailsByIdAsync(id);
 
-            if (mediaDetails == null)
+            if (mediaDetails == null || !mediaDetails.MediaFiles.Any())
             {
-                TempData["ErrorMessage"] = "Media not found.";
+                TempData["ErrorMessage"] = "No media found for this client.";
                 return RedirectToAction("Index");
             }
 
