@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
+@{
+    string backAction = ViewData["BackAction"]?.ToString() ?? "Index";
+    string backController = ViewData["BackController"]?.ToString() ?? "Home";
+}
+
+<div class="search-bar mb-4 justify-content-center d-flex">
+    <form asp-controller="Search" asp-action="Index" method="get" class="w-100 d-flex justify-content-center">
+        <div class="input-group" style="max-width: 600px;">
+            <input type="text"
+                   name="searchQuery"
+                   class="form-control"
+                   placeholder="Search for driver's name, client's name or tour's name"
+                   aria-label="Search" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>

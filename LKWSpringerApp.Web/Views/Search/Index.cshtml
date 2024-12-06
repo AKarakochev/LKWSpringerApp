@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<dynamic>
 
+@{
+    string backAction = ViewData["BackAction"]?.ToString() ?? "Index";
+    string backController = ViewData["BackController"]?.ToString() ?? "Home";
+}
+
 <div class="container mt-4">
     <h2>Search Results</h2>
     <hr />
@@ -18,4 +23,8 @@
             }
         </ul>
     }
+
+    <div class="mt-4 text-center">
+        <a asp-action="@backAction" asp-controller="@backController" class="btn btn-primary">Back</a>
+    </div>
 </div>

@@ -2,7 +2,11 @@
 
 @{
     ViewData["Title"] = "Client Media";
+    TempData["BackController"] = "Media";
+    TempData["BackAction"] = "Index";
 }
+
+@Html.Partial("_SearchBar")
 
 <div class="client-image-wallpaper">
     <h2><u>Client Media List</u></h2>
@@ -40,7 +44,7 @@
                         <td>@client.ClientName</td>
                         <td>@client.MediaCount</td>
                         <td class="text-center">
-                            <a asp-action="Details" asp-route-id="@client.ClientId" class="btn btn-warning">View Details</a>
+                            <a asp-action="Details" asp-route-id="@client.ClientId" class="btn btn-primary">View Details</a>
                         </td>
                     </tr>
                 }

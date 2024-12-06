@@ -2,7 +2,11 @@
 
 @{
     ViewData["Title"] = "Clients";
+    TempData["BackController"] = "Client";
+    TempData["BackAction"] = "Index";
 }
+
+@Html.Partial("_SearchBar")
 
 <div class="client-index-wallpaper">
     <h2><u>All Clients</u></h2>

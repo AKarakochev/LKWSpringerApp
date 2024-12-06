@@ -23,6 +23,9 @@ namespace LKWSpringerApp.Web.Controllers
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 15)
         {
+            ViewData["BackController"] = "Driver";
+            ViewData["BackAction"] = "Index";
+
             try
             {
                 var paginatedDrivers = await driverService.IndexGetAllOrderedBySecondNameAsync(pageIndex, pageSize);

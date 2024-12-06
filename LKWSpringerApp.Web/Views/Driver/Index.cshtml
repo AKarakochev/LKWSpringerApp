@@ -2,7 +2,12 @@
 
 @{
     ViewData["Title"] = "All Drivers";
+    TempData["BackController"] = "Driver";
+    TempData["BackAction"] = "Index";
 }
+
+@Html.Partial("_SearchBar")
+
 <div class="driver-index-wallpaper">
     <h2><u>All Drivers</u></h2>
 

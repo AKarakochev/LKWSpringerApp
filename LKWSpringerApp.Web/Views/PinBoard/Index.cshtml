@@ -2,7 +2,11 @@
 
 @{
     ViewData["Title"] = "Pin Board";
+    TempData["BackController"] = "PinBoard";
+    TempData["BackAction"] = "Index";
 }
+
+@Html.Partial("_SearchBar")
 
 <div class="pinboard-index-wallpaper">
     <h2><u>Pin Board</u></h2>

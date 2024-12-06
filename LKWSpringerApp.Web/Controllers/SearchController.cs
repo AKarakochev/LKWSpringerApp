@@ -19,6 +19,12 @@ namespace LKWSpringerApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string searchQuery)
         {
+            string backController = TempData["BackController"]?.ToString() ?? "Home";
+            string backAction = TempData["BackAction"]?.ToString() ?? "Index";
+
+            ViewData["BackController"] = backController;
+            ViewData["BackAction"] = backAction;
+
             if (string.IsNullOrEmpty(searchQuery))
             {
                 return View(Enumerable.Empty<dynamic>());

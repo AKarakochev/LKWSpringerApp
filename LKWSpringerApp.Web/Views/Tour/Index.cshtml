@@ -2,7 +2,11 @@
 
 @{
     ViewData["Title"] = "All Tours";
+    TempData["BackController"] = "Tour";
+    TempData["BackAction"] = "Index";
 }
+
+@Html.Partial("_SearchBar")
 
 <div class="tour-index-wallpaper">
     <h2><u>All Tours</u></h2>

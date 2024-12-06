@@ -17,12 +17,12 @@
 
 <div class="home-page-wallpaper">
     
-    <div class="search-bar mb-4">
-        <form asp-controller="Search" asp-action="Index" method="get" class="d-flex">
+    <div class="search-bar mb-4 justify-content-center d-flex">
+        <form asp-controller="Search" asp-action="Index" method="get" class="input-group">
             <input type="text"
                    name="searchQuery"
-                   class="form-control me-2"
-                   placeholder="Search for drivers, clients, tours, media, or pin board..."
+                   class="form-control"
+                   placeholder="Search for driver's name, client's name or tour's name"
                    aria-label="Search" />
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
