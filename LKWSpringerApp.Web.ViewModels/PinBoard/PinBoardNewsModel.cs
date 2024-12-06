@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LKWSpringerApp.Web.ViewModels.PinBoard
+﻿namespace LKWSpringerApp.Web.ViewModels.PinBoard
 {
     public class PinBoardNewsModel
     {

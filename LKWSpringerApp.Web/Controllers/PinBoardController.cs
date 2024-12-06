@@ -6,6 +6,8 @@ using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.PinBoard;
 using LKWSpringerApp.Services.Data.Helpers;
 using LKWSpringerApp.Web.ViewModels.Driver;
+using static LKWSpringerApp.Common.ErrorMessagesConstants.PinBoard;
+using static LKWSpringerApp.Common.SuccessMessagesConstants.PinBoard;
 
 namespace LKWSpringerApp.Web.Controllers
 {
@@ -41,7 +43,7 @@ namespace LKWSpringerApp.Web.Controllers
 
             if (!isAdmin && loggedInDriverId != id.ToString())
             {
-                TempData["ErrorMessage"] = "You do not have permission to view this information!";
+                TempData["ErrorMessage"] = PinBoardDoNotHavePermission;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -49,7 +51,7 @@ namespace LKWSpringerApp.Web.Controllers
 
             if (details == null)
             {
-                TempData["ErrorMessage"] = "Details not available.";
+                TempData["ErrorMessage"] = PinBoardDetailsNotAvailable;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -73,7 +75,7 @@ namespace LKWSpringerApp.Web.Controllers
                 return View(model);
 
             await pinBoardService.EditNewsAsync(model);
-            TempData["SuccessMessage"] = "News updated successfully.";
+            TempData["SuccessMessage"] = PinBoardNewsUpdated;
             return RedirectToAction(nameof(Index));
         }
 
@@ -83,7 +85,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                TempData["ErrorMessage"] = "Invalid driver ID.";
+                TempData["ErrorMessage"] = PinBoardDriverInvalidId;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -91,7 +93,7 @@ namespace LKWSpringerApp.Web.Controllers
 
             if (pinBoardData == null)
             {
-                TempData["ErrorMessage"] = "Driver PinBoard data not found.";
+                TempData["ErrorMessage"] = PinBoardDriverDataNotFound;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -105,14 +107,14 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "Invalid data. Please correct the errors and try again.";
+                TempData["ErrorMessage"] = PinBoardInvalidData;
                 return View(model);
             }
 
             try
             {
                 await pinBoardService.UpdatePinBoardAsync(model);
-                TempData["SuccessMessage"] = "PinBoard details updated successfully.";
+                TempData["SuccessMessage"] = PinBoardDetailsUpdate;
                 return RedirectToAction(nameof(Details), new { id = model.DriverId });
             }
             catch (Exception ex)

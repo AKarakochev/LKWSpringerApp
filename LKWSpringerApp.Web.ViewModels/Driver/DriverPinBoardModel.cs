@@ -1,5 +1,4 @@
-﻿
-namespace LKWSpringerApp.Web.ViewModels.Driver
+﻿namespace LKWSpringerApp.Web.ViewModels.Driver
 {
     public class DriverPinBoardModel
     { 

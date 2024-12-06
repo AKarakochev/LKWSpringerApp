@@ -243,18 +243,18 @@ header, footer {
 }
 
 @media (max-width: 576px) {
-    .search-bar .input-group {
-        max-width: 100%;
-    }
+.search-bar .input-group {
+    max-width: 100%;
+}
 
-        .search-bar .input-group input,
-        .search-bar .input-group button {
-            flex: 1 1 auto;
-        }
+.search-bar .input-group input,
+.search-bar .input-group button {
+    flex: 1 1 auto;
+}
 
-        .search-bar .input-group button {
-            flex: 0 1 auto;
-        }
+.search-bar .input-group button {
+    flex: 0 1 auto;
+}
 }
 
 .search-bar {
@@ -262,18 +262,18 @@ header, footer {
     padding: 0 15px;
 }
 
-    .search-bar .input-group {
-        max-width: 800px;
-        width: 100%;
-    }
+.search-bar .input-group {
+    max-width: 800px;
+    width: 100%;
+}
 
-        .search-bar .input-group input {
-            flex: 1;
-        }
+.search-bar .input-group input {
+    flex: 1;
+}
 
-        .search-bar .input-group button {
-            flex: 0 1 auto;
-        }
+.search-bar .input-group button {
+    flex: 0 1 auto;
+}
 
 @media (max-width: 576px) { 
     .search-bar .input-group {

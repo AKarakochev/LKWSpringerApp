@@ -22,6 +22,7 @@
         {
             public const string ClientNameErrorMessage = "The client name is required.";
             public const string ClientAddressErrorMessage = "The client address is required.";
+            public const string ClientAddressUrlErrorMessage = "Please enter a valid Url";
             public const string ClientPhoneNumberErrorMessage = "The client phone number is required.";
             public const string ClientDeliveryDescriptionErrorMessage = "Delivery description is required.";
             public const string ClientDeliveryTimeErrorMessage = "Delivery time is required in format HH:MM - HH:MM";
@@ -39,11 +40,11 @@
         {
             public const string MediaImageUrlErrorMessage = "ImageUrl is required.";
 
-            public const string MediaInvalidIdErrorMessage = "Invalid client image ID.";
+            public const string MediaInvalidIdErrorMessage = "Invalid client ID.";
             public const string MediaTryAgainErrorMessage = "An unexpected error occurred.Please try again later.";
             public const string MediaInvalidImageFormatErrorMessage = "Invalid image file format.";
             public const string MediaInvalidVideoFormatErrorMessage = "Invalid video file format.";
-            public const string MediaIsDeletedOrNotFoundErrorMessage = "Client not found or is deleted.";
+            public const string MediaIsDeletedOrNotFoundErrorMessage = "Media is deleted or not found.";
         }
 
         public static class Tour
@@ -61,7 +62,12 @@
         {
             public const string PinBoardDrivingLicenseExpDateErrorMessage = "Driving license ExpDate must be in format MM/YYYY and it is required field.";
             public const string PinBoardDrivingCardExpDateErrorMessage = "Driving card ExpDate must be in format MM/YYYY and it is required field.";
-
+            public const string PinBoardDoNotHavePermission = "You do not have permission to view this information!";
+            public const string PinBoardDetailsNotAvailable = "Details not available.";
+            public const string PinBoardDriverInvalidId = "Invalid driver ID.";
+            public const string PinBoardDriverDataNotFound = "Driver PinBoard data not found.";
+            public const string PinBoardInvalidData = "Invalid data. Please correct the errors and try again.";
+            
         }
     }
 }

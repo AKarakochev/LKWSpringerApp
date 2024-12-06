@@ -30,5 +30,11 @@
             public const string TourAddedSuccessMessage = "Tour added successfully.";
             public const string TourUpdatedSuccessMessage = "Tour updated successfully.";
         }
+
+        public static class PinBoard
+        {
+            public const string PinBoardNewsUpdated = "News updated successfully.";
+            public const string PinBoardDetailsUpdate = "Details updated successfully.";
+        }
     }
 }

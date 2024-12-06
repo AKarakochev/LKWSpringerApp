@@ -43,7 +43,7 @@ namespace LKWSpringerApp.Web.Controllers
         {
             if (id == Guid.Empty)
             {
-                TempData["ErrorMessage"] = "Invalid client ID.";
+                TempData["ErrorMessage"] = MediaInvalidIdErrorMessage;
                 return RedirectToAction("Index");
             }
 
@@ -51,7 +51,7 @@ namespace LKWSpringerApp.Web.Controllers
 
             if (mediaDetails == null || !mediaDetails.MediaFiles.Any())
             {
-                TempData["ErrorMessage"] = "No media found for this client.";
+                TempData["ErrorMessage"] = MediaIsDeletedOrNotFoundErrorMessage;
                 return RedirectToAction("Index");
             }
 
