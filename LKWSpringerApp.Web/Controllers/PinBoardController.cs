@@ -36,17 +36,9 @@ namespace LKWSpringerApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Details(Guid id)
         {
-            var loggedInDriverId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var isAdmin = User.IsInRole("Admin");
-
-            if (!isAdmin && loggedInDriverId != id.ToString())
-            {
-                TempData["ErrorMessage"] = PinBoardDoNotHavePermission;
-                return RedirectToAction(nameof(Index));
-            }
-
             var details = await pinBoardService.GetPinBoardDataForDriverAsync(id);
 
             if (details == null)
