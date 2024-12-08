@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using LKWSpringerApp.Data.Models;
 using LKWSpringerApp.Data.Models.Repository.Interfaces;
 using LKWSpringerApp.Data.Repository;
+using Microsoft.AspNetCore.Identity;
 
 namespace LKWSpringerApp.Web.Infrastructure.Extensions
 {
@@ -11,7 +12,7 @@ namespace LKWSpringerApp.Web.Infrastructure.Extensions
     {
         public static void RegisterRepositories(this IServiceCollection services, Assembly modelsAssembly)
         {
-            Type[] typesToExclude = { typeof(ApplicationUserDriver) };
+           
             Type[] modelTypes = modelsAssembly
                 .GetTypes()
                 .Where(t => t.IsClass && !t.IsAbstract && t.Namespace == "LKWSpringerApp.Data.Models")
@@ -19,12 +20,12 @@ namespace LKWSpringerApp.Web.Infrastructure.Extensions
 
             foreach (var type in modelTypes)
             {
-                if (typesToExclude.Contains(type)) continue;
+                if (type == typeof(IdentityUser)) continue;
 
-                var idProperty = type.GetProperty("Id") ?? type.GetProperty("UserId");
+                var idProperty = type.GetProperty("Id");
                 if (idProperty == null)
                 {
-                    Console.WriteLine($"Skipping {type.Name}: No 'Id' or 'UserId' property found.");
+                    Console.WriteLine($"Skipping {type.Name}: No 'Id' property found.");
                     continue;
                 }
 

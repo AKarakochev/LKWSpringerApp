@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 using LKWSpringerApp.Data.Models;
 using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity;
 
 namespace LKWSpringerApp.Data
 {
-    public class LkwSpringerDbContext : IdentityDbContext
+    public class LkwSpringerDbContext : IdentityDbContext<IdentityUser>
     {
         public LkwSpringerDbContext()
         {
@@ -25,7 +26,6 @@ namespace LKWSpringerApp.Data
         public virtual DbSet<Tour> Tours { get; set; }
         public virtual DbSet<TourClient> TourClients { get; set; }
         public virtual DbSet<Media> Media { get; set; }
-        public virtual DbSet<ApplicationUserDriver> UsersDrivers { get; set; }
         public virtual DbSet<PinBoard> PinBoards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -35,21 +35,6 @@ namespace LKWSpringerApp.Data
             builder.Entity<Media>().ToTable("Media");
 
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            builder.Entity<ApplicationUserDriver>()
-                .HasKey(ud => new { ud.UserId, ud.DriverId });
-
-            builder.Entity<ApplicationUserDriver>()
-                .HasOne(ud => ud.User)
-                .WithMany()
-                .HasForeignKey(ud => ud.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<ApplicationUserDriver>()
-                .HasOne(ud => ud.Driver)
-                .WithMany()
-                .HasForeignKey(ud => ud.DriverId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<DriverTour>()
                 .HasKey(dt => new { dt.DriverId, dt.TourId });

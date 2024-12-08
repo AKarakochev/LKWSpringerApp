@@ -60,4 +60,8 @@
     <UpToDateCheckInput Remove="Views\Media\Details.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Views\Shared\" />
+  </ItemGroup>
+
 </Project>

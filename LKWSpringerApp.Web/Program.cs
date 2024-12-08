@@ -68,14 +68,15 @@ namespace LKWSpringerApp.Web
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
 
-            builder.Services.RegisterRepositories(typeof(ApplicationUserDriver).Assembly);
-            
+            builder.Services.RegisterRepositories(typeof(Client).Assembly);
+
             builder.Services.AddScoped<IClientService, ClientService>();
             builder.Services.AddScoped<IDriverService, DriverService>();
             builder.Services.AddScoped<ITourService, TourService>();
             builder.Services.AddScoped<IRepository<DriverTour, Guid>, BaseRepository<DriverTour, Guid>>();
             builder.Services.AddScoped<IMediaService, MediaService>();
             builder.Services.AddScoped<IPinBoardService, PinBoardService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddControllersWithViews(options =>
             {
@@ -99,7 +100,6 @@ namespace LKWSpringerApp.Web
 
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -117,6 +117,10 @@ namespace LKWSpringerApp.Web
                     "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;");
                 await next();
             });
+
+            app.MapControllerRoute(
+                name: "Areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",
