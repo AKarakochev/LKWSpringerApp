@@ -219,11 +219,10 @@ header, footer {
     background-position: center;
     min-height: calc(100vh - 120px);
     padding: 20px;
-    color: #fff;
-}
+    color: #fff;}
     
 .pinboard-index-wallpaper h2 {
-    olor: #fff;
+    color: #fff;
 }
 
 .table {
