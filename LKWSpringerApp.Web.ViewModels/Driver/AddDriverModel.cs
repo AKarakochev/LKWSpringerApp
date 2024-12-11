@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LKWSpringerApp.Web.ViewModels.Driver
 {
-    [EitherSpringerOrStamm(ErrorMessage = "A driver can only be a stammdriver or a springerdriver, not both.")]
+    [EitherSpringerOrStamm(ErrorMessage = DriverCanNotBeBoth)]
     public class AddDriverModel
     {
         [Required(ErrorMessage = DriverFirstNameErrorMessage)]
@@ -43,7 +43,7 @@ namespace LKWSpringerApp.Web.ViewModels.Driver
             var model = (AddDriverModel)validationContext.ObjectInstance;
             if (model.Springerdriver && model.Stammdriver)
             {
-                return new ValidationResult("A driver cannot be both a stammdriver and a springerdriver.");
+                return new ValidationResult(DriverCanNotBeBoth);
             }
             return ValidationResult.Success;
         }

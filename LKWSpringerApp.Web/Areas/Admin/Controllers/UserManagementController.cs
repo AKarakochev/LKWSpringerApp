@@ -1,7 +1,7 @@
-﻿using LKWSpringerApp.Data.Models;
-using LKWSpringerApp.Services.Data;
-using LKWSpringerApp.Services.Data.Interfaces;
-using LKWSpringerApp.Web.ViewModels.Admin.UserManagement;
+﻿using LKWSpringerApp.Services.Data.Interfaces;
+using static LKWSpringerApp.Common.SuccessMessagesConstants.UserManagement;
+using static LKWSpringerApp.Common.ErrorMessagesConstants.UserManagement;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -41,11 +41,11 @@ namespace LKWSpringerApp.Web.Areas.Admin.Controllers
             bool assignResult = await _userService.AssignUserToRoleAsync(userId, role);
             if (await _userService.AssignUserToRoleAsync(userId, role))
             {
-                TempData["SuccessMessage"] = "Role assigned successfully.";
+                TempData["SuccessMessage"] = RoleAssignSuccess;
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to assign role.";
+                TempData["ErrorMessage"] = RoleAssignFail;
             }
 
             return RedirectToAction(nameof(Index));
@@ -58,7 +58,7 @@ namespace LKWSpringerApp.Web.Areas.Admin.Controllers
             bool removeResult = await _userService.RemoveUserRoleAsync(userId, role);
             if (!removeResult)
             {
-                TempData["ErrorMessage"] = "Failed to remove role.";
+                TempData["ErrorMessage"] = RoleRemoveFail;
             }
 
             return RedirectToAction(nameof(Index));
@@ -71,7 +71,7 @@ namespace LKWSpringerApp.Web.Areas.Admin.Controllers
             bool deleteResult = await _userService.DeleteUserAsync(userId);
             if (!deleteResult)
             {
-                TempData["ErrorMessage"] = "Failed to delete user.";
+                TempData["ErrorMessage"] = UserDeleteFail;
             }
 
             return RedirectToAction(nameof(Index));

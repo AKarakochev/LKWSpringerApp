@@ -36,5 +36,10 @@
             public const string PinBoardNewsUpdated = "News updated successfully.";
             public const string PinBoardDetailsUpdate = "Details updated successfully.";
         }
+
+        public static class UserManagement
+        {
+            public const string RoleAssignSuccess = "Role assigned successfully.";
+        }
     }
 }

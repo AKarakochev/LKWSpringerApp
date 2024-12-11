@@ -12,6 +12,7 @@
             public const string DriverStartDateErrorMessage = "The date that the driver has started this job.";
             public const string DriverStartDateFormatErrorMessage = "Invalid Start Date format.";
             public const string DriverPhoneNumberErrorMessage = "The phone number of the driver is required.";
+            public const string DriverCanNotBeBoth = "A driver cannot be both a stammdriver and a springerdriver.";
 
             public const string DriverInvalidIdErrorMessage = "Invalid driver ID.";
             public const string DriverOrTourInvalidIdErrorMessage = "Invalid driver or tour ID.";
@@ -67,7 +68,13 @@
             public const string PinBoardDriverInvalidId = "Invalid driver ID.";
             public const string PinBoardDriverDataNotFound = "Driver PinBoard data not found.";
             public const string PinBoardInvalidData = "Invalid data. Please correct the errors and try again.";
-            
+        }
+
+        public static class UserManagement
+        {
+            public const string RoleAssignFail = "Failed to assign role.";
+            public const string RoleRemoveFail = "Failed to remove role.";
+            public const string UserDeleteFail = "Failed to delete user.";
         }
     }
 }
