@@ -20,7 +20,7 @@ namespace LKWSpringerApp.Services.Data
 
         public async Task<List<AllUsersViewModel>> GetAllUsersAsync()
         {
-            var users = _userManager.Users.ToList();
+            var users = await _userManager.Users.AsNoTracking().ToListAsync();
             var userViewModels = new List<AllUsersViewModel>();
 
             foreach (var user in users)
@@ -37,60 +37,50 @@ namespace LKWSpringerApp.Services.Data
             return userViewModels;
         }
 
-        public async Task<IActionResult> EditRoles(string id)
+        public async Task<bool> AssignUserToRoleAsync(string userId, string roleName)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null || !await _roleManager.RoleExistsAsync(roleName))
             {
-                return NotFound();
+                return false;
             }
 
-            var allRoles = _roleManager.Roles.ToList();
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            var model = new UserRolesViewModel
+            if (!await _userManager.IsInRoleAsync(user, roleName))
             {
-                UserId = user.Id,
-                Email = user.Email,
-                Roles = allRoles.Select(r => new RoleViewModel
-                {
-                    RoleName = r.Name,
-                    IsSelected = userRoles.Contains(r.Name)
-                }).ToList()
-            };
+                var result = await _userManager.AddToRoleAsync(user, roleName);
+                return result.Succeeded;
+            }
 
-            return View(model);
+            return true;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditRoles(UserRolesViewModel model)
+        public async Task<bool> RemoveUserRoleAsync(string userId, string roleName)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null || !await _roleManager.RoleExistsAsync(roleName))
+            {
+                return false;
+            }
+
+            if (await _userManager.IsInRoleAsync(user, roleName))
+            {
+                var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+                return result.Succeeded;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return NotFound();
+                return false;
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-            var selectedRoles = model.Roles.Where(r => r.IsSelected).Select(r => r.RoleName).ToList();
-
-            // Add new roles
-            var result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
-            if (!result.Succeeded)
-            {
-                ModelState.AddModelError("", "Failed to add roles.");
-                return View(model);
-            }
-
-            // Remove unselected roles
-            result = await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles));
-            if (!result.Succeeded)
-            {
-                ModelState.AddModelError("", "Failed to remove roles.");
-                return View(model);
-            }
-
-            return RedirectToAction(nameof(Index));
+            var result = await _userManager.DeleteAsync(user);
+            return result.Succeeded;
         }
     }
 }

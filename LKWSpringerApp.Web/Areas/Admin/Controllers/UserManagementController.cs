@@ -1,4 +1,5 @@
 ﻿using LKWSpringerApp.Data.Models;
+using LKWSpringerApp.Services.Data;
 using LKWSpringerApp.Services.Data.Interfaces;
 using LKWSpringerApp.Web.ViewModels.Admin.UserManagement;
 using Microsoft.AspNetCore.Authorization;
@@ -14,30 +15,66 @@ namespace LKWSpringerApp.Web.Areas.Admin.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUserService _userService;
 
-        public UserManagementController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserManagementController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IUserService userService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _userService = userService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var users = _userManager.Users.ToList();
-            var userViewModels = new List<AllUsersViewModel>();
+            var users = await _userService.GetAllUsersAsync();
+            var roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+            ViewData["AvailableRoles"] = roles;
 
-            foreach (var user in users)
+            return View(users);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignRole(string userId, string role)
+        {
+            bool assignResult = await _userService.AssignUserToRoleAsync(userId, role);
+            if (await _userService.AssignUserToRoleAsync(userId, role))
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                userViewModels.Add(new AllUsersViewModel
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Roles = roles.ToList()
-                });
+                TempData["SuccessMessage"] = "Role assigned successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to assign role.";
             }
 
-            return View(userViewModels);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveRole(string userId, string role)
+        {
+            bool removeResult = await _userService.RemoveUserRoleAsync(userId, role);
+            if (!removeResult)
+            {
+                TempData["ErrorMessage"] = "Failed to remove role.";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            bool deleteResult = await _userService.DeleteUserAsync(userId);
+            if (!deleteResult)
+            {
+                TempData["ErrorMessage"] = "Failed to delete user.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
